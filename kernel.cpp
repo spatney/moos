@@ -7,7 +7,7 @@ void printf(const char * msg) {
 }
 
 extern "C" void kernelMain(void * multiboot, unsigned int magic) {
-    printf("Soon this will be an OS");
+    printf("Soon this will be an OS again");
 
     while(1);
 }
