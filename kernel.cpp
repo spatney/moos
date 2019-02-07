@@ -1,7 +1,7 @@
 #include "src/types.h"
 #include "src/stdlib.h"
 
-extern "C" void kernelMain(void * multiboot, uint32_t magic) {
+extern "C" void boot(void * multiboot, uint32_t magic) {
     printf("Soon this will be an OS -> ");
     printf(itoa(magic, 16));
 
