@@ -33,5 +33,5 @@ kernel.iso: kernel.bin
 	rm kernel.bin
 
 run: kernel.iso
-	(killall VirtualBox && sleep 1) || true
+	(pkill VirtualBox) || true
 	VirtualBox --startvm "OS" &
