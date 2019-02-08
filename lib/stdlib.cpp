@@ -12,9 +12,9 @@ void printf(const int8_t *message)
 {
     static Cursor cursor;
 
-    for (uint16_t size = 0; message[size] != '\0'; ++size)
+    for (uint16_t i = 0; message[i] != '\0'; ++i)
     {
-        switch (message[size])
+        switch (message[i])
         {
         case '\n':
             cursor.x = 0;
@@ -24,7 +24,7 @@ void printf(const int8_t *message)
             cursor.x += 4;
             break;
         default:
-            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[size];
+            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
             cursor.x++;
             break;
         }
