@@ -24,7 +24,7 @@ kernel.iso: kernel.bin
 	cp $< iso/boot/
 	echo 'set timeout=0' > iso/boot/grub/grub.cfg
 	echo 'set default=0' >> iso/boot/grub/grub.cfg
-	echo 'menuentry "My OS" {' >> iso/boot/grub/grub.cfg
+	echo 'menuentry "PixelMite" {' >> iso/boot/grub/grub.cfg
 	echo '	multiboot /boot/kernel.bin' >> iso/boot/grub/grub.cfg
 	echo '	boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
