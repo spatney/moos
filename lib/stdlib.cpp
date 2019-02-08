@@ -1,14 +1,42 @@
 #include "types.h"
 #include "stdlib.h"
 
-int32_t cursor=0;
+void printf(const int8_t * str) {
+    static uint16_t* VideoMemory = (uint16_t*)0xb8000;
 
-void printf(const int8_t * msg) {
-    uint16_t* VideoMemory = (uint16_t*)0xb8000;
+    static uint8_t x=0,y=0;
 
-    for(uint32_t i=0; msg[i] != '\0'; ++i) {
-        VideoMemory[cursor] = (VideoMemory[cursor] & 0xFF00 | msg[i]);
-        cursor++;
+    for(int i = 0; str[i] != '\0'; ++i)
+    {
+        switch(str[i])
+        {
+            case '\n':
+                x = 0;
+                y++;
+                break;
+            case '\t':
+                x+=4;
+                break;
+            default:
+                VideoMemory[80*y+x] = (VideoMemory[80*y+x] & 0xFF00) | str[i];
+                x++;
+                break;
+        }
+
+        if(x >= 80)
+        {
+            x = 0;
+            y++;
+        }
+
+        if(y >= 25)
+        {
+            for(y = 0; y < 25; y++)
+                for(x = 0; x < 80; x++)
+                    VideoMemory[80*y+x] = (VideoMemory[80*y+x] & 0xFF00) | ' ';
+            x = 0;
+            y = 0;
+        }
     }
 }
 
