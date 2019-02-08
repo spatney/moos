@@ -1,5 +1,6 @@
 #include "types.h"
 #include "stdlib.h"
+#include "hardware.h"
 
 struct Cursor
 {
@@ -7,15 +8,13 @@ struct Cursor
     uint8_t y = 0;
 };
 
-void printf(const int8_t *str)
+void printf(const int8_t *message)
 {
-    static uint16_t *VideoMemory = (uint16_t *)0xb8000;
-
     static Cursor cursor;
 
-    for (int i = 0; str[i] != '\0'; ++i)
+    for (uint16_t size = 0; message[size] != '\0'; ++size)
     {
-        switch (str[i])
+        switch (message[size])
         {
         case '\n':
             cursor.x = 0;
@@ -25,7 +24,7 @@ void printf(const int8_t *str)
             cursor.x += 4;
             break;
         default:
-            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | str[i];
+            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[size];
             cursor.x++;
             break;
         }
@@ -49,16 +48,13 @@ void printf(const int8_t *str)
 
 int8_t *itoa(int32_t val, int32_t base)
 {
-
     static int8_t buf[32] = {0};
+    int32_t size = 30;
 
-    int32_t i = 30;
+    buf[size--] = '\0';
 
-    buf[i--] = '\0';
+    for (; val && size; --size, val /= base)
+        buf[size] = "0123456789abcdef"[val % base];
 
-    for (; val && i; --i, val /= base)
-
-        buf[i] = "0123456789abcdef"[val % base];
-
-    return &buf[i + 1];
+    return &buf[size + 1];
 }
