@@ -15,7 +15,7 @@ extern "C" void boot(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
 
-    printf("Hi, I am PixelMite, your Kernel :)");
+    printf("Hi, I am PixelMite, your Kernel :)\nThe magic numbers are %d and %#", 10, magic);
 
     while (1)
         ;

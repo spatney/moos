@@ -1,3 +1,4 @@
+#include <stdarg.h>
 #include "types.h"
 #include "stdlib.h"
 #include "hardware.h"
@@ -8,9 +9,12 @@ struct Cursor
     uint8_t y = 0;
 };
 
-void printf(const int8_t *message)
+void printf(const int8_t* message, ...)
 {
     static Cursor cursor;
+
+    va_list valist;
+    va_start(valist, 0);
 
     for (uint16_t i = 0; message[i] != '\0'; ++i)
     {
@@ -38,6 +42,20 @@ void printf(const int8_t *message)
         case '\t':
             cursor.x += 4;
             break;
+
+        case '%':
+            if (message[i + 1] == 'd')
+            {
+                printf(itoa(va_arg(valist, int32_t), /*base*/ 10));
+                i++;
+                break;
+            }
+            else if (message[i + 1] == '#')
+            {
+                printf(itoa(va_arg(valist, int32_t), /*base*/ 16));
+                i++;
+                break;
+            }
         default:
             VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
             cursor.x++;
@@ -46,7 +64,7 @@ void printf(const int8_t *message)
     }
 }
 
-int8_t *itoa(int32_t val, int32_t base)
+int8_t* itoa(int32_t val, int32_t base)
 {
     static int8_t buf[32] = {0};
     int32_t size = 30;
