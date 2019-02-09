@@ -5,5 +5,6 @@
 
     int8_t* itoa(int32_t val, int32_t base);
     void printf(const int8_t * msg);
+    void wait(int32_t seconds);
 
 #endif

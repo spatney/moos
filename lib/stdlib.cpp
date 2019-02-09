@@ -14,21 +14,6 @@ void printf(const int8_t *message)
 
     for (uint16_t i = 0; message[i] != '\0'; ++i)
     {
-        switch (message[i])
-        {
-        case '\n':
-            cursor.x = 0;
-            cursor.y++;
-            break;
-        case '\t':
-            cursor.x += 4;
-            break;
-        default:
-            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
-            cursor.x++;
-            break;
-        }
-
         if (cursor.x >= 80)
         {
             cursor.x = 0;
@@ -42,6 +27,21 @@ void printf(const int8_t *message)
                     VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
             cursor.x = 0;
             cursor.y = 0;
+        }
+
+        switch (message[i])
+        {
+        case '\n':
+            cursor.x = 0;
+            cursor.y++;
+            break;
+        case '\t':
+            cursor.x += 4;
+            break;
+        default:
+            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
+            cursor.x++;
+            break;
         }
     }
 }
@@ -57,4 +57,22 @@ int8_t *itoa(int32_t val, int32_t base)
         buf[size] = "0123456789abcdef"[val % base];
 
     return &buf[size + 1];
+}
+
+void wait(int32_t seconds)
+{
+    static int16_t wait_loop0 = 500;
+    static int16_t wait_loop1 = 6000;
+    int32_t i, j, k;
+    for (i = 0; i < seconds; i++)
+    {
+        for (j = 0; j < wait_loop0; j++)
+        {
+            for (k = 0; k < wait_loop1; k++)
+            {
+                int32_t volatile t = 120 * j * i + k;
+                t = t + 5;
+            }
+        }
+    }
 }
