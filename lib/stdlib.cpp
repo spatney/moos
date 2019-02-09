@@ -9,14 +9,14 @@ struct Cursor
     uint8_t y = 0;
 };
 
-void printf(const int8_t* message, ...)
+void printf(const int8_t *message, ...)
 {
     static Cursor cursor;
 
-    va_list valist;
-    va_start(valist, 0);
+    va_list args;
+    va_start(args, 0);
 
-    for (uint16_t i = 0; message[i] != '\0'; ++i)
+    for (uint32_t i = 0; message[i] != '\0'; ++i)
     {
         if (cursor.x >= 80)
         {
@@ -46,16 +46,39 @@ void printf(const int8_t* message, ...)
         case '%':
             if (message[i + 1] == 'd')
             {
-                printf(itoa(va_arg(valist, int32_t), /*base*/ 10));
+                printf(itoa(va_arg(args, int32_t), /*base*/ 10));
                 i++;
                 break;
             }
-            else if (message[i + 1] == '#')
+            else if (message[i + 1] == 'x')
             {
-                printf(itoa(va_arg(valist, int32_t), /*base*/ 16));
+                printf(itoa(va_arg(args, int32_t), /*base*/ 16));
                 i++;
                 break;
             }
+            else if (message[i + 1] == 'o')
+            {
+                printf(itoa(va_arg(args, int32_t), /*base*/ 8));
+                i++;
+                break;
+            }
+            else if (message[i + 1] == 's')
+            {
+                printf(va_arg(args, int8_t *));
+                i++;
+                break;
+            }
+            else if (message[i + 1] == 'c')
+            {
+                int32_t c = va_arg(args, int32_t);
+                int8_t cStr[2];
+                cStr[0] = c;
+                cStr[1] = '\0';
+                printf(cStr);
+                i++;
+                break;
+            }
+
         default:
             VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
             cursor.x++;
@@ -64,23 +87,28 @@ void printf(const int8_t* message, ...)
     }
 }
 
-int8_t* itoa(int32_t val, const int32_t base)
+int8_t *itoa(int32_t val, const int32_t base)
 {
-    static int8_t buf[32] = {0};
-    int32_t size = 30;
+    static int8_t Representation[] = "0123456789abcdef";
+    static int8_t buffer[50];
+    int8_t *ptr;
 
-    buf[size--] = '\0';
+    ptr = &buffer[49];
+    *ptr = '\0';
 
-    for (; val && size; --size, val /= base)
-        buf[size] = "0123456789abcdef"[val % base];
+    do
+    {
+        *--ptr = Representation[val % base];
+        val /= base;
+    } while (val != 0);
 
-    return &buf[size + 1];
+    return ptr;
 }
 
 void wait(int32_t seconds)
 {
-    static int16_t wait_loop0 = 400;
-    static int16_t wait_loop1 = 6000;
+    static int32_t wait_loop0 = 400;
+    static int32_t wait_loop1 = 6000;
     int32_t i, j, k;
     for (i = 0; i < seconds; i++)
     {
