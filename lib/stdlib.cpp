@@ -64,7 +64,7 @@ void printf(const int8_t* message, ...)
     }
 }
 
-int8_t* itoa(int32_t val, int32_t base)
+int8_t* itoa(int32_t val, const int32_t base)
 {
     static int8_t buf[32] = {0};
     int32_t size = 30;
@@ -79,7 +79,7 @@ int8_t* itoa(int32_t val, int32_t base)
 
 void wait(int32_t seconds)
 {
-    static int16_t wait_loop0 = 500;
+    static int16_t wait_loop0 = 400;
     static int16_t wait_loop1 = 6000;
     int32_t i, j, k;
     for (i = 0; i < seconds; i++)
