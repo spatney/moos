@@ -107,7 +107,7 @@ int8_t *itoa(int32_t val, const int32_t base)
 
 void wait(int32_t seconds)
 {
-    static int32_t wait_loop0 = 400;
+    static int32_t wait_loop0 = 4000;
     static int32_t wait_loop1 = 6000;
     int32_t i, j, k;
     for (i = 0; i < seconds; i++)
