@@ -19,7 +19,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 
     interrupts.Activate();
 
-    printf("Hi, I am PixelMite, your Kernel :)\nThe magic numbers are %d and %x", 7, magic);
+    printf("Hi, I am MoOS's Kernel! :)\nThe magic numbers are %d and %x", 7, magic);
     printf("\nAnother line? wow");
 
     while (1)

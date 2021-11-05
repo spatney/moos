@@ -39,3 +39,7 @@ clean:
 run: kernel.iso
 	(pkill VirtualBoxVM) || true
 	VirtualBoxVM --startvm "Pixel" &
+
+wsl-run: kernel.iso
+	(powershell.exe "taskkill /IM "VirtualBoxVM.exe" /F") || true
+	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &
