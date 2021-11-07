@@ -10,7 +10,7 @@
 class PrintFKeyboardEventHandler : public KeyboardEventHandler
 {
 public:
-    void OnKeyDown(char c)
+    void OnKeyDown(int8_t c)
     {
         printf("%c", c);
     }
@@ -78,7 +78,6 @@ extern "C" void callConstructors()
 
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
-
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
 
@@ -102,7 +101,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     printf("Activating interrupts ...\n");
     interrupts.Activate();
 
-    printf("\nDone!\n");
+    printf("\nDone\n\nMoOS> ");
     while (1)
         ;
 }

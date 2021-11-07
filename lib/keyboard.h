@@ -11,8 +11,8 @@ class KeyboardEventHandler
 public:
     KeyboardEventHandler();
 
-    virtual void OnKeyDown(char);
-    virtual void OnKeyUp(char);
+    virtual void OnKeyDown(int8_t);
+    virtual void OnKeyUp(int8_t);
 };
 
 class KeyboardDriver : public InterruptHandler, public Driver

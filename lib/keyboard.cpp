@@ -5,10 +5,10 @@ KeyboardEventHandler::KeyboardEventHandler()
 {
 }
 
-void KeyboardEventHandler::OnKeyDown(char)
+void KeyboardEventHandler::OnKeyDown(int8_t)
 {
 }
-void KeyboardEventHandler::OnKeyUp(char)
+void KeyboardEventHandler::OnKeyUp(int8_t)
 {
 }
 
@@ -212,7 +212,7 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 
     default:
     {
-        printf("KEYBOARD 0x%x", key);
+        printf("\nUnknown key pressed => 0x%x", key);
         break;
     }
     }
