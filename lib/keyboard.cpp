@@ -18,6 +18,7 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager, KeyboardEventHandler *
       commandPort(0x64)
 {
     this->eventHandler = eventHandler;
+    isShiftDown = false;
 }
 
 KeyboardDriver::~KeyboardDriver()
@@ -44,53 +45,53 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 
     uint8_t key = dataPort.Read();
 
-    if(eventHandler == 0) {
+    if (eventHandler == 0)
+    {
         return esp;
     }
 
-    if (key >= 0x80 || key == 0xFA || key == 0x45)
+    if (key == 0xFA || key == 0x45)
     {
-        // ignore 'key down'
         return esp;
     }
 
     switch (key)
     {
     case 0x02:
-        eventHandler->OnKeyDown('1');
+        eventHandler->OnKeyDown(isShiftDown ? '!' : '1');
         break;
     case 0x03:
-        eventHandler->OnKeyDown('2');
+        eventHandler->OnKeyDown(isShiftDown ? '@' : '2');
         break;
     case 0x04:
-        eventHandler->OnKeyDown('3');
+        eventHandler->OnKeyDown(isShiftDown ? '#' : '3');
         break;
     case 0x05:
-        eventHandler->OnKeyDown('4');
+        eventHandler->OnKeyDown(isShiftDown ? '$' : '4');
         break;
     case 0x06:
-        eventHandler->OnKeyDown('5');
+        eventHandler->OnKeyDown(isShiftDown ? '%' : '5');
         break;
     case 0x07:
-        eventHandler->OnKeyDown('6');
+        eventHandler->OnKeyDown(isShiftDown ? '^' : '6');
         break;
     case 0x08:
-        eventHandler->OnKeyDown('7');
+        eventHandler->OnKeyDown(isShiftDown ? '&' : '7');
         break;
     case 0x09:
-        eventHandler->OnKeyDown('8');
+        eventHandler->OnKeyDown(isShiftDown ? '*' : '8');
         break;
     case 0x0A:
-        eventHandler->OnKeyDown('9');
+        eventHandler->OnKeyDown(isShiftDown ? '(' : '9');
         break;
     case 0x0B:
-        eventHandler->OnKeyDown('0');
+        eventHandler->OnKeyDown(isShiftDown ? ')' : '0');
         break;
     case 0x0C:
-        eventHandler->OnKeyDown('-');
+        eventHandler->OnKeyDown(isShiftDown ? '_' : '-');
         break;
     case 0x0D:
-        eventHandler->OnKeyDown('=');
+        eventHandler->OnKeyDown(isShiftDown ? '+' : '=');
         break;
 
     case 0x10:
@@ -194,13 +195,13 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
         eventHandler->OnKeyDown('m');
         break;
     case 0x33:
-        eventHandler->OnKeyDown(',');
+        eventHandler->OnKeyDown(isShiftDown ? '<' : ',');
         break;
     case 0x34:
-        eventHandler->OnKeyDown('.');
+        eventHandler->OnKeyDown(isShiftDown ? '>' : '.');
         break;
     case 0x35:
-        eventHandler->OnKeyDown('/');
+        eventHandler->OnKeyDown(isShiftDown ? '?' : '/');
         break;
 
     case 0x1C:
@@ -209,13 +210,28 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x39:
         eventHandler->OnKeyDown(' ');
         break;
-// Special keus
+        // Special keus
     case 0x0E:
         eventHandler->OnKeyDown(0X0E);
         break;
 
+    case 0x2A:
+    case 0x36:
+        isShiftDown = true;
+        break;
+
+    case 0xB6:
+    case 0XAA:
+        isShiftDown = false;
+        break;
+
     default:
     {
+        if (key >= 0x80)
+        {
+            // ignore key up
+            break;
+        }
         printf("\nUnknown key pressed => 0x%x", key);
         break;
     }

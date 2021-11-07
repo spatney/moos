@@ -108,7 +108,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     printf("Activating interrupts ...\n");
     interrupts.Activate();
 
-    printf("\nOS boot complete!\n\nMoOS> ");
+    printf("\nOS boot complete!\n\nMoOS\a> ");
     while (1)
         ;
 }

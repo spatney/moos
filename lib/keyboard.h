@@ -19,8 +19,9 @@ class KeyboardDriver : public InterruptHandler, public Driver
 {
     Port8Bit dataPort;
     Port8Bit commandPort;
-
     KeyboardEventHandler* eventHandler;
+
+    bool isShiftDown;
 
 public:
     KeyboardDriver(InterruptManager *manager, KeyboardEventHandler *eventHandler);
