@@ -102,11 +102,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     }
     else if (interruptNumber != 0x20)
     {
-        char *strTemplate = "\nUNHANDLED INTERRUPT 0x00";
-        char *hex = "0123456789ABCDEF";
-        strTemplate[23] = hex[(interruptNumber >> 4) & 0x0F];
-        strTemplate[24] = hex[interruptNumber & 0x0F];
-        printf(strTemplate);
+        printf("UNHANDLED INTERRUPT %x", interruptNumber);
     }
 
     if (0x20 <= interruptNumber && interruptNumber < 0x30) {

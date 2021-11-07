@@ -1,10 +1,30 @@
 #include "keyboard.h"
 #include "stdlib.h"
 
-KeyboardDriver::KeyboardDriver(InterruptManager *manager)
+KeyboardEventHandler::KeyboardEventHandler()
+{
+}
+
+void KeyboardEventHandler::OnKeyDown(char)
+{
+}
+void KeyboardEventHandler::OnKeyUp(char)
+{
+}
+
+KeyboardDriver::KeyboardDriver(InterruptManager *manager, KeyboardEventHandler *eventHandler)
     : InterruptHandler(0x21, manager),
       dataPort(0x60),
       commandPort(0x64)
+{
+    this->eventHandler = eventHandler;
+}
+
+KeyboardDriver::~KeyboardDriver()
+{
+}
+
+void KeyboardDriver::Activate()
 {
     while (commandPort.Read() & 0x1)
     {
@@ -19,14 +39,14 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager)
     dataPort.Write(0xF4); // activate keyboard;
 }
 
-KeyboardDriver::~KeyboardDriver()
-{
-}
-
 uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
 {
 
     uint8_t key = dataPort.Read();
+
+    if(eventHandler == 0) {
+        return esp;
+    }
 
     if (key >= 0x80 || key == 0xFA || key == 0x45)
     {
@@ -37,166 +57,162 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     switch (key)
     {
     case 0x02:
-        printf("1");
+        eventHandler->OnKeyDown('1');
         break;
     case 0x03:
-        printf("2");
+        eventHandler->OnKeyDown('2');
         break;
     case 0x04:
-        printf("3");
+        eventHandler->OnKeyDown('3');
         break;
     case 0x05:
-        printf("4");
+        eventHandler->OnKeyDown('4');
         break;
     case 0x06:
-        printf("5");
+        eventHandler->OnKeyDown('5');
         break;
     case 0x07:
-        printf("6");
+        eventHandler->OnKeyDown('6');
         break;
     case 0x08:
-        printf("7");
+        eventHandler->OnKeyDown('7');
         break;
     case 0x09:
-        printf("8");
+        eventHandler->OnKeyDown('8');
         break;
     case 0x0A:
-        printf("9");
+        eventHandler->OnKeyDown('9');
         break;
     case 0x0B:
-        printf("0");
+        eventHandler->OnKeyDown('0');
         break;
     case 0x0C:
-        printf("-");
+        eventHandler->OnKeyDown('-');
         break;
     case 0x0D:
-        printf("=");
+        eventHandler->OnKeyDown('=');
         break;
 
     case 0x10:
-        printf("q");
+        eventHandler->OnKeyDown('q');
         break;
     case 0x11:
-        printf("w");
+        eventHandler->OnKeyDown('w');
         break;
     case 0x12:
-        printf("e");
+        eventHandler->OnKeyDown('e');
         break;
     case 0x13:
-        printf("r");
+        eventHandler->OnKeyDown('r');
         break;
     case 0x14:
-        printf("t");
+        eventHandler->OnKeyDown('t');
         break;
     case 0x15:
-        printf("y");
+        eventHandler->OnKeyDown('y');
         break;
     case 0x16:
-        printf("u");
+        eventHandler->OnKeyDown('u');
         break;
     case 0x17:
-        printf("i");
+        eventHandler->OnKeyDown('i');
         break;
     case 0x18:
-        printf("o");
+        eventHandler->OnKeyDown('o');
         break;
     case 0x19:
-        printf("p");
+        eventHandler->OnKeyDown('p');
         break;
 
     case 0x1A:
-        printf("[");
+        eventHandler->OnKeyDown('[');
         break;
     case 0x1B:
-        printf("]");
+        eventHandler->OnKeyDown(']');
         break;
     case 0x2B:
-        printf("\\");
+        eventHandler->OnKeyDown('\\');
         break;
 
     case 0x1E:
-        printf("a");
+        eventHandler->OnKeyDown('a');
         break;
     case 0x1F:
-        printf("s");
+        eventHandler->OnKeyDown('s');
         break;
     case 0x20:
-        printf("d");
+        eventHandler->OnKeyDown('d');
         break;
     case 0x21:
-        printf("f");
+        eventHandler->OnKeyDown('f');
         break;
     case 0x22:
-        printf("g");
+        eventHandler->OnKeyDown('g');
         break;
     case 0x23:
-        printf("h");
+        eventHandler->OnKeyDown('h');
         break;
     case 0x24:
-        printf("j");
+        eventHandler->OnKeyDown('j');
         break;
     case 0x25:
-        printf("k");
+        eventHandler->OnKeyDown('k');
         break;
     case 0x26:
-        printf("l");
+        eventHandler->OnKeyDown('l');
         break;
 
     case 0x27:
-        printf(";");
+        eventHandler->OnKeyDown(';');
         break;
     case 0x28:
-        printf("'");
+        eventHandler->OnKeyDown('\'');
         break;
     case 0x29:
-        printf("`");
+        eventHandler->OnKeyDown('`');
         break;
 
     case 0x2C:
-        printf("z");
+        eventHandler->OnKeyDown('z');
         break;
     case 0x2D:
-        printf("x");
+        eventHandler->OnKeyDown('x');
         break;
     case 0x2E:
-        printf("c");
+        eventHandler->OnKeyDown('c');
         break;
     case 0x2F:
-        printf("v");
+        eventHandler->OnKeyDown('v');
         break;
     case 0x30:
-        printf("b");
+        eventHandler->OnKeyDown('b');
         break;
     case 0x31:
-        printf("n");
+        eventHandler->OnKeyDown('n');
         break;
     case 0x32:
-        printf("m");
+        eventHandler->OnKeyDown('m');
         break;
     case 0x33:
-        printf(",");
+        eventHandler->OnKeyDown(',');
         break;
     case 0x34:
-        printf(".");
+        eventHandler->OnKeyDown('.');
         break;
     case 0x35:
-        printf("/");
+        eventHandler->OnKeyDown('/');
         break;
 
     case 0x1C:
-        printf("\n");
+        eventHandler->OnKeyDown('\n');
         break;
     case 0x39:
-        printf(" ");
+        eventHandler->OnKeyDown(' ');
         break;
 
     default:
     {
-        char *templateString = "KEYBOARD 0x00 ";
-        char *hex = "0123456789ABCDEF";
-        templateString[11] = hex[(key >> 4) & 0xF];
-        templateString[12] = hex[key & 0xF];
-        printf(templateString);
+        printf("KEYBOARD 0x%x", key);
         break;
     }
     }
