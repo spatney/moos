@@ -2,6 +2,7 @@
 #include "lib/stdlib.h"
 #include "lib/gdt.h"
 #include "lib/interrupts.h"
+#include "lib/keyboard.h"
 
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -16,6 +17,8 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
+
+    KeyboardDriver keyboard(&interrupts);
 
     interrupts.Activate();
 

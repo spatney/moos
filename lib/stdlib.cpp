@@ -9,6 +9,17 @@ struct Cursor
     uint8_t y = 0;
 };
 
+uint32_t strlen(const char *s)
+{
+    uint32_t count = 0;
+    while(*s!='\0')
+    {
+        count++;
+        s++;
+    }
+    return count;
+}
+
 void printf(const int8_t *message, ...)
 {
     static Cursor cursor;
