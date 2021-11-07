@@ -70,6 +70,7 @@ public:
     uint32_t DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp);
 
     static void ignoreInterruptRequest();
+    static void handleInterruptRequest0x0C(); //mouse
     static void handleInterruptRequest0x01(); //keyboard
     static void handleInterruptRequest0x00(); //timer
 };

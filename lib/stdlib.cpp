@@ -20,10 +20,10 @@ uint32_t strlen(const char *s)
     return count;
 }
 
+static Cursor cursor;
+
 void printf(const int8_t *message, ...)
 {
-    static Cursor cursor;
-
     va_list args;
     va_start(args, 0);
 

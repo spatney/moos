@@ -3,6 +3,7 @@
 #include "lib/gdt.h"
 #include "lib/interrupts.h"
 #include "lib/keyboard.h"
+#include "lib/mouse.h"
 
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -19,6 +20,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     InterruptManager interrupts(&gdt);
 
     KeyboardDriver keyboard(&interrupts);
+    MouseDriver mouse(&interrupts);
 
     interrupts.Activate();
 

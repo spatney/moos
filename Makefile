@@ -1,8 +1,8 @@
-GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
+GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-objects = loader.o lib/port.o lib/gdt.o lib/stdlib.o lib/interruptstubs.o lib/interrupts.o lib/keyboard.o kernel.o
+objects = loader.o lib/port.o lib/gdt.o lib/stdlib.o lib/interruptstubs.o lib/interrupts.o lib/keyboard.o lib/mouse.o kernel.o
 
 %.o: %.cpp
 	g++ $(GCCPARAMS) -c -o $@ $<
