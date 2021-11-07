@@ -12,7 +12,14 @@ class PrintFKeyboardEventHandler : public KeyboardEventHandler
 public:
     void OnKeyDown(int8_t c)
     {
-        printf("%c", c);
+        if (c == 0X0E)
+        {
+            backspace();
+        }
+        else
+        {
+            printf("%c", c);
+        }
     }
 };
 
@@ -101,7 +108,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     printf("Activating interrupts ...\n");
     interrupts.Activate();
 
-    printf("\nDone\n\nMoOS> ");
+    printf("\nOS boot complete!\n\nMoOS> ");
     while (1)
         ;
 }

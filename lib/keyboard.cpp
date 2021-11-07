@@ -209,6 +209,10 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x39:
         eventHandler->OnKeyDown(' ');
         break;
+// Special keus
+    case 0x0E:
+        eventHandler->OnKeyDown(0X0E);
+        break;
 
     default:
     {

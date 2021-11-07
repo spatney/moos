@@ -5,14 +5,14 @@
 
 struct Cursor
 {
-    uint8_t x = 0;
-    uint8_t y = 0;
+    int8_t x = 0;
+    int8_t y = 0;
 };
 
 uint32_t strlen(const char *s)
 {
     uint32_t count = 0;
-    while(*s!='\0')
+    while (*s != '\0')
     {
         count++;
         s++;
@@ -22,6 +22,25 @@ uint32_t strlen(const char *s)
 
 static Cursor cursor;
 
+void moveCursorBackByOne() {
+    cursor.x -= 1;
+    if (cursor.x < 0 && cursor.y > 0)
+    {
+        cursor.x = 79;
+        cursor.y--;
+    }
+    else if (cursor.x < 0)
+    {
+        cursor.x = 0;
+    }
+}
+
+void backspace()
+{
+    moveCursorBackByOne();
+    printf(" ");
+    moveCursorBackByOne();
+}
 void printf(const int8_t *message, ...)
 {
     va_list args;
