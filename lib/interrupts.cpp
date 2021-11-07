@@ -1,6 +1,5 @@
 #include "interrupts.h"
-
-void printf(const int8_t *message, ...);
+#include "stdlib.h"
 
 InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager *interruptManager) {
     this->interruptNumber = interruptNumber;

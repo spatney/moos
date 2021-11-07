@@ -1,9 +1,6 @@
 #include "keyboard.h"
 #include "stdlib.h"
 
-void printf(const int8_t *message, ...);
-int strlen(char *);
-
 KeyboardDriver::KeyboardDriver(InterruptManager* manager)
 : InterruptHandler(0x21, manager),
   dataPort(0x60),
