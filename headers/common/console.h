@@ -10,12 +10,12 @@ namespace moos
         class Console
         {
         public:
-            static void Write(const int8_t *message, ...);
+            static void Write(const moos::common::int8_t *message, ...);
             static void Backspace();
 
         private:
             static void moveCursorBackByOne();
-            static int8_t *itoa(int32_t val, const int32_t base);
+            static moos::common::int8_t *itoa(moos::common::int32_t val, const moos::common::int32_t base);
         };
     }
 }

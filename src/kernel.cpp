@@ -39,7 +39,6 @@ public:
         y = 12;
         invertVideoMemoryAt(x, y);
     }
-    void OnActivate() {}
     void OnMouseDown(uint8_t button)
     {
         invertVideoMemoryAt(x, y);
