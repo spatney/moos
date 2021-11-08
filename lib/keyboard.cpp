@@ -95,104 +95,104 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
         break;
 
     case 0x10:
-        eventHandler->OnKeyDown('q');
+        eventHandler->OnKeyDown(isShiftDown ? 'Q' :'q');
         break;
     case 0x11:
-        eventHandler->OnKeyDown('w');
+        eventHandler->OnKeyDown(isShiftDown ? 'W' :'w');
         break;
     case 0x12:
-        eventHandler->OnKeyDown('e');
+        eventHandler->OnKeyDown(isShiftDown ? 'E' :'e');
         break;
     case 0x13:
-        eventHandler->OnKeyDown('r');
+        eventHandler->OnKeyDown(isShiftDown ? 'R' :'r');
         break;
     case 0x14:
-        eventHandler->OnKeyDown('t');
+        eventHandler->OnKeyDown(isShiftDown ? 'T' :'t');
         break;
     case 0x15:
-        eventHandler->OnKeyDown('y');
+        eventHandler->OnKeyDown(isShiftDown ? 'Y' :'y');
         break;
     case 0x16:
-        eventHandler->OnKeyDown('u');
+        eventHandler->OnKeyDown(isShiftDown ? 'U' :'u');
         break;
     case 0x17:
-        eventHandler->OnKeyDown('i');
+        eventHandler->OnKeyDown(isShiftDown ? 'I' :'i');
         break;
     case 0x18:
-        eventHandler->OnKeyDown('o');
+        eventHandler->OnKeyDown(isShiftDown ? 'O' :'o');
         break;
     case 0x19:
-        eventHandler->OnKeyDown('p');
+        eventHandler->OnKeyDown(isShiftDown ? 'P' :'p');
         break;
 
     case 0x1A:
-        eventHandler->OnKeyDown('[');
+        eventHandler->OnKeyDown(isShiftDown ? '{' :'[');
         break;
     case 0x1B:
-        eventHandler->OnKeyDown(']');
+        eventHandler->OnKeyDown(isShiftDown ? '}' :']');
         break;
     case 0x2B:
-        eventHandler->OnKeyDown('\\');
+        eventHandler->OnKeyDown(isShiftDown ? '|' :'\\');
         break;
 
     case 0x1E:
-        eventHandler->OnKeyDown('a');
+        eventHandler->OnKeyDown(isShiftDown ? 'A' :'a');
         break;
     case 0x1F:
-        eventHandler->OnKeyDown('s');
+        eventHandler->OnKeyDown(isShiftDown ? 'S' :'s');
         break;
     case 0x20:
-        eventHandler->OnKeyDown('d');
+        eventHandler->OnKeyDown(isShiftDown ? 'D' :'d');
         break;
     case 0x21:
-        eventHandler->OnKeyDown('f');
+        eventHandler->OnKeyDown(isShiftDown ? 'F' :'f');
         break;
     case 0x22:
-        eventHandler->OnKeyDown('g');
+        eventHandler->OnKeyDown(isShiftDown ? 'G' :'g');
         break;
     case 0x23:
-        eventHandler->OnKeyDown('h');
+        eventHandler->OnKeyDown(isShiftDown ? 'H' :'h');
         break;
     case 0x24:
-        eventHandler->OnKeyDown('j');
+        eventHandler->OnKeyDown(isShiftDown ? 'J' :'j');
         break;
     case 0x25:
-        eventHandler->OnKeyDown('k');
+        eventHandler->OnKeyDown(isShiftDown ? 'K' :'k');
         break;
     case 0x26:
-        eventHandler->OnKeyDown('l');
+        eventHandler->OnKeyDown(isShiftDown ? 'L' :'l');
         break;
 
     case 0x27:
-        eventHandler->OnKeyDown(';');
+        eventHandler->OnKeyDown(isShiftDown ? ':' :';');
         break;
     case 0x28:
-        eventHandler->OnKeyDown('\'');
+        eventHandler->OnKeyDown(isShiftDown ? '"' :'\'');
         break;
     case 0x29:
-        eventHandler->OnKeyDown('`');
+        eventHandler->OnKeyDown(isShiftDown ? '~' :'`');
         break;
 
     case 0x2C:
-        eventHandler->OnKeyDown('z');
+        eventHandler->OnKeyDown(isShiftDown ? 'Z' :'z');
         break;
     case 0x2D:
-        eventHandler->OnKeyDown('x');
+        eventHandler->OnKeyDown(isShiftDown ? 'X' :'x');
         break;
     case 0x2E:
-        eventHandler->OnKeyDown('c');
+        eventHandler->OnKeyDown(isShiftDown ? 'C' :'c');
         break;
     case 0x2F:
-        eventHandler->OnKeyDown('v');
+        eventHandler->OnKeyDown(isShiftDown ? 'V' :'v');
         break;
     case 0x30:
-        eventHandler->OnKeyDown('b');
+        eventHandler->OnKeyDown(isShiftDown ? 'B' :'b');
         break;
     case 0x31:
-        eventHandler->OnKeyDown('n');
+        eventHandler->OnKeyDown(isShiftDown ? 'N' :'n');
         break;
     case 0x32:
-        eventHandler->OnKeyDown('m');
+        eventHandler->OnKeyDown(isShiftDown ? 'M' :'m');
         break;
     case 0x33:
         eventHandler->OnKeyDown(isShiftDown ? '<' : ',');
@@ -210,7 +210,7 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x39:
         eventHandler->OnKeyDown(' ');
         break;
-        // Special keus
+        // Special keys
     case 0x0E:
         eventHandler->OnKeyDown(0X0E);
         break;
