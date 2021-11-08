@@ -40,12 +40,13 @@ kernel.iso: kernel.bin
 	echo '	boot' >> iso/boot/grub/grub.cfg
 	echo '}' >> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=$@ iso
+	rm -rf obj
 	rm -rf iso
 	rm kernel.bin
 
 .phony: clean
 clean:
-	rm -rf obj kernel.bin kernel.iso
+	rm -rf obj iso kernel.bin kernel.iso
 
 run: kernel.iso
 	(pkill VirtualBoxVM) || true

@@ -3,7 +3,6 @@
 .section .text
 
 .extern _ZN4moos8hardware16InterruptManager15HandleInterruptEhj
-.global _ZN16InterruptManager22IgnoreInterruptRequestEv
 
 .macro HandleException num
 .global _ZN4moos8hardware16InterruptManager28HandleInterruptException\num\()Ev
