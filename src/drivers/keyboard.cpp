@@ -62,6 +62,7 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     switch (key)
     {
     case 0x02:
+    // case 0x02 | 0x80: KEY UP
         eventHandler->OnKeyDown(isShiftDown ? '!' : '1');
         break;
     case 0x03:
