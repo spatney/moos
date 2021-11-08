@@ -7,14 +7,14 @@
 .macro HandleException num
 .global _ZN4moos8hardware16InterruptManager28HandleInterruptException\num\()Ev
 _ZN4moos8hardware16InterruptManager28HandleInterruptException\num\()Ev:
-    mov $\num, (interruptnumber)
+    movb $\num, (interruptnumber)
     jmp int_bottom
 .endm
 
 .macro HandleInterruptRequest num
 .global _ZN4moos8hardware16InterruptManager26HandleInterruptRequest\num\()Ev
 _ZN4moos8hardware16InterruptManager26HandleInterruptRequest\num\()Ev:
-    mov $\num + IRQ_BASE, (interruptnumber)
+    movb $\num + IRQ_BASE, (interruptnumber)
     jmp int_bottom
 .endm
 
