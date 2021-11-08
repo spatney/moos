@@ -1,11 +1,16 @@
-#include "lib/types.h"
-#include "lib/stdlib.h"
-#include "lib/gdt.h"
-#include "lib/interrupts.h"
-#include "lib/keyboard.h"
-#include "lib/mouse.h"
-#include "lib/driver.h"
-#include "lib/hardware.h"
+#include <common/types.h>
+#include <common/console.h>
+#include <hardware/interrupts.h>
+#include <drivers/keyboard.h>
+#include <drivers/mouse.h>
+#include <drivers/driver.h>
+#include <hardware/video.h>
+#include <gdt.h>
+
+using namespace moos;
+using namespace moos::hardware;
+using namespace moos::drivers;
+using namespace moos::common;
 
 class PrintFKeyboardEventHandler : public KeyboardEventHandler
 {
@@ -14,11 +19,11 @@ public:
     {
         if (c == 0X0E)
         {
-            backspace();
+            Console::Backspace();
         }
         else
         {
-            printf("%c", c);
+            Console::Write("%c", c);
         }
     }
 };
@@ -88,9 +93,9 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
 
-    printf("Booting MoOS Kernel ...\n\n");
+    Console::Write("Booting MoOS Kernel ...\n\n");
 
-    printf("Initializing driver manager ...\n");
+    Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
 
@@ -102,13 +107,13 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     MouseDriver mouse(&interrupts, &mouseToConsole);
     driverManager.AddDriver(&mouse);
 
-    printf("Activating driver manager ...\n");
+    Console::Write("Activating driver manager ...\n");
     driverManager.ActivateAll();
 
-    printf("Activating interrupts ...\n");
+    Console::Write("Activating interrupts ...\n");
     interrupts.Activate();
 
-    printf("\nOS boot complete!\n\nMoOS\a> ");
+    Console::Write("\nOS boot complete!\n\nMoOS\a> ");
     while (1)
         ;
 }

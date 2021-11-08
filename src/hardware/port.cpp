@@ -1,4 +1,7 @@
-#include "port.h"
+#include <hardware/port.h>
+
+using namespace moos::hardware;
+using namespace moos::common;
 
 Port::Port(uint16_t portnumber)
 {

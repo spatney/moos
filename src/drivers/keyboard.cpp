@@ -1,5 +1,9 @@
-#include "keyboard.h"
-#include "stdlib.h"
+#include <drivers/keyboard.h>
+#include <common/console.h>
+
+using namespace moos::drivers;
+using namespace moos::hardware;
+using namespace moos::common;
 
 KeyboardEventHandler::KeyboardEventHandler()
 {
@@ -232,7 +236,7 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
             // ignore key up
             break;
         }
-        printf("\nUnknown key pressed => 0x%x", key);
+        Console::Write("\nUnknown key pressed => 0x%x", key);
         break;
     }
     }

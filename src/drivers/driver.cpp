@@ -1,4 +1,7 @@
-#include "driver.h"
+#include <drivers/driver.h>
+
+using namespace moos::drivers;
+using namespace moos::common;
 
 Driver::Driver()
 {

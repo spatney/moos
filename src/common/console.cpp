@@ -1,7 +1,10 @@
+#include <common/console.h>
 #include <stdarg.h>
-#include "types.h"
-#include "stdlib.h"
-#include "hardware.h"
+#include <common/types.h>
+#include <hardware/video.h>
+
+using namespace moos::common;
+using namespace moos::hardware;
 
 struct Cursor
 {
@@ -9,20 +12,21 @@ struct Cursor
     int8_t y = 0;
 };
 
-uint32_t strlen(const char *s)
+/*int32_t strlen(const char *s)
 {
-    uint32_t count = 0;
+    int32_t count = 0;
     while (*s != '\0')
     {
         count++;
         s++;
     }
     return count;
-}
+}*/
 
 static Cursor cursor;
 
-void moveCursorBackByOne() {
+void Console::moveCursorBackByOne()
+{
     cursor.x -= 1;
     if (cursor.x < 0 && cursor.y > 0)
     {
@@ -35,13 +39,14 @@ void moveCursorBackByOne() {
     }
 }
 
-void backspace()
+void Console::Backspace()
 {
     moveCursorBackByOne();
-    printf(" ");
+    Write(" ");
     moveCursorBackByOne();
 }
-void printf(const int8_t *message, ...)
+
+void Console::Write(const int8_t *message, ...)
 {
     va_list args;
     va_start(args, 0);
@@ -76,25 +81,25 @@ void printf(const int8_t *message, ...)
         case '%':
             if (message[i + 1] == 'd')
             {
-                printf(itoa(va_arg(args, int32_t), /*base*/ 10));
+                Write(itoa(va_arg(args, int32_t), /*base*/ 10));
                 i++;
                 break;
             }
             else if (message[i + 1] == 'x')
             {
-                printf(itoa(va_arg(args, int32_t), /*base*/ 16));
+                Write(itoa(va_arg(args, int32_t), /*base*/ 16));
                 i++;
                 break;
             }
             else if (message[i + 1] == 'o')
             {
-                printf(itoa(va_arg(args, int32_t), /*base*/ 8));
+                Write(itoa(va_arg(args, int32_t), /*base*/ 8));
                 i++;
                 break;
             }
             else if (message[i + 1] == 's')
             {
-                printf(va_arg(args, int8_t *));
+                Write(va_arg(args, int8_t *));
                 i++;
                 break;
             }
@@ -104,7 +109,7 @@ void printf(const int8_t *message, ...)
                 int8_t cStr[2];
                 cStr[0] = c;
                 cStr[1] = '\0';
-                printf(cStr);
+                Write(cStr);
                 i++;
                 break;
             }
@@ -117,7 +122,7 @@ void printf(const int8_t *message, ...)
     }
 }
 
-int8_t *itoa(int32_t val, const int32_t base)
+int8_t *Console::itoa(int32_t val, const int32_t base)
 {
     static int8_t Representation[] = "0123456789abcdef";
     static int8_t buffer[50];
@@ -135,7 +140,7 @@ int8_t *itoa(int32_t val, const int32_t base)
     return ptr;
 }
 
-void wait(int32_t seconds)
+/*void wait(int32_t seconds)
 {
     static int32_t wait_loop0 = 4000;
     static int32_t wait_loop1 = 6000;
@@ -151,4 +156,4 @@ void wait(int32_t seconds)
             }
         }
     }
-}
+}*/

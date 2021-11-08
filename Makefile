@@ -1,13 +1,24 @@
-GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
+GCCPARAMS = -m32 -Iheaders -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
-objects = loader.o lib/port.o lib/gdt.o lib/stdlib.o lib/interruptstubs.o lib/interrupts.o lib/driver.o lib/keyboard.o lib/mouse.o kernel.o
+objects = obj/loader.o \
+		  obj/gdt.o \
+		  obj/common/console.o \
+		  obj/hardware/port.o \
+		  obj/hardware/interruptstubs.o \
+		  obj/hardware/interrupts.o \
+		  obj/drivers/driver.o \
+		  obj/drivers/keyboard.o \
+		  obj/drivers/mouse.o \
+		  obj/kernel.o
 
-%.o: %.cpp
+obj/%.o: src/%.cpp
+	mkdir -p $(@D)
 	g++ $(GCCPARAMS) -c -o $@ $<
 
-%.o: %.s
+obj/%.o: src/%.s
+	mkdir -p $(@D)
 	as $(ASPARAMS) -o $@ $<
 
 kernel.bin: linker.ld $(objects)
@@ -34,7 +45,7 @@ kernel.iso: kernel.bin
 
 .phony: clean
 clean:
-	rm -f $(objects) kernel.bin kernel.iso
+	rm -rf obj kernel.bin kernel.iso
 
 run: kernel.iso
 	(pkill VirtualBoxVM) || true

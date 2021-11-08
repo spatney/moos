@@ -1,6 +1,9 @@
-#include "mouse.h"
-#include "stdlib.h"
-#include "hardware.h"
+#include <drivers/mouse.h>
+#include <hardware/video.h>
+
+using namespace moos::drivers;
+using namespace moos::hardware;
+using namespace moos::common;
 
 MouseEventHandler::MouseEventHandler()
 {

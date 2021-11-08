@@ -1,5 +1,8 @@
-#include "interrupts.h"
-#include "stdlib.h"
+#include <hardware/interrupts.h>
+#include <common/console.h>
+
+using namespace moos::common;
+using namespace moos::hardware;
 
 InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager *interruptManager) {
     this->interruptNumber = interruptNumber;
@@ -102,7 +105,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     }
     else if (interruptNumber != 0x20)
     {
-        printf("UNHANDLED INTERRUPT %x", interruptNumber);
+        Console::Write("UNHANDLED INTERRUPT %x", interruptNumber);
     }
 
     if (0x20 <= interruptNumber && interruptNumber < 0x30) {

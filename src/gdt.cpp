@@ -1,4 +1,7 @@
-#include "gdt.h"
+#include <gdt.h>
+
+using namespace moos;
+using namespace moos::common;
 
 GlobalDescriptorTable::GlobalDescriptorTable()
     : nullSegmentSelector(0, 0, 0),
