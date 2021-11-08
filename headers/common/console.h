@@ -12,6 +12,7 @@ namespace moos
         public:
             static void Write(const moos::common::int8_t *message, ...);
             static void Backspace();
+            static void Sleep(moos::common::int32_t);
 
         private:
             static void moveCursorBackByOne();

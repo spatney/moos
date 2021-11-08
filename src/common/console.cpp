@@ -12,17 +12,6 @@ struct Cursor
     int8_t y = 0;
 };
 
-/*int32_t strlen(const char *s)
-{
-    int32_t count = 0;
-    while (*s != '\0')
-    {
-        count++;
-        s++;
-    }
-    return count;
-}*/
-
 static Cursor cursor;
 
 void Console::moveCursorBackByOne()
@@ -140,7 +129,7 @@ int8_t *Console::itoa(int32_t val, const int32_t base)
     return ptr;
 }
 
-/*void wait(int32_t seconds)
+void Console::Sleep(int32_t seconds)
 {
     static int32_t wait_loop0 = 4000;
     static int32_t wait_loop1 = 6000;
@@ -156,4 +145,4 @@ int8_t *Console::itoa(int32_t val, const int32_t base)
             }
         }
     }
-}*/
+}
