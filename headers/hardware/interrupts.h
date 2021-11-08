@@ -68,13 +68,13 @@ namespace moos
             void Activate();
             void Deactivate();
 
-            static moos::common::uint32_t handleInterrupt(moos::common::uint8_t interruptNumber, moos::common::uint32_t esp);
+            static moos::common::uint32_t HandleInterrupt(moos::common::uint8_t interruptNumber, moos::common::uint32_t esp);
             moos::common::uint32_t DoHandleInterrupt(moos::common::uint8_t interruptNumber, moos::common::uint32_t esp);
 
-            static void ignoreInterruptRequest();
-            static void handleInterruptRequest0x0C(); //mouse
-            static void handleInterruptRequest0x01(); //keyboard
-            static void handleInterruptRequest0x00(); //timer
+            static void IgnoreInterruptRequest();
+            static void HandleInterruptRequest0x0C(); //mouse
+            static void HandleInterruptRequest0x01(); //keyboard
+            static void HandleInterruptRequest0x00(); //timer
         };
     }
 }
