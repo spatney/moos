@@ -88,6 +88,10 @@ namespace moos
                 moos::common::uint16_t device,
                 moos::common::uint16_t function,
                 moos::common::uint16_t bar);
+
+            moos::drivers::Driver *GetDriver(
+                PeripheralComponentInterconnectDeviceDescriptor descriptor,
+                moos::hardware::InterruptManager *InterruptManager);
         };
     }
 }

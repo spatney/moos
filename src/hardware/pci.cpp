@@ -74,9 +74,20 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
                     continue;
                 }
 
-                for(uint8_t barNum = 0; barNum < 6; barNum++) {
+                for (uint8_t barNum = 0; barNum < 6; barNum++)
+                {
                     BaseAddressRegister bar = GetBaseAddressRegister(bus, device, function, barNum);
-                    if(bar.address )
+                    if (bar.address && (bar.type == IO))
+                    {
+                        dev.portBase = (uint32_t)bar.address;
+                    }
+
+                    Driver *driver = GetDriver(dev, interruptManager);
+
+                    if (driver != 0)
+                    {
+                        driverManager->AddDriver(driver);
+                    }
                 }
 
                 Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
@@ -93,9 +104,9 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
 }
 
 PeripheralComponentInterconnectDeviceDescriptor PeripheralComponentInterconnectController::GetDeviceDescriptor(
-    moos::common::uint16_t bus,
-    moos::common::uint16_t device,
-    moos::common::uint16_t function)
+    uint16_t bus,
+    uint16_t device,
+    uint16_t function)
 {
     PeripheralComponentInterconnectDeviceDescriptor result;
 
@@ -117,9 +128,79 @@ PeripheralComponentInterconnectDeviceDescriptor PeripheralComponentInterconnectC
 }
 
 BaseAddressRegister PeripheralComponentInterconnectController::GetBaseAddressRegister(
-    moos::common::uint16_t bus,
-    moos::common::uint16_t device,
-    moos::common::uint16_t function,
-    moos::common::uint16_t bar)
+    uint16_t bus,
+    uint16_t device,
+    uint16_t function,
+    uint16_t bar)
 {
+    BaseAddressRegister result;
+
+    uint32_t headerType = Read(bus, device, function, 0x0E) & 0x7F;
+    uint8_t maxBars = 6 - (4 * headerType);
+
+    if (bar >= maxBars)
+    {
+        return result;
+    }
+
+    uint32_t bar_value = Read(bus, device, function, 0x10 + 4 * bar);
+    result.type = (bar_value & 0x1) ? IO : MemmoryMap;
+    uint32_t temp;
+
+    if (result.type == MemmoryMap)
+    {
+        // Console::Write("MEMORY MAPPED BAR NOT SUPPORTED");
+        switch ((bar_value >> 1) & 0x3)
+        {
+        // TBD
+        case 0:
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+
+        default:
+            break;
+        }
+
+        result.prefetchable = ((bar_value >> 3) & 0x1) == 0x1;
+    }
+    else
+    {
+        result.address = (uint8_t *)(bar_value & ~0x3);
+        result.prefetchable = false;
+    }
+
+    return result;
+}
+
+Driver *PeripheralComponentInterconnectController::GetDriver(
+    PeripheralComponentInterconnectDeviceDescriptor descriptor,
+    InterruptManager *InterruptManager)
+{
+    switch (descriptor.vendor_id)
+    {
+    case 0x1022: // AMD
+        switch (descriptor.device_id)
+        {
+        case 0x2000: //am79c973
+            break;
+        }
+        break;
+    case 0x8086: // Intel
+        break;
+    }
+
+    switch (descriptor.class_id)
+    {
+    case 0x03: // graphics
+        switch (descriptor.subclass_id)
+        {
+        case 0x00: // VGA
+            Console::Write("Loading VGA driver .. \n");
+            break;
+        }
+    }
+    return 0;
 }

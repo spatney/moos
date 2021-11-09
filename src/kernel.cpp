@@ -100,7 +100,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
-    pciController.SelectDrivers(&driverManager);
+    pciController.SelectDrivers(&driverManager, &interruptManager);
 
     PrintFKeyboardEventHandler keyboardEventHandler;
     KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
