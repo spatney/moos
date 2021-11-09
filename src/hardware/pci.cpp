@@ -198,7 +198,7 @@ Driver *PeripheralComponentInterconnectController::GetDriver(
         switch (descriptor.subclass_id)
         {
         case 0x00: // VGA
-            Console::Write("Loading VGA driver .. \n");
+            Console::Write("Loading VGA driver ... \n");
             break;
         }
     }

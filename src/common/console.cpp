@@ -63,6 +63,10 @@ void Console::Write(const int8_t *message, ...)
                 for (cursor.x = 0; cursor.x < 80; cursor.x++)
                     VideoMemory[80 * cursor.y + cursor.x] = VideoMemory[80 * (cursor.y + 1) + cursor.x];
 
+            cursor.y++;
+            for (cursor.x = 0; cursor.x < 80; cursor.x++)
+                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+
             cursor.x = 0;
             cursor.y -= 1;
         }
@@ -70,13 +74,24 @@ void Console::Write(const int8_t *message, ...)
         switch (message[i])
         {
         case '\n':
-            cursor.x = 0;
+            for (; cursor.x < 80; cursor.x++)
+                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
             cursor.y++;
+            cursor.x = 0;
+            Write(" ");
+            for (; cursor.x < 80; cursor.x++)
+                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+            cursor.x = 0;
             break;
         case '\t':
+        {
+            int8_t tempX = cursor.x;
+            for (; cursor.x < 80; cursor.x++)
+                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+            cursor.x = tempX;
             cursor.x += 4;
             break;
-
+        }
         case '%':
             if (message[i + 1] == 'd')
             {
