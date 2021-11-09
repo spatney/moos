@@ -123,7 +123,7 @@ void Console::Write(const int8_t *message, ...)
 
 int8_t *Console::itoa(int32_t val, const int32_t base)
 {
-    static int8_t Representation[] = "0123456789abcdef";
+    static int8_t Representation[] = "0123456789ABCDEF";
     static int8_t buffer[50];
     int8_t *ptr;
 

@@ -10,6 +10,21 @@ namespace moos
 {
     namespace hardware
     {
+        enum BaseAddressRegisterType
+        {
+            IO = 0,
+            MemmoryMap = 1
+        };
+
+        class BaseAddressRegister
+        {
+        public:
+            bool prefetchable;
+            moos::common::uint8_t *address;
+            moos::common::uint32_t size;
+            BaseAddressRegisterType type;
+        };
+
         class PeripheralComponentInterconnectDeviceDescriptor
         {
         public:
@@ -59,11 +74,20 @@ namespace moos
                 moos::common::uint16_t bus,
                 moos::common::uint16_t device);
 
-            void SelectDrivers(moos::drivers::DriverManager *driverManager);
+            void SelectDrivers(
+                moos::drivers::DriverManager *driverManager, 
+                moos::hardware::InterruptManager *InterruptManager);
+
             PeripheralComponentInterconnectDeviceDescriptor GetDeviceDescriptor(
                 moos::common::uint16_t bus,
                 moos::common::uint16_t device,
                 moos::common::uint16_t function);
+
+            BaseAddressRegister GetBaseAddressRegister(
+                moos::common::uint16_t bus,
+                moos::common::uint16_t device,
+                moos::common::uint16_t function,
+                moos::common::uint16_t bar);
         };
     }
 }

@@ -57,7 +57,7 @@ bool PeripheralComponentInterconnectController::DeviceHasFunctions(
     return Read(bus, device, 0, 0x0E) & (1 << 7);
 }
 
-void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *driverManager)
+void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *driverManager, InterruptManager *interruptManager)
 {
     for (uint8_t bus = 0; bus < 8; bus++)
     {
@@ -65,33 +65,28 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
         {
             uint8_t numFunctions = DeviceHasFunctions(bus, device) ? 8 : 1;
 
-            bool shouldPrintLine = false;
-
             for (uint8_t function = 0; function < numFunctions; function++)
             {
                 PeripheralComponentInterconnectDeviceDescriptor dev = GetDeviceDescriptor(bus, device, function);
 
                 if (dev.vendor_id == 0x000 || dev.vendor_id == 0xFFFF)
                 {
-                    break;
+                    continue;
                 }
 
-                Console::Write("PCI BUS %x, DEVICE %x, FUNCTION %x, VENDOR %x, DEVICE %x\n",
+                for(uint8_t barNum = 0; barNum < 6; barNum++) {
+                    BaseAddressRegister bar = GetBaseAddressRegister(bus, device, function, barNum);
+                    if(bar.address )
+                }
+
+                Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
                                bus,
                                device,
                                function,
                                dev.vendor_id,
-                               dev.device_id);
-                shouldPrintLine = true;
-            }
-
-            if (shouldPrintLine)
-            {
-                for (uint32_t i = 0; i < 79; i++)
-                {
-                    Console::Write("-");
-                }
-                Console::Write("\n");
+                               dev.device_id,
+                               dev.class_id,
+                               dev.subclass_id);
             }
         }
     }
@@ -119,4 +114,12 @@ PeripheralComponentInterconnectDeviceDescriptor PeripheralComponentInterconnectC
     result.interrupt = Read(bus, device, function, 0x3C);
 
     return result;
+}
+
+BaseAddressRegister PeripheralComponentInterconnectController::GetBaseAddressRegister(
+    moos::common::uint16_t bus,
+    moos::common::uint16_t device,
+    moos::common::uint16_t function,
+    moos::common::uint16_t bar)
+{
 }
