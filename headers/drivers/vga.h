@@ -24,11 +24,6 @@ namespace moos
 
             void WriteRegisters(common::uint8_t *registers);
             common::uint8_t *GetFrameBufferSergment();
-            
-            virtual void PutPixel(
-                common::uint32_t x,
-                common::uint32_t y,
-                common::uint8_t colorIndex);
 
             virtual common::uint8_t GetColorIndex(
                 common::uint8_t r,
@@ -37,7 +32,7 @@ namespace moos
 
         public:
             VideoGraphicsArray();
-            virtual ~VideoGraphicsArray();
+            ~VideoGraphicsArray();
 
             virtual bool setMode(
                 common::uint32_t width,
@@ -55,6 +50,11 @@ namespace moos
                 common::uint8_t r,
                 common::uint8_t g,
                 common::uint8_t b);
+
+            virtual void PutPixel(
+                common::uint32_t x,
+                common::uint32_t y,
+                common::uint8_t colorIndex);
         };
 
     }

@@ -8,6 +8,7 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+#include <drivers/vga.h>
 
 #include <gdt.h>
 
@@ -91,6 +92,14 @@ extern "C" void callConstructors()
         (*i)();
 }
 
+void DrawBlueScreen(VideoGraphicsArray *vga)
+{
+    vga->setMode(320, 200, 8);
+    for (uint8_t y = 0; y < 200; y++)
+        for (uint16_t x = 0; x < 320; x++)
+            vga->PutPixel(x, y, 0x00, 0x00, 0xA7);
+}
+
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
@@ -113,6 +122,8 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     MouseDriver mouse(&interruptManager, &mouseToConsole);
     driverManager.AddDriver(&mouse);
 
+    VideoGraphicsArray vga;
+
     Console::Write("Activating driver manager ...\n");
     driverManager.ActivateAll();
 
@@ -120,6 +131,9 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     interruptManager.Activate();
 
     Console::Write("\n\nMoOS\a> ");
+
+    DrawBlueScreen(&vga);
+
     while (1)
         ;
 }
