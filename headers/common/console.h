@@ -10,6 +10,7 @@ namespace moos
         class Console
         {
         public:
+            static void Clear();
             static void Write(const moos::common::int8_t *message, ...);
             static void Backspace();
             static void Sleep(moos::common::int32_t);

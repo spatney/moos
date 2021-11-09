@@ -35,6 +35,15 @@ void Console::Backspace()
     moveCursorBackByOne();
 }
 
+void Console::Clear()
+{
+    for (cursor.y = 0; cursor.y < 25; cursor.y++)
+        for (cursor.x = 0; cursor.x < 80; cursor.x++)
+            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+    cursor.x = 0;
+    cursor.y = 0;
+}
+
 void Console::Write(const int8_t *message, ...)
 {
     va_list args;
@@ -50,11 +59,12 @@ void Console::Write(const int8_t *message, ...)
 
         if (cursor.y >= 25)
         {
-            for (cursor.y = 0; cursor.y < 25; cursor.y++)
+            for (cursor.y = 0; cursor.y < 24; cursor.y++)
                 for (cursor.x = 0; cursor.x < 80; cursor.x++)
-                    VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+                    VideoMemory[80 * cursor.y + cursor.x] = VideoMemory[80 * (cursor.y + 1) + cursor.x];
+
             cursor.x = 0;
-            cursor.y = 0;
+            cursor.y -= 1;
         }
 
         switch (message[i])

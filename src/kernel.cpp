@@ -5,6 +5,7 @@
 #include <drivers/mouse.h>
 #include <drivers/driver.h>
 #include <hardware/video.h>
+#include <hardware/pci.h>
 #include <gdt.h>
 
 using namespace moos;
@@ -90,29 +91,32 @@ extern "C" void callConstructors()
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
-    InterruptManager interrupts(&gdt);
+    InterruptManager interruptManager(&gdt);
 
+    Console::Clear();
     Console::Write("Booting MoOS Kernel ...\n\n");
 
     Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
+    PeripheralComponentInterconnectController pciController;
+    pciController.SelectDrivers(&driverManager);
 
     PrintFKeyboardEventHandler keyboardEventHandler;
-    KeyboardDriver keyboard(&interrupts, &keyboardEventHandler);
+    KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
     driverManager.AddDriver(&keyboard);
 
     MouseToCosole mouseToConsole;
-    MouseDriver mouse(&interrupts, &mouseToConsole);
+    MouseDriver mouse(&interruptManager, &mouseToConsole);
     driverManager.AddDriver(&mouse);
 
     Console::Write("Activating driver manager ...\n");
     driverManager.ActivateAll();
 
-    Console::Write("Activating interrupts ...\n");
-    interrupts.Activate();
+    Console::Write("Activating interrupt manager ...\n");
+    interruptManager.Activate();
 
-    Console::Write("\nOS boot complete!\n\nMoOS\a> ");
+    Console::Write("\n\nMoOS\a> ");
     while (1)
         ;
 }
