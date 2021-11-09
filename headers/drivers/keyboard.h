@@ -126,12 +126,13 @@ namespace moos
             virtual void OnKeyUp(common::int8_t);
 
             // Update keyboard to pass enum in future
-            //virtual void OnKeyDown(Keys key);
-            //virtual void OnKeyUp(Keys key);
+            // virtual void OnKeyDown(Keys key);
+            // virtual void OnKeyUp(Keys key);
         };
 
         class KeyboardDriver : public hardware::InterruptHandler, public Driver
         {
+        private:
             hardware::Port8Bit dataPort;
             hardware::Port8Bit commandPort;
             KeyboardEventHandler *eventHandler;
@@ -140,9 +141,9 @@ namespace moos
 
         public:
             KeyboardDriver(
-                hardware::InterruptManager *manager, 
+                hardware::InterruptManager *manager,
                 KeyboardEventHandler *eventHandler);
-                
+
             ~KeyboardDriver();
             virtual common::uint32_t HandleInterrupt(common::uint32_t esp);
             virtual void Activate();

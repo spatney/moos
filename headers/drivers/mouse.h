@@ -18,14 +18,15 @@ namespace moos
             virtual void OnActivate();
             virtual void OnMouseDown(common::uint8_t button);
             virtual void OnMouseUp(common::uint8_t button);
-            
+
             virtual void OnMouseMove(
-                common::int32_t x, 
+                common::int32_t x,
                 common::int32_t y);
         };
 
         class MouseDriver : public hardware::InterruptHandler, public Driver
         {
+        private:
             hardware::Port8Bit dataPort;
             hardware::Port8Bit commandPort;
 
@@ -37,7 +38,7 @@ namespace moos
 
         public:
             MouseDriver(
-                hardware::InterruptManager *manager, 
+                hardware::InterruptManager *manager,
                 MouseEventHandler *eventHandler);
 
             ~MouseDriver();

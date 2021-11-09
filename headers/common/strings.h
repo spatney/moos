@@ -3,10 +3,13 @@
 
 #include <common/types.h>
 
-namespace moos {
-    namespace common {
+namespace moos
+{
+    namespace common
+    {
         class StringUtil
         {
+        public:
             static int32_t strlen(const moos::common::int8_t *s);
         };
     }

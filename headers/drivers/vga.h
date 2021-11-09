@@ -10,6 +10,7 @@ namespace moos
     {
         class VideoGraphicsArray
         {
+        private:
             hardware::Port8Bit miscPort;
             hardware::Port8Bit crtcIndexPort;
             hardware::Port8Bit crtcDataPort;
