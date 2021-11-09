@@ -14,7 +14,7 @@ namespace moos
             ~Driver();
 
             virtual void Activate();
-            virtual moos::common::int32_t Reset();
+            virtual common::int32_t Reset();
             virtual void Deactivate();
         };
 
@@ -22,7 +22,7 @@ namespace moos
         {
         private:
             Driver *drivers[255];
-            moos::common::int32_t numDrivers;
+            common::int32_t numDrivers;
 
         public:
             DriverManager();

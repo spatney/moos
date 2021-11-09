@@ -11,17 +11,21 @@ namespace moos
     class SegmentDescriptor
     {
     private:
-      moos::common::uint16_t limit_lo;
-      moos::common::uint16_t base_lo;
-      moos::common::uint8_t base_hi;
-      moos::common::uint8_t type;
-      moos::common::uint8_t limit_hi;
-      moos::common::uint8_t base_vhi;
+      common::uint16_t limit_lo;
+      common::uint16_t base_lo;
+      common::uint8_t base_hi;
+      common::uint8_t type;
+      common::uint8_t limit_hi;
+      common::uint8_t base_vhi;
 
     public:
-      SegmentDescriptor(moos::common::uint32_t base, moos::common::uint32_t limit, moos::common::uint8_t type);
-      moos::common::uint32_t Base();
-      moos::common::uint32_t Limit();
+      SegmentDescriptor(
+          common::uint32_t base,
+          common::uint32_t limit,
+          common::uint8_t type);
+
+      common::uint32_t Base();
+      common::uint32_t Limit();
     } __attribute__((packed));
 
   private:
@@ -34,8 +38,8 @@ namespace moos
     GlobalDescriptorTable();
     ~GlobalDescriptorTable();
 
-    moos::common::uint16_t CodeSegmentSelector();
-    moos::common::uint16_t DataSegmentSelector();
+    common::uint16_t CodeSegmentSelector();
+    common::uint16_t DataSegmentSelector();
   };
 }
 

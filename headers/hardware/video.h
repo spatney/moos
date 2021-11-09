@@ -7,7 +7,7 @@ namespace moos
 {
     namespace hardware
     {
-        static moos::common::uint16_t *VideoMemory = (moos::common::uint16_t *)0xb8000;
+        static common::uint16_t *VideoMemory = (common::uint16_t *)0xb8000;
     }
 }
 

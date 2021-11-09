@@ -11,13 +11,16 @@ namespace moos
         {
         public:
             static void Clear();
-            static void Write(const moos::common::int8_t *message, ...);
+            static void Write(const common::int8_t *message, ...);
             static void Backspace();
-            static void Sleep(moos::common::int32_t);
+            static void Sleep(common::int32_t);
 
         private:
             static void moveCursorBackByOne();
-            static moos::common::int8_t *itoa(moos::common::int32_t val, const moos::common::int32_t base);
+            
+            static common::int8_t *itoa(
+                common::int32_t val, 
+                const common::int32_t base);
         };
     }
 }

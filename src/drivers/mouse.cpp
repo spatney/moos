@@ -1,5 +1,4 @@
 #include <drivers/mouse.h>
-#include <hardware/video.h>
 
 using namespace moos::drivers;
 using namespace moos::hardware;

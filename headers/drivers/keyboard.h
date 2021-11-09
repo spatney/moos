@@ -122,26 +122,29 @@ namespace moos
         public:
             KeyboardEventHandler();
 
-            virtual void OnKeyDown(moos::common::int8_t);
-            virtual void OnKeyUp(moos::common::int8_t);
+            virtual void OnKeyDown(common::int8_t);
+            virtual void OnKeyUp(common::int8_t);
 
             // Update keyboard to pass enum in future
             //virtual void OnKeyDown(Keys key);
             //virtual void OnKeyUp(Keys key);
         };
 
-        class KeyboardDriver : public moos::hardware::InterruptHandler, public Driver
+        class KeyboardDriver : public hardware::InterruptHandler, public Driver
         {
-            moos::hardware::Port8Bit dataPort;
-            moos::hardware::Port8Bit commandPort;
+            hardware::Port8Bit dataPort;
+            hardware::Port8Bit commandPort;
             KeyboardEventHandler *eventHandler;
 
             bool isShiftDown;
 
         public:
-            KeyboardDriver(moos::hardware::InterruptManager *manager, KeyboardEventHandler *eventHandler);
+            KeyboardDriver(
+                hardware::InterruptManager *manager, 
+                KeyboardEventHandler *eventHandler);
+                
             ~KeyboardDriver();
-            virtual moos::common::uint32_t HandleInterrupt(moos::common::uint32_t esp);
+            virtual common::uint32_t HandleInterrupt(common::uint32_t esp);
             virtual void Activate();
         };
     }

@@ -20,29 +20,29 @@ namespace moos
         {
         public:
             bool prefetchable;
-            moos::common::uint8_t *address;
-            moos::common::uint32_t size;
+            common::uint8_t *address;
+            common::uint32_t size;
             BaseAddressRegisterType type;
         };
 
         class PeripheralComponentInterconnectDeviceDescriptor
         {
         public:
-            moos::common::uint32_t portBase;
-            moos::common::uint32_t interrupt;
+            common::uint32_t portBase;
+            common::uint32_t interrupt;
 
-            moos::common::uint16_t bus;
-            moos::common::uint16_t device;
-            moos::common::uint16_t function;
+            common::uint16_t bus;
+            common::uint16_t device;
+            common::uint16_t function;
 
-            moos::common::uint16_t vendor_id;
-            moos::common::uint16_t device_id;
+            common::uint16_t vendor_id;
+            common::uint16_t device_id;
 
-            moos::common::uint8_t class_id;
-            moos::common::uint8_t subclass_id;
-            moos::common::uint8_t interface_id;
+            common::uint8_t class_id;
+            common::uint8_t subclass_id;
+            common::uint8_t interface_id;
 
-            moos::common::uint8_t revision;
+            common::uint8_t revision;
 
             PeripheralComponentInterconnectDeviceDescriptor();
             ~PeripheralComponentInterconnectDeviceDescriptor();
@@ -57,41 +57,41 @@ namespace moos
             PeripheralComponentInterconnectController();
             ~PeripheralComponentInterconnectController();
 
-            moos::common::uint32_t Read(
-                moos::common::uint16_t bus,
-                moos::common::uint16_t device,
-                moos::common::uint16_t function,
-                moos::common::uint32_t registerOffset);
+            common::uint32_t Read(
+                common::uint16_t bus,
+                common::uint16_t device,
+                common::uint16_t function,
+                common::uint32_t registerOffset);
 
             void Write(
-                moos::common::uint16_t bus,
-                moos::common::uint16_t device,
-                moos::common::uint16_t function,
-                moos::common::uint32_t registerOffset,
-                moos::common::uint32_t value);
+                common::uint16_t bus,
+                common::uint16_t device,
+                common::uint16_t function,
+                common::uint32_t registerOffset,
+                common::uint32_t value);
 
             bool DeviceHasFunctions(
-                moos::common::uint16_t bus,
-                moos::common::uint16_t device);
+                common::uint16_t bus,
+                common::uint16_t device);
 
             void SelectDrivers(
-                moos::drivers::DriverManager *driverManager, 
-                moos::hardware::InterruptManager *InterruptManager);
+                drivers::DriverManager *driverManager, 
+                hardware::InterruptManager *InterruptManager);
 
             PeripheralComponentInterconnectDeviceDescriptor GetDeviceDescriptor(
-                moos::common::uint16_t bus,
-                moos::common::uint16_t device,
-                moos::common::uint16_t function);
+                common::uint16_t bus,
+                common::uint16_t device,
+                common::uint16_t function);
 
             BaseAddressRegister GetBaseAddressRegister(
-                moos::common::uint16_t bus,
-                moos::common::uint16_t device,
-                moos::common::uint16_t function,
-                moos::common::uint16_t bar);
+                common::uint16_t bus,
+                common::uint16_t device,
+                common::uint16_t function,
+                common::uint16_t bar);
 
-            moos::drivers::Driver *GetDriver(
+            drivers::Driver *GetDriver(
                 PeripheralComponentInterconnectDeviceDescriptor descriptor,
-                moos::hardware::InterruptManager *InterruptManager);
+                hardware::InterruptManager *InterruptManager);
         };
     }
 }

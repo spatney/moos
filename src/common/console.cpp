@@ -1,6 +1,6 @@
 #include <common/console.h>
+
 #include <stdarg.h>
-#include <common/types.h>
 #include <hardware/video.h>
 
 using namespace moos::common;

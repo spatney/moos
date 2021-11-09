@@ -1,11 +1,14 @@
 #include <common/types.h>
 #include <common/console.h>
-#include <hardware/interrupts.h>
-#include <drivers/keyboard.h>
-#include <drivers/mouse.h>
-#include <drivers/driver.h>
+
 #include <hardware/video.h>
 #include <hardware/pci.h>
+#include <hardware/interrupts.h>
+
+#include <drivers/driver.h>
+#include <drivers/keyboard.h>
+#include <drivers/mouse.h>
+
 #include <gdt.h>
 
 using namespace moos;
