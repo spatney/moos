@@ -103,12 +103,21 @@ uint8_t VideoGraphicsArray::GetColorIndex(
     uint8_t g,
     uint8_t b)
 {
+
     if (r == 0x00 && g == 0x00 && b == 0xA8)
     {
         return 0x01;
     }
+    else if (r == 0x00 && g == 0xA8 && b == 0x00)
+    {
+        return 0x02;
+    }
+    else if (r == 0xA8 && g == 0x00 && b == 0x00)
+    {
+        return 0x04;
+    }
 
-    return 0x02;
+    return 0xF;
 }
 
 bool VideoGraphicsArray::setMode(
@@ -149,4 +158,22 @@ bool VideoGraphicsArray::SupportsMode(
     uint32_t colorDepth)
 {
     return width == 320 && height == 200 && colorDepth == 8;
+}
+
+void VideoGraphicsArray::FillRectangle(
+    uint32_t x,
+    uint32_t y,
+    uint32_t w,
+    uint32_t h,
+    uint8_t r,
+    uint8_t g,
+    uint8_t b)
+{
+    for (int32_t Y = 0; Y < h; Y++)
+    {
+        for (int32_t X = 0; X < w; X++)
+        {
+            PutPixel(X + x, Y + y, r, g, b);
+        }
+    }
 }

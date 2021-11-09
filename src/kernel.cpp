@@ -94,14 +94,15 @@ extern "C" void callConstructors()
 
 void DrawBlueScreen(VideoGraphicsArray *vga)
 {
-    vga->setMode(320, 200, 8);
-    for (uint8_t y = 0; y < 200; y++)
-    {
-        for (uint16_t x = 0; x < 320; x++)
-        {
-            vga->PutPixel(x, y, 0x00, 0x00, 0xA8);
-        }
-    }
+    uint32_t w = 320;
+    uint32_t h = 200;
+
+    vga->setMode(w, h, 8);
+    vga->FillRectangle(0, 0, w, h, 0x00, 0x00, 0x00);
+    vga->FillRectangle(w / 4, h / 4, 100, 100, 0x00, 0x00, 0xA8);
+    vga->FillRectangle(w / 6, h / 6, 50, 70, 0x00, 0xA8, 0x00);
+    vga->FillRectangle(w * 2 / 3, h * 1 / 2 - 20, 100, 50, 0xA8, 0x00, 0x00);
+    vga->FillRectangle(0, h - 20, w, 20, 0x00, 0x00, 0xA8);
 }
 
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
