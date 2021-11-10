@@ -107,23 +107,6 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-void DrawDummyDesktop(GraphicsContext *gc)
-{
-    uint32_t w = 320;
-    uint32_t h = 200;
-
-    gc->FillRectangle(0, 0, w, h, 0x00, 0x00, 0x00);
-    gc->FillRectangle(w / 4, h / 4, 100, 100, 0x00, 0x00, 0xA8);
-    gc->FillRectangle(w / 6, h / 6, 50, 70, 0x00, 0xA8, 0x00);
-    gc->FillRectangle(w * 2 / 3, h * 1 / 2 - 20, 100, 50, 0xA8, 0x00, 0x00);
-    gc->FillRectangle(0, h - 20, w, 20, 0x00, 0x00, 0xA8);
-
-    gc->DrawLine(10, 10, 100, 10, 0xA8, 0x00, 0x00);
-    gc->DrawLine(100, 10, 120, 100, 0xA8, 0x00, 0x00);
-    gc->DrawLine(120, 100, 30, 100, 0xA8, 0x00, 0x00);
-    gc->DrawLine(30, 100, 10, 10, 0xA8, 0x00, 0x00);
-}
-
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
@@ -142,7 +125,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     driverManager.AddDriver(&keyboard);
 
     GraphicsContext gc;
-    Desktop desktop(100, 100, 0xFF, 0xFF, 0xFF);
+    Desktop desktop(320, 200, 0xFF, 0xFF, 0xFF);
 
     MouseToCosole mouseToConsole(&desktop, &gc);
 
@@ -157,17 +140,16 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 
     Console::Write("\n\nMoOS\a> ");
 
-    //DrawDummyDesktop(&gc);
-    //gc.FillRectangle(0, 0, 320, 200, 0xFF, 0xFF, 0xFF);
-
-    Window win1(&desktop, 10,10, 20, 20, 0xA8,0,0);
-    Window win2(&desktop, 40,40, 30, 30, 0, 0xA8,0);
+    Window win1(&desktop, 10, 10, 20, 20, 0xA8, 0, 0);
+    Window win2(&desktop, 40, 40, 30, 30, 0, 0xA8, 0);
+    Window win3(&desktop, 100, 150, 20, 20, 0,0, 0xA8);
+    Window win4(&desktop, 200, 150, 30, 30, 0xA8, 0xA8, 0);
 
     desktop.AddChildWidget(&win1);
     desktop.AddChildWidget(&win2);
+    desktop.AddChildWidget(&win3);
+    desktop.AddChildWidget(&win4);
 
-    desktop.Draw(&gc);
-    
     while (1)
     {
         desktop.Draw(&gc);

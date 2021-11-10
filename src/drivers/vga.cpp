@@ -18,6 +18,10 @@ VideoGraphicsArray::VideoGraphicsArray() : miscPort(0x3C2),
 }
 VideoGraphicsArray::~VideoGraphicsArray()
 {
+    for (int32_t i = 0; i < 64000; i++)
+    {
+        lastBuffer[i] = 250;
+    }
 }
 
 void VideoGraphicsArray::WriteRegisters(uint8_t *registers)
@@ -79,6 +83,20 @@ uint8_t *VideoGraphicsArray::GetFrameBufferSergment()
     }
 }
 
+void VideoGraphicsArray::Finalize()
+{
+    for (uint32_t i = 0; i < 64000; i++)
+    {
+        if (lastBuffer[i] != buffer[i])
+        {
+            uint8_t *pixelAddress = GetFrameBufferSergment() + i;
+            *pixelAddress = buffer[i];
+
+            lastBuffer[i] = buffer[i];
+        }
+    }
+}
+
 void VideoGraphicsArray::PutPixel(
     int32_t x,
     int32_t y,
@@ -88,8 +106,7 @@ void VideoGraphicsArray::PutPixel(
     {
         return;
     }
-    uint8_t *pixelAddress = GetFrameBufferSergment() + 320 * y + x;
-    *pixelAddress = colorIndex;
+    buffer[320 * y + x] = colorIndex;
 }
 
 void VideoGraphicsArray::PutPixel(

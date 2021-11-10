@@ -18,6 +18,8 @@ namespace moos
             GraphicsContext();
             ~GraphicsContext();
 
+            virtual void Finalize();
+
             virtual void FillRectangle(
                 common::int32_t x,
                 common::int32_t y,

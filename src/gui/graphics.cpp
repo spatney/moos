@@ -13,6 +13,10 @@ GraphicsContext::~GraphicsContext()
 {
 }
 
+void GraphicsContext::Finalize() {
+    vga.Finalize();
+}
+
 void GraphicsContext::FillRectangle(
     int32_t x,
     int32_t y,

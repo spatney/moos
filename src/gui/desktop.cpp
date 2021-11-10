@@ -30,10 +30,6 @@ void Desktop::Draw(gui::GraphicsContext *gc)
     int32_t centerX = w / 2;
     int32_t centerY = h / 2;
 
-    //gc->DrawLine(LastMouseX, LastMouseY - size, LastMouseX, LastMouseY + size, r, g, b);
-    //gc->DrawLine(LastMouseX - size, LastMouseY, LastMouseX + size, LastMouseY, r, g, b);
-
-    // Windows Logo
     gc->FillRectangle(centerX - rSize, centerY - rSize, rSize, rSize, 0xA8, 0x00, 0x00);
     gc->FillRectangle(centerX + 1, centerY - rSize, rSize, rSize, 0x00, 0xA8, 0x00);
     gc->FillRectangle(centerX - rSize, centerY + 1, rSize, rSize, 0x00, 0x00, 0xA8);
@@ -46,6 +42,8 @@ void Desktop::Draw(gui::GraphicsContext *gc)
 
     LastMouseX = MouseX;
     LastMouseY = MouseY;
+
+    gc->Finalize();
 }
 
 void Desktop::OnMouseDown(uint8_t button)

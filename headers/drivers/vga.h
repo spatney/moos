@@ -26,6 +26,9 @@ namespace moos
             void WriteRegisters(common::uint8_t *registers);
             common::uint8_t *GetFrameBufferSergment();
 
+            common::uint8_t buffer [320*200];
+            common::uint8_t lastBuffer [320*200];
+
             virtual common::uint8_t GetColorIndex(
                 common::uint8_t r,
                 common::uint8_t g,
@@ -56,6 +59,8 @@ namespace moos
                 common::int32_t x,
                 common::int32_t y,
                 common::uint8_t colorIndex);
+
+            virtual void Finalize();
         };
     }
 }
