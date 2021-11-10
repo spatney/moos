@@ -8,7 +8,8 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
-#include <drivers/vga.h>
+
+#include <gui/graphics.h>
 
 #include <gdt.h>
 
@@ -16,6 +17,7 @@ using namespace moos;
 using namespace moos::hardware;
 using namespace moos::drivers;
 using namespace moos::common;
+using namespace moos::gui;
 
 class PrintFKeyboardEventHandler : public KeyboardEventHandler
 {
@@ -92,17 +94,21 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-void DrawBlueScreen(VideoGraphicsArray *vga)
+void DrawDummyDesktop(GraphicsContext *gc)
 {
     uint32_t w = 320;
     uint32_t h = 200;
 
-    vga->setMode(w, h, 8);
-    vga->FillRectangle(0, 0, w, h, 0x00, 0x00, 0x00);
-    vga->FillRectangle(w / 4, h / 4, 100, 100, 0x00, 0x00, 0xA8);
-    vga->FillRectangle(w / 6, h / 6, 50, 70, 0x00, 0xA8, 0x00);
-    vga->FillRectangle(w * 2 / 3, h * 1 / 2 - 20, 100, 50, 0xA8, 0x00, 0x00);
-    vga->FillRectangle(0, h - 20, w, 20, 0x00, 0x00, 0xA8);
+    gc->FillRectangle(0, 0, w, h, 0x00, 0x00, 0x00);
+    gc->FillRectangle(w / 4, h / 4, 100, 100, 0x00, 0x00, 0xA8);
+    gc->FillRectangle(w / 6, h / 6, 50, 70, 0x00, 0xA8, 0x00);
+    gc->FillRectangle(w * 2 / 3, h * 1 / 2 - 20, 100, 50, 0xA8, 0x00, 0x00);
+    gc->FillRectangle(0, h - 20, w, 20, 0x00, 0x00, 0xA8);
+
+    gc->DrawLine(10, 10, 100, 10, 0xA8, 0x00, 0x00);
+    gc->DrawLine(100, 10, 120, 100, 0xA8, 0x00, 0x00);
+    gc->DrawLine(120, 100, 30, 100, 0xA8, 0x00, 0x00);
+    gc->DrawLine(30, 100, 10, 10, 0xA8, 0x00, 0x00);
 }
 
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
@@ -112,7 +118,6 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 
     Console::Clear();
     Console::Write("Booting MoOS Kernel ...\n\n");
-
     Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
@@ -127,8 +132,6 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     MouseDriver mouse(&interruptManager, &mouseToConsole);
     driverManager.AddDriver(&mouse);
 
-    VideoGraphicsArray vga;
-
     Console::Write("Activating driver manager ...\n");
     driverManager.ActivateAll();
 
@@ -136,8 +139,9 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     interruptManager.Activate();
 
     Console::Write("\n\nMoOS\a> ");
+    GraphicsContext gc;
 
-    DrawBlueScreen(&vga);
+    DrawDummyDesktop(&gc);
 
     while (1)
         ;
