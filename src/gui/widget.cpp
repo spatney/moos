@@ -43,10 +43,10 @@ void Widget::ModelToScreen(
     if (parent != 0)
     {
         parent->ModelToScreen(x, y);
-
-        x += this->x;
-        y += this->y;
     }
+
+    x += this->x;
+    y += this->y;
 }
 
 void Widget::Draw(GraphicsContext *gc)
@@ -89,10 +89,8 @@ bool Widget::ContainsCoordinate(
     int32_t x,
     int32_t y)
 {
-    if (x > this->x && x < (this->x + this->w) && y > this->y && y < (this->y + this->h))
-        return true;
-
-    return false;
+    return this->x <= x && x < this->x + this->w
+        && this->y <= y && y < this->y + this->h;
 }
 
 CompositeWidget::CompositeWidget(
@@ -114,13 +112,14 @@ CompositeWidget::~CompositeWidget()
 {
 }
 
-bool CompositeWidget::AddChildWidget(Widget *widget)
+bool CompositeWidget::AddChildWidget(Widget *child)
 {
     if (numChildren >= 100)
     {
         return false;
     }
-    children[numChildren++] = widget;
+    children[numChildren] = child;
+    numChildren++;
     return true;
 }
 
@@ -147,7 +146,7 @@ void CompositeWidget::OnMouseDown(
     int32_t y,
     uint8_t button)
 {
-    for (int32_t i = 0; i < numChildren; --i)
+    for (int32_t i = 0; i < numChildren; ++i)
     {
         if (children[i]->ContainsCoordinate(x - this->x, y - this->y))
         {
@@ -162,7 +161,7 @@ void CompositeWidget::OnMouseUp(
     int32_t y,
     uint8_t button)
 {
-    for (int32_t i = 0; i < numChildren; --i)
+    for (int32_t i = 0; i < numChildren; ++i)
     {
         if (children[i]->ContainsCoordinate(x - this->x, y - this->y))
         {
@@ -180,7 +179,7 @@ void CompositeWidget::OnMouseMove(
 {
     int32_t eventFiredOnChild = -1;
 
-    for (int32_t i = 0; i < numChildren; --i)
+    for (int32_t i = 0; i < numChildren; ++i)
     {
         if (children[i]->ContainsCoordinate(oldX - this->x, oldY - this->y))
         {
@@ -190,7 +189,7 @@ void CompositeWidget::OnMouseMove(
         }
     }
 
-    for (int32_t i = 0; i < numChildren; --i)
+    for (int32_t i = 0; i < numChildren; ++i)
     {
         if (children[i]->ContainsCoordinate(newX - this->x, newY - this->y))
         {

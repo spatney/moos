@@ -44,13 +44,16 @@ void MouseDriver::Activate()
 uint32_t MouseDriver::HandleInterrupt(uint32_t esp)
 {
     uint8_t status = commandPort.Read();
-
-    if ((!(status & 0x20)) || eventHandler == 0)
-    {
+    if (!(status & 0x20)) {
         return esp;
     }
 
     buffer[offset] = dataPort.Read();
+
+    if (eventHandler == 0) {
+        return esp;
+    }
+
     offset = (offset + 1) % 3;
 
     if (offset == 0)
@@ -62,9 +65,9 @@ uint32_t MouseDriver::HandleInterrupt(uint32_t esp)
 
         for (uint8_t i = 0; i < 3; i++)
         {
-            if ((buffer[0] & (0x01 << i)) != (buttons & (0x01 << i)))
+            if ((buffer[0] & (0x1 << i)) != (buttons & (0x1 << i)))
             {
-                if (buttons & (0x1 << 1))
+                if (buttons & (0x1 << i))
                 {
                     eventHandler->OnMouseUp(i + 1);
                 }

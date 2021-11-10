@@ -28,16 +28,8 @@ namespace moos
 
             ~Desktop();
             void Draw(gui::GraphicsContext *gc);
-
-            void OnMouseDown(
-                common::int32_t x,
-                common::int32_t y,
-                common::uint8_t button);
-
-            void OnMouseUp(
-                common::int32_t x,
-                common::int32_t y,
-                common::uint8_t button);
+            void OnMouseDown(common::uint8_t button);
+            void OnMouseUp(common::uint8_t button);
 
             void OnMouseMove(
                 common::int32_t xOffset,

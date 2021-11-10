@@ -23,15 +23,15 @@ Desktop::~Desktop()
 
 void Desktop::Draw(gui::GraphicsContext *gc)
 {
-    //CompositeWidget::Draw(gc);
+    CompositeWidget::Draw(gc);
 
     uint8_t rSize = 6;
     uint8_t size = 2;
     int32_t centerX = w / 2;
     int32_t centerY = h / 2;
 
-    gc->DrawLine(LastMouseX, LastMouseY - size, LastMouseX, LastMouseY + size, r, g, b);
-    gc->DrawLine(LastMouseX - size, LastMouseY, LastMouseX + size, LastMouseY, r, g, b);
+    //gc->DrawLine(LastMouseX, LastMouseY - size, LastMouseX, LastMouseY + size, r, g, b);
+    //gc->DrawLine(LastMouseX - size, LastMouseY, LastMouseX + size, LastMouseY, r, g, b);
 
     // Windows Logo
     gc->FillRectangle(centerX - rSize, centerY - rSize, rSize, rSize, 0xA8, 0x00, 0x00);
@@ -48,18 +48,12 @@ void Desktop::Draw(gui::GraphicsContext *gc)
     LastMouseY = MouseY;
 }
 
-void Desktop::OnMouseDown(
-    int32_t x,
-    int32_t y,
-    uint8_t button)
+void Desktop::OnMouseDown(uint8_t button)
 {
     CompositeWidget::OnMouseDown(MouseX, MouseY, button);
 }
 
-void Desktop::OnMouseUp(
-    int32_t x,
-    int32_t y,
-    uint8_t button)
+void Desktop::OnMouseUp(uint8_t button)
 {
     CompositeWidget::OnMouseUp(MouseX, MouseY, button);
 }

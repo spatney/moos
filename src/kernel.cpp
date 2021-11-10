@@ -11,6 +11,7 @@
 
 #include <gui/graphics.h>
 #include <gui/desktop.h>
+#include <gui/window.h>
 
 #include <gdt.h>
 
@@ -54,11 +55,14 @@ public:
     }
     void OnMouseDown(uint8_t button)
     {
-        invertVideoMemoryAt(x, y);
+        //invertVideoMemoryAt(x, y);
+
+        desktop->OnMouseDown(button);
     }
     void OnMouseUp(uint8_t button)
     {
-        invertVideoMemoryAt(x, y);
+        //invertVideoMemoryAt(x, y);
+        desktop->OnMouseUp(button);
     }
     void OnMouseMove(int32_t xOffset, int32_t yOffSet)
     {
@@ -86,7 +90,7 @@ public:
         invertVideoMemoryAt(x, y);*/
 
         desktop->OnMouseMove(xOffset, yOffSet);
-        desktop->Draw(gc);
+        //desktop->Draw(gc);
     }
     void invertVideoMemoryAt(int8_t x, int8_t y)
     {
@@ -138,7 +142,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     driverManager.AddDriver(&keyboard);
 
     GraphicsContext gc;
-    Desktop desktop(320, 200, 0xFF, 0xFF, 0xFF);
+    Desktop desktop(100, 100, 0xFF, 0xFF, 0xFF);
 
     MouseToCosole mouseToConsole(&desktop, &gc);
 
@@ -154,11 +158,18 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     Console::Write("\n\nMoOS\a> ");
 
     //DrawDummyDesktop(&gc);
-    gc.FillRectangle(0, 0, 320, 200, 0xFF, 0xFF, 0xFF);
+    //gc.FillRectangle(0, 0, 320, 200, 0xFF, 0xFF, 0xFF);
+
+    Window win1(&desktop, 10,10, 20, 20, 0xA8,0,0);
+    Window win2(&desktop, 40,40, 30, 30, 0, 0xA8,0);
+
+    desktop.AddChildWidget(&win1);
+    desktop.AddChildWidget(&win2);
+
     desktop.Draw(&gc);
     
     while (1)
     {
-        //desktop.Draw(&gc);
+        desktop.Draw(&gc);
     }
 }
