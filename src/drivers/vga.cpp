@@ -80,17 +80,21 @@ uint8_t *VideoGraphicsArray::GetFrameBufferSergment()
 }
 
 void VideoGraphicsArray::PutPixel(
-    uint32_t x,
-    uint32_t y,
+    int32_t x,
+    int32_t y,
     uint8_t colorIndex)
 {
+    if (x < 0 || x >= 320 || y < 0 || y >= 200)
+    {
+        return;
+    }
     uint8_t *pixelAddress = GetFrameBufferSergment() + 320 * y + x;
     *pixelAddress = colorIndex;
 }
 
 void VideoGraphicsArray::PutPixel(
-    uint32_t x,
-    uint32_t y,
+    int32_t x,
+    int32_t y,
     uint8_t r,
     uint8_t g,
     uint8_t b)
@@ -103,21 +107,32 @@ uint8_t VideoGraphicsArray::GetColorIndex(
     uint8_t g,
     uint8_t b)
 {
-
-    if (r == 0x00 && g == 0x00 && b == 0xA8)
+    if (r == 0xA8 && g == 0x00 && b == 0x00)
     {
-        return 0x01;
+        return 0x04; // red
     }
     else if (r == 0x00 && g == 0xA8 && b == 0x00)
     {
-        return 0x02;
+        return 0x02; // green
     }
-    else if (r == 0xA8 && g == 0x00 && b == 0x00)
+    else if (r == 0x00 && g == 0x00 && b == 0xA8)
     {
-        return 0x04;
+        return 0x01; // blue
+    }
+    else if (r == 0xFF && g == 0xFF && b == 0xFF)
+    {
+        return 0x1F; // white
+    }
+    else if (r == 0x00 && g == 0x00 && b == 0x00)
+    {
+        return 0x00; // black
+    }
+    else if (r == 0xA8 && g == 0xA8 && b == 0x00)
+    {
+        return 0x0E; // yellow
     }
 
-    return 0xF;
+    return 0xF; // default
 }
 
 bool VideoGraphicsArray::setMode(

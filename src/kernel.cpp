@@ -10,6 +10,7 @@
 #include <drivers/mouse.h>
 
 #include <gui/graphics.h>
+#include <gui/desktop.h>
 
 #include <gdt.h>
 
@@ -38,13 +39,18 @@ public:
 class MouseToCosole : public MouseEventHandler
 {
     int8_t x, y;
+    Desktop *desktop;
+    GraphicsContext *gc;
 
 public:
-    MouseToCosole()
+    MouseToCosole(Desktop *desktop, GraphicsContext *gc)
     {
-        x = 40;
+        /*x = 40;
         y = 12;
-        invertVideoMemoryAt(x, y);
+        invertVideoMemoryAt(x, y);*/
+
+        this->desktop = desktop;
+        this->gc = gc;
     }
     void OnMouseDown(uint8_t button)
     {
@@ -56,7 +62,7 @@ public:
     }
     void OnMouseMove(int32_t xOffset, int32_t yOffSet)
     {
-        invertVideoMemoryAt(x, y);
+        /*invertVideoMemoryAt(x, y);
 
         x += xOffset;
         if (x >= 80)
@@ -77,7 +83,10 @@ public:
             y = 0;
         }
 
-        invertVideoMemoryAt(x, y);
+        invertVideoMemoryAt(x, y);*/
+
+        desktop->OnMouseMove(xOffset, yOffSet);
+        desktop->Draw(gc);
     }
     void invertVideoMemoryAt(int8_t x, int8_t y)
     {
@@ -128,7 +137,11 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
     driverManager.AddDriver(&keyboard);
 
-    MouseToCosole mouseToConsole;
+    GraphicsContext gc;
+    Desktop desktop(320, 200, 0xFF, 0xFF, 0xFF);
+
+    MouseToCosole mouseToConsole(&desktop, &gc);
+
     MouseDriver mouse(&interruptManager, &mouseToConsole);
     driverManager.AddDriver(&mouse);
 
@@ -139,10 +152,13 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     interruptManager.Activate();
 
     Console::Write("\n\nMoOS\a> ");
-    GraphicsContext gc;
 
-    DrawDummyDesktop(&gc);
-
+    //DrawDummyDesktop(&gc);
+    gc.FillRectangle(0, 0, 320, 200, 0xFF, 0xFF, 0xFF);
+    desktop.Draw(&gc);
+    
     while (1)
-        ;
+    {
+        //desktop.Draw(&gc);
+    }
 }

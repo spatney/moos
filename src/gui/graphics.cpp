@@ -69,7 +69,6 @@ void GraphicsContext::DrawLine(
     int32_t x = X1;
     int32_t y = Y1;
 
-
     if (abs(dx) > abs(dy))
     {
         vga.PutPixel(x, y, r, g, b);
@@ -90,7 +89,6 @@ void GraphicsContext::DrawLine(
     }
     else
     {
-
         vga.PutPixel(x, y, r, g, b);
         int pk = (2 * abs(dx)) - abs(dy);
 

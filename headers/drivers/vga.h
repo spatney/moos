@@ -46,15 +46,15 @@ namespace moos
                 common::uint32_t colorDepth);
 
             virtual void PutPixel(
-                common::uint32_t x,
-                common::uint32_t y,
+                common::int32_t x,
+                common::int32_t y,
                 common::uint8_t r,
                 common::uint8_t g,
                 common::uint8_t b);
 
             virtual void PutPixel(
-                common::uint32_t x,
-                common::uint32_t y,
+                common::int32_t x,
+                common::int32_t y,
                 common::uint8_t colorIndex);
         };
     }

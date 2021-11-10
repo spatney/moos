@@ -11,7 +11,7 @@ Widget::Widget(
     int32_t h,
     int32_t r,
     int32_t g,
-    int32_t b)
+    int32_t b) : KeyboardEventHandler()
 {
     this->parent = parent;
     this->x = x;
@@ -61,7 +61,8 @@ void Widget::Draw(GraphicsContext *gc)
 
 void Widget::OnMouseDown(
     int32_t x,
-    int32_t y)
+    int32_t y,
+    uint8_t button)
 {
     if (focusable)
     {
@@ -71,7 +72,8 @@ void Widget::OnMouseDown(
 
 void Widget::OnMouseUp(
     int32_t x,
-    int32_t y)
+    int32_t y,
+    uint8_t button)
 {
 }
 
@@ -83,18 +85,13 @@ void Widget::OnMouseMove(
 {
 }
 
-void Widget::OnKeyDown(char *str)
-{
-}
-
-void Widget::OnKeyUp(char *str)
-{
-}
-
 bool Widget::ContainsCoordinate(
     int32_t x,
     int32_t y)
 {
+    if (x > this->x && x < (this->x + this->w) && y > this->y && y < (this->y + this->h))
+        return true;
+
     return false;
 }
 
@@ -112,8 +109,19 @@ CompositeWidget::CompositeWidget(
     focussedChild = 0;
     numChildren = 0;
 }
+
 CompositeWidget::~CompositeWidget()
 {
+}
+
+bool CompositeWidget::AddChildWidget(Widget *widget)
+{
+    if (numChildren >= 100)
+    {
+        return false;
+    }
+    children[numChildren++] = widget;
+    return true;
 }
 
 void CompositeWidget::Draw(GraphicsContext *gc)
@@ -136,13 +144,14 @@ void CompositeWidget::GetFocus(Widget *widget)
 
 void CompositeWidget::OnMouseDown(
     int32_t x,
-    int32_t y)
+    int32_t y,
+    uint8_t button)
 {
     for (int32_t i = 0; i < numChildren; --i)
     {
         if (children[i]->ContainsCoordinate(x - this->x, y - this->y))
         {
-            children[i]->OnMouseDown(x - this->x, y - this->y);
+            children[i]->OnMouseDown(x - this->x, y - this->y, button);
             break;
         }
     }
@@ -150,13 +159,14 @@ void CompositeWidget::OnMouseDown(
 
 void CompositeWidget::OnMouseUp(
     int32_t x,
-    int32_t y)
+    int32_t y,
+    uint8_t button)
 {
     for (int32_t i = 0; i < numChildren; --i)
     {
         if (children[i]->ContainsCoordinate(x - this->x, y - this->y))
         {
-            children[i]->OnMouseUp(x - this->x, y - this->y);
+            children[i]->OnMouseUp(x - this->x, y - this->y, button);
             break;
         }
     }
@@ -193,18 +203,18 @@ void CompositeWidget::OnMouseMove(
     }
 }
 
-void CompositeWidget::OnKeyDown(char *str)
+void CompositeWidget::OnKeyDown(char c)
 {
     if (focussedChild != 0)
     {
-        focussedChild->OnKeyDown(str);
+        focussedChild->OnKeyDown(c);
     }
 }
 
-void CompositeWidget::OnKeyUp(char *str)
+void CompositeWidget::OnKeyUp(char c)
 {
     if (focussedChild != 0)
     {
-        focussedChild->OnKeyUp(str);
+        focussedChild->OnKeyUp(c);
     }
 }

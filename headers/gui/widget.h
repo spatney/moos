@@ -3,12 +3,13 @@
 
 #include <common/types.h>
 #include <gui/graphics.h>
+#include <drivers/keyboard.h>
 
 namespace moos
 {
     namespace gui
     {
-        class Widget
+        class Widget : public drivers::KeyboardEventHandler
         {
         protected:
             Widget *parent;
@@ -44,21 +45,19 @@ namespace moos
 
             virtual void OnMouseDown(
                 common::int32_t x,
-                common::int32_t y);
+                common::int32_t y,
+                common::uint8_t button);
 
             virtual void OnMouseUp(
                 common::int32_t x,
-                common::int32_t y);
+                common::int32_t y,
+                common::uint8_t button);
 
             virtual void OnMouseMove(
                 common::int32_t oldX,
                 common::int32_t oldY,
                 common::int32_t newX,
                 common::int32_t newY);
-
-            virtual void OnKeyDown(char *str);
-
-            virtual void OnKeyUp(char *str);
 
             virtual bool ContainsCoordinate(
                 common::int32_t x,
@@ -86,14 +85,17 @@ namespace moos
 
             virtual void Draw(GraphicsContext *gc);
             virtual void GetFocus(Widget *widget);
+            virtual bool AddChildWidget(Widget *widget);
 
             virtual void OnMouseDown(
                 common::int32_t x,
-                common::int32_t y);
+                common::int32_t y,
+                common::uint8_t button);
 
             virtual void OnMouseUp(
                 common::int32_t x,
-                common::int32_t y);
+                common::int32_t y,
+                common::uint8_t button);
 
             virtual void OnMouseMove(
                 common::int32_t oldX,
@@ -101,9 +103,8 @@ namespace moos
                 common::int32_t newX,
                 common::int32_t newY);
 
-            virtual void OnKeyUp(char *str);
-
-            virtual void OnKeyDown(char *str);
+            virtual void OnKeyUp(char);
+            virtual void OnKeyDown(char);
         };
     }
 }
