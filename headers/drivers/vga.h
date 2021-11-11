@@ -15,7 +15,7 @@ namespace moos
             hardware::Port8Bit crtcIndexPort;
             hardware::Port8Bit crtcDataPort;
             hardware::Port8Bit sequencerIndexPort;
-            hardware::Port8Bit sequencerDataort;
+            hardware::Port8Bit sequencerDataport;
             hardware::Port8Bit graphicsControllerIndexPort;
             hardware::Port8Bit graphicsControllerDataPort;
             hardware::Port8Bit attributeControllerIndexPort;

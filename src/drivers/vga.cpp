@@ -7,7 +7,7 @@ VideoGraphicsArray::VideoGraphicsArray() : miscPort(0x3C2),
                                            crtcIndexPort(0x3D4),
                                            crtcDataPort(0x3D5),
                                            sequencerIndexPort(0x3C4),
-                                           sequencerDataort(0x3C5),
+                                           sequencerDataport(0x3C5),
                                            graphicsControllerIndexPort(0x3CE),
                                            graphicsControllerDataPort(0x3CF),
                                            attributeControllerIndexPort(0x3C0),
@@ -31,7 +31,7 @@ void VideoGraphicsArray::WriteRegisters(uint8_t *registers)
     for (uint8_t i = 0; i < 5; i++)
     {
         sequencerIndexPort.Write(i);
-        sequencerDataort.Write(*(registers++));
+        sequencerDataport.Write(*(registers++));
     }
 
     crtcIndexPort.Write(0x03);
@@ -85,6 +85,13 @@ uint8_t *VideoGraphicsArray::GetFrameBufferSergment()
 
 void VideoGraphicsArray::Finalize()
 {
+
+    /*uint8_t status = attributeControllerResetPort.Read() & 8;
+
+    while (status == 0) {
+        status = attributeControllerResetPort.Read() & 8;
+    }*/
+
     for (uint32_t i = 0; i < 64000; i++)
     {
         if (lastBuffer[i] != buffer[i])
