@@ -58,10 +58,10 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
 
     // multi-tasking demo
-    Task t1(&gdt, taskA);
+    /*Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
-    //taskManager.AddTask(&t1);
-    //taskManager.AddTask(&t2);
+    taskManager.AddTask(&t1);
+    taskManager.AddTask(&t2);*/
 
     Console::Write("Initializing driver manager ...\n");
 

@@ -157,14 +157,13 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     {
         esp = handlers[interruptNumber]->HandleInterrupt(esp);
     }
-    else if (interruptNumber != 0x20)
-    {
-        Console::Write("UNHANDLED INTERRUPT %x", interruptNumber);
-    }
-
-    if (interruptNumber == hardwareInterruptOffset)
+    else if (interruptNumber == hardwareInterruptOffset)
     {
         esp = (uint32_t)taskManager->Schedule((CPUState *)esp);
+    }
+    else
+    {
+        Console::Write("UNHANDLED INTERRUPT %x", interruptNumber);
     }
 
     if (0x20 <= interruptNumber && interruptNumber < 0x30)
