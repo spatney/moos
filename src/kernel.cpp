@@ -29,25 +29,6 @@ using namespace moos::drivers;
 using namespace moos::common;
 using namespace moos::gui;
 
-#ifndef GRAPHICS_MODE
-
-void taskA()
-{
-    while (true)
-    {
-        Console::Write("A\n");
-    }
-}
-
-void taskB()
-{
-    while (true)
-    {
-        Console::Write("B\n");
-    }
-}
-
-#endif
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
@@ -57,6 +38,9 @@ extern "C" void callConstructors()
         (*i)();
 }
 
+void taskA();
+void taskB();
+
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
     Console::Clear();
@@ -64,38 +48,34 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
     GlobalDescriptorTable gdt;
     TaskManager taskManager;
+    InterruptManager interruptManager(0x20, &gdt, &taskManager);
 
     size_t heapSize = 10 * 1024 * 1024; // 10MB;
     Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
-
-    multiboot_info *multiboot = (multiboot_info_t *) multiBootInfoAddress;
+    multiboot_info *multiboot = (multiboot_info_t *)multiBootInfoAddress;
     uint32_t padding = 10 * 1024;
     MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
 
     // multi-tasking demo
-    /*Task t1(&gdt, taskA);
+    Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
-    taskManager.AddTask(&t1);
-    taskManager.AddTask(&t2);*/
-
-    InterruptManager interruptManager(
-        0x20,
-        &gdt,
-        &taskManager);
+    //taskManager.AddTask(&t1);
+    //taskManager.AddTask(&t2);
 
     Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
+
     Console::Write("Loading PCI device drivers ...\n");
     pciController.SelectDrivers(&driverManager, &interruptManager);
 
     MouseEventHandler *handler;
 
 #ifndef GRAPHICS_MODE
-    Terminal *terminal = new Terminal(); 
-    KeyboardDriver keyboard(&interruptManager, terminal);
-    driverManager.AddDriver(&keyboard);
+    Terminal *terminal = new Terminal();
+    KeyboardDriver *keyboard = new KeyboardDriver(&interruptManager, terminal);
+    driverManager.AddDriver(keyboard);
     handler = terminal;
 #endif
 
@@ -131,5 +111,28 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifdef GRAPHICS_MODE
         desktop->Draw(&gc);
 #endif
+    }
+}
+
+#define WAIT 50
+void taskA()
+{
+    while (true)
+    {
+        Console::Write("A\n");
+        Console::Sleep(WAIT);
+        Console::Write("C\n");
+        Console::Sleep(WAIT);
+    }
+}
+
+void taskB()
+{
+    while (true)
+    {
+        Console::Write("B\n");
+        Console::Sleep(WAIT);
+        Console::Write("D\n");
+        Console::Sleep(WAIT);
     }
 }

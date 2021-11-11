@@ -83,15 +83,18 @@ uint8_t *VideoGraphicsArray::GetFrameBufferSergment()
     }
 }
 
-void VideoGraphicsArray::Finalize()
-{
-
-    /*uint8_t status = attributeControllerResetPort.Read() & 8;
+void VideoGraphicsArray::WaitForVSync() {
+    // attempting to prevent 'tearing', but don't think this is right.
+    // so unused for now
+    uint8_t status = attributeControllerResetPort.Read() & 8;
 
     while (status == 0) {
         status = attributeControllerResetPort.Read() & 8;
-    }*/
+    }
+}
 
+void VideoGraphicsArray::Finalize()
+{
     for (uint32_t i = 0; i < 64000; i++)
     {
         if (lastBuffer[i] != buffer[i])

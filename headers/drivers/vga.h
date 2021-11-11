@@ -26,13 +26,15 @@ namespace moos
             void WriteRegisters(common::uint8_t *registers);
             common::uint8_t *GetFrameBufferSergment();
 
-            common::uint8_t buffer [320*200];
-            common::uint8_t lastBuffer [320*200];
+            common::uint8_t buffer[320 * 200];
+            common::uint8_t lastBuffer[320 * 200];
 
             virtual common::uint8_t GetColorIndex(
                 common::uint8_t r,
                 common::uint8_t g,
                 common::uint8_t b);
+
+            virtual void WaitForVSync();
 
         public:
             VideoGraphicsArray();
