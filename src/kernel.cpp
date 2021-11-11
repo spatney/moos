@@ -10,6 +10,7 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+#include <gui/terminal.h>
 
 #ifdef GRAPHICS_MODE
 #include <gui/graphics.h>
@@ -26,72 +27,9 @@ using namespace moos;
 using namespace moos::hardware;
 using namespace moos::drivers;
 using namespace moos::common;
-
-#ifdef GRAPHICS_MODE
 using namespace moos::gui;
-#endif
 
 #ifndef GRAPHICS_MODE
-class PrintFKeyboardEventHandler : public KeyboardEventHandler
-{
-public:
-    void OnKeyDown(int8_t c)
-    {
-        if (c == 0X0E)
-        {
-            Console::Backspace();
-        }
-        else
-        {
-            Console::Write("%c", c);
-        }
-    }
-};
-
-class MouseToCosole : public MouseEventHandler
-{
-    int32_t x, y;
-
-public:
-    MouseToCosole()
-    {
-        x = 40;
-        y = 12;
-        invertVideoMemoryAt(x, y);
-    }
-    void OnMouseDown(uint8_t button)
-    {
-        invertVideoMemoryAt(x, y);
-    }
-    void OnMouseUp(uint8_t button)
-    {
-        invertVideoMemoryAt(x, y);
-    }
-    void OnMouseMove(int32_t xOffset, int32_t yOffset)
-    {
-        xOffset /= 4;
-        yOffset /= 4;
-
-        invertVideoMemoryAt(x, y);
-        x += xOffset;
-        y += yOffset;
-
-        if (x < 0)
-            x = 0;
-        if (x >= 80)
-            x = 79;
-        if (y < 0)
-            y = 0;
-        if (y >= 25)
-            y = 24;
-
-        invertVideoMemoryAt(x, y);
-    }
-    void invertVideoMemoryAt(int8_t x, int8_t y)
-    {
-        VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0x0F00) << 4 | (VideoMemory[80 * y + x] & 0xF000) >> 4 | (VideoMemory[80 * y + x] & 0x00FF);
-    }
-};
 
 void taskA()
 {
@@ -134,10 +72,6 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     uint32_t padding = 10 * 1024;
     MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
 
-    MouseEventHandler *m1 = new MouseEventHandler();
-    delete m1;
-    m1 = new MouseEventHandler();
-
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
@@ -159,12 +93,10 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     MouseEventHandler *handler;
 
 #ifndef GRAPHICS_MODE
-    PrintFKeyboardEventHandler *keyboardEventHandler = new PrintFKeyboardEventHandler();
-    KeyboardDriver keyboard(&interruptManager, keyboardEventHandler);
+    Terminal *terminal = new Terminal(); 
+    KeyboardDriver keyboard(&interruptManager, terminal);
     driverManager.AddDriver(&keyboard);
-
-    MouseToCosole *mouseToConsole = new MouseToCosole();
-    handler = mouseToConsole;
+    handler = terminal;
 #endif
 
 #ifdef GRAPHICS_MODE
