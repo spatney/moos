@@ -5,3 +5,7 @@ Nothing special, just me trying to figure out how things work to better understa
 ```sudo apt install make g++ binutils libc6-dev-i386 grub-common xorriso```
 
 ```sudo aptinstall grub-pc-bin``` needed for WSL based distros
+
+```make kernel.bin``` check if everything compiles
+
+```make kernel.iso``` build a bootable iso with GRUB as the bootloader
