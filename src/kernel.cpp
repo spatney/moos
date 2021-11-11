@@ -1,4 +1,4 @@
-#define GRAPHICS_MODE
+//#define GRAPHICS_MODE
 
 #include <common/types.h>
 #include <common/console.h>
