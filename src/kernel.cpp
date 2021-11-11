@@ -17,6 +17,7 @@
 #include <gui/window.h>
 #endif
 
+#include <multitasking.h>
 #include <gdt.h>
 
 using namespace moos;
@@ -89,6 +90,25 @@ public:
         VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0x0F00) << 4 | (VideoMemory[80 * y + x] & 0xF000) >> 4 | (VideoMemory[80 * y + x] & 0x00FF);
     }
 };
+
+void taskA()
+{
+    while (true)
+    {
+        Console::Write("A\n");
+    }
+    
+}
+
+void taskB()
+{
+    while (true)
+    {
+        Console::Write("B\n");
+    }
+    
+}
+
 #endif
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
@@ -102,7 +122,19 @@ extern "C" void callConstructors()
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
     GlobalDescriptorTable gdt;
-    InterruptManager interruptManager(&gdt);
+    
+    TaskManager taskManager;
+
+    // multi-tasking demo
+    /*Task t1(&gdt, taskA);
+    Task t2(&gdt, taskB);
+    taskManager.AddTask(&t1);
+    taskManager.AddTask(&t2);*/
+
+    InterruptManager interruptManager(
+        0x20,
+        &gdt,
+        &taskManager);
 
     Console::Clear();
     Console::Write("Booting MoOS Kernel ...\n\n");

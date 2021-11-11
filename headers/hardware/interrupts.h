@@ -3,6 +3,7 @@
 
 #include <common/types.h>
 #include <hardware/port.h>
+#include <multitasking.h>
 #include <gdt.h>
 
 namespace moos
@@ -33,6 +34,7 @@ namespace moos
         protected:
             static InterruptManager *ActivateInterruptManager;
             InterruptHandler *handlers[256];
+            TaskManager *taskManager;
             common::uint16_t hardwareInterruptOffset;
 
             struct GateDescriptor
@@ -65,7 +67,10 @@ namespace moos
             Port8BitSlow picSlaveData;
 
         public:
-            InterruptManager(GlobalDescriptorTable *gdt);
+            InterruptManager(
+                common::uint16_t hardwareInterruptOffset,
+                GlobalDescriptorTable *gdt, 
+                TaskManager *taskManager);
             ~InterruptManager();
 
             void Activate();
