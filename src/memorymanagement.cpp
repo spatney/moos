@@ -4,7 +4,7 @@
 using namespace moos;
 using namespace moos::common;
 
-MemoryManager* MemoryManager::activeMemoryManager = 0;
+MemoryManager *MemoryManager::activeMemoryManager = 0;
 
 MemoryManager::MemoryManager(
     common::size_t head,
@@ -80,10 +80,29 @@ void *MemoryManager::malloc(common::size_t size)
     return (void *)(((size_t)emptyBlock) + sizeof(MemoryBlock));
 }
 
+void MemoryManager::printFree()
+{
+    MemoryBlock *curr = this->head;
+    size_t size = 0;
+
+    while (curr != 0)
+    {
+        if (!curr->allocated)
+        {
+            size += curr->size;
+        }
+
+        curr = curr->next;
+    }
+
+    Console::Write("%d bytes remaining in heap\n", size);
+}
+
 void MemoryManager::free(void *ptr)
 {
     MemoryBlock *block = (MemoryBlock *)((size_t)ptr - sizeof(MemoryBlock));
     block->allocated = false;
+    size_t freed = block->size;
 
     if (block->prev != 0 && !block->prev->allocated)
     {
@@ -112,38 +131,38 @@ void MemoryManager::free(void *ptr)
     }
 }
 
-void* operator new(unsigned size)
+void *operator new(unsigned size)
 {
-    if(moos::MemoryManager::activeMemoryManager == 0)
+    if (moos::MemoryManager::activeMemoryManager == 0)
         return 0;
     return moos::MemoryManager::activeMemoryManager->malloc(size);
 }
 
-void* operator new[](unsigned size)
+void *operator new[](unsigned size)
 {
-    if(moos::MemoryManager::activeMemoryManager == 0)
+    if (moos::MemoryManager::activeMemoryManager == 0)
         return 0;
     return moos::MemoryManager::activeMemoryManager->malloc(size);
 }
 
-void* operator new(unsigned size, void* ptr)
+void *operator new(unsigned size, void *ptr)
 {
     return ptr;
 }
 
-void* operator new[](unsigned size, void* ptr)
+void *operator new[](unsigned size, void *ptr)
 {
     return ptr;
 }
 
-void operator delete(void* ptr)
+void operator delete(void *ptr, unsigned)
 {
-    if(moos::MemoryManager::activeMemoryManager != 0)
+    if (moos::MemoryManager::activeMemoryManager != 0)
         moos::MemoryManager::activeMemoryManager->free(ptr);
 }
 
-void operator delete[](void* ptr)
+void operator delete[](void *ptr, unsigned)
 {
-    if(moos::MemoryManager::activeMemoryManager != 0)
+    if (moos::MemoryManager::activeMemoryManager != 0)
         moos::MemoryManager::activeMemoryManager->free(ptr);
 }

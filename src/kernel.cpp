@@ -1,4 +1,4 @@
-#define GRAPHICS_MODE
+//#define GRAPHICS_MODE
 
 #include <common/types.h>
 #include <common/console.h>
@@ -20,6 +20,7 @@
 #include <memorymanagement.h>
 #include <multitasking.h>
 #include <gdt.h>
+#include <multiboot.h>
 
 using namespace moos;
 using namespace moos::hardware;
@@ -118,7 +119,7 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-extern "C" void kernel_main(void *multiboot, uint32_t magic)
+extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
     Console::Clear();
     Console::Write("Booting MoOS Kernel ...\n\n");
@@ -126,11 +127,16 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     GlobalDescriptorTable gdt;
     TaskManager taskManager;
 
-    uint32_t *memUpper = (uint32_t *)(((size_t)multiboot) + 8);
     size_t heapSize = 10 * 1024 * 1024; // 10MB;
-    MemoryManager memoryManager((*memUpper) * 1024 - heapSize - 10 * 1024, heapSize);
+    Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
 
-    Console::Write("Heap address 0x%x\n", &heapSize);
+    multiboot_info *multiboot = (multiboot_info_t *) multiBootInfoAddress;
+    uint32_t padding = 10 * 1024;
+    MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
+
+    MouseEventHandler *m1 = new MouseEventHandler();
+    delete m1;
+    m1 = new MouseEventHandler();
 
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
@@ -147,6 +153,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
+    Console::Write("Loading PCI device drivers ...\n");
     pciController.SelectDrivers(&driverManager, &interruptManager);
 
     MouseEventHandler *handler;
@@ -156,7 +163,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     KeyboardDriver keyboard(&interruptManager, keyboardEventHandler);
     driverManager.AddDriver(&keyboard);
 
-    MouseToCosole* mouseToConsole = new MouseToCosole();
+    MouseToCosole *mouseToConsole = new MouseToCosole();
     handler = mouseToConsole;
 #endif
 

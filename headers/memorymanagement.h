@@ -29,17 +29,18 @@ namespace moos
 
         void *malloc(common::size_t size);
         void free(void *ptr);
+        void printFree();
     };
 }
 
-void* operator new(unsigned size);
-void* operator new[](unsigned size);
+void *operator new(unsigned size);
+void *operator new[](unsigned size);
 
 // placement new
-void* operator new(unsigned size, void* ptr);
-void* operator new[](unsigned size, void* ptr);
+void *operator new(unsigned size, void *ptr);
+void *operator new[](unsigned size, void *ptr);
 
-void operator delete(void* ptr);
-void operator delete[](void* ptr);
+void operator delete(void *ptr, unsigned);
+void operator delete[](void *ptr, unsigned);
 
 #endif
