@@ -1,4 +1,4 @@
-#define GRAPHICS_MODE = 1;
+#define GRAPHICS_MODE
 
 #include <common/types.h>
 #include <common/console.h>
@@ -47,7 +47,7 @@ public:
 
 class MouseToCosole : public MouseEventHandler
 {
-    int8_t x, y;
+    int32_t x, y;
 
 public:
     MouseToCosole()
@@ -64,8 +64,24 @@ public:
     {
         invertVideoMemoryAt(x, y);
     }
-    void OnMouseMove(int32_t xOffset, int32_t yOffSet)
+    void OnMouseMove(int32_t xOffset, int32_t yOffset)
     {
+        xOffset /= 4;
+        yOffset /= 4;
+
+        invertVideoMemoryAt(x, y);
+        x += xOffset;
+        y += yOffset;
+
+        if (x < 0)
+            x = 0;
+        if (x >= 80)
+            x = 79;
+        if (y < 0)
+            y = 0;
+        if (y >= 25)
+            y = 24;
+
         invertVideoMemoryAt(x, y);
     }
     void invertVideoMemoryAt(int8_t x, int8_t y)
@@ -97,7 +113,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     pciController.SelectDrivers(&driverManager, &interruptManager);
 
     MouseEventHandler *handler;
-    
+
 #ifndef GRAPHICS_MODE
     PrintFKeyboardEventHandler keyboardEventHandler;
     KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
@@ -111,6 +127,16 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     GraphicsContext gc;
     Desktop desktop(320, 200, 0xFF, 0xFF, 0xFF);
     handler = &desktop;
+
+    Window win1(&desktop, 10, 10, 20, 20, 0xA8, 0, 0);
+    Window win2(&desktop, 40, 40, 30, 30, 0, 0xA8, 0);
+    Window win3(&desktop, 100, 150, 20, 20, 0, 0, 0xA8);
+    Window win4(&desktop, 200, 150, 30, 30, 0xA8, 0xA8, 0);
+
+    desktop.AddChildWidget(&win1);
+    desktop.AddChildWidget(&win2);
+    desktop.AddChildWidget(&win3);
+    desktop.AddChildWidget(&win4);
 #endif
 
     MouseDriver mouse(&interruptManager, handler);
@@ -123,18 +149,6 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     interruptManager.Activate();
 
     Console::Write("\n\nMoOS\a> ");
-
-#ifdef GRAPHICS_MODE
-    Window win1(&desktop, 10, 10, 20, 20, 0xA8, 0, 0);
-    Window win2(&desktop, 40, 40, 30, 30, 0, 0xA8, 0);
-    Window win3(&desktop, 100, 150, 20, 20, 0, 0, 0xA8);
-    Window win4(&desktop, 200, 150, 30, 30, 0xA8, 0xA8, 0);
-
-    desktop.AddChildWidget(&win1);
-    desktop.AddChildWidget(&win2);
-    desktop.AddChildWidget(&win3);
-    desktop.AddChildWidget(&win4);
-#endif
 
     while (1)
     {
