@@ -1,4 +1,4 @@
-//#define GRAPHICS_MODE
+#define GRAPHICS_MODE
 
 #include <common/types.h>
 #include <common/console.h>
@@ -17,6 +17,7 @@
 #include <gui/window.h>
 #endif
 
+#include <memorymanagement.h>
 #include <multitasking.h>
 #include <gdt.h>
 
@@ -97,7 +98,6 @@ void taskA()
     {
         Console::Write("A\n");
     }
-    
 }
 
 void taskB()
@@ -106,7 +106,6 @@ void taskB()
     {
         Console::Write("B\n");
     }
-    
 }
 
 #endif
@@ -121,9 +120,17 @@ extern "C" void callConstructors()
 
 extern "C" void kernel_main(void *multiboot, uint32_t magic)
 {
+    Console::Clear();
+    Console::Write("Booting MoOS Kernel ...\n\n");
+
     GlobalDescriptorTable gdt;
-    
     TaskManager taskManager;
+
+    uint32_t *memUpper = (uint32_t *)(((size_t)multiboot) + 8);
+    size_t heapSize = 10 * 1024 * 1024; // 10MB;
+    MemoryManager memoryManager((*memUpper) * 1024 - heapSize - 10 * 1024, heapSize);
+
+    Console::Write("Heap address 0x%x\n", &heapSize);
 
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
@@ -136,8 +143,6 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
         &gdt,
         &taskManager);
 
-    Console::Clear();
-    Console::Write("Booting MoOS Kernel ...\n\n");
     Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
@@ -147,28 +152,28 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     MouseEventHandler *handler;
 
 #ifndef GRAPHICS_MODE
-    PrintFKeyboardEventHandler keyboardEventHandler;
-    KeyboardDriver keyboard(&interruptManager, &keyboardEventHandler);
+    PrintFKeyboardEventHandler *keyboardEventHandler = new PrintFKeyboardEventHandler();
+    KeyboardDriver keyboard(&interruptManager, keyboardEventHandler);
     driverManager.AddDriver(&keyboard);
 
-    MouseToCosole mouseToConsole;
-    handler = &mouseToConsole;
+    MouseToCosole* mouseToConsole = new MouseToCosole();
+    handler = mouseToConsole;
 #endif
 
 #ifdef GRAPHICS_MODE
     GraphicsContext gc;
-    Desktop desktop(320, 200, 0xFF, 0xFF, 0xFF);
-    handler = &desktop;
+    Desktop *desktop = new Desktop(320, 200, 0xFF, 0xFF, 0xFF);
+    handler = desktop;
 
-    Window win1(&desktop, 10, 10, 20, 20, 0xA8, 0, 0);
-    Window win2(&desktop, 40, 40, 30, 30, 0, 0xA8, 0);
-    Window win3(&desktop, 100, 150, 20, 20, 0, 0, 0xA8);
-    Window win4(&desktop, 200, 150, 30, 30, 0xA8, 0xA8, 0);
+    Window win1(desktop, 10, 10, 20, 20, 0xA8, 0, 0);
+    Window win2(desktop, 40, 40, 30, 30, 0, 0xA8, 0);
+    Window win3(desktop, 100, 150, 20, 20, 0, 0, 0xA8);
+    Window win4(desktop, 200, 150, 30, 30, 0xA8, 0xA8, 0);
 
-    desktop.AddChildWidget(&win1);
-    desktop.AddChildWidget(&win2);
-    desktop.AddChildWidget(&win3);
-    desktop.AddChildWidget(&win4);
+    desktop->AddChildWidget(&win1);
+    desktop->AddChildWidget(&win2);
+    desktop->AddChildWidget(&win3);
+    desktop->AddChildWidget(&win4);
 #endif
 
     MouseDriver mouse(&interruptManager, handler);
@@ -185,7 +190,7 @@ extern "C" void kernel_main(void *multiboot, uint32_t magic)
     while (1)
     {
 #ifdef GRAPHICS_MODE
-        desktop.Draw(&gc);
+        desktop->Draw(&gc);
 #endif
     }
 }
