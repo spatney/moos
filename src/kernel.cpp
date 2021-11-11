@@ -1,4 +1,9 @@
-#define GRAPHICS_MODE
+// #define GRAPHICS_MODE
+
+#include <core/memory.h>
+#include <core/multitasking.h>
+#include <core/gdt.h>
+#include <core/multiboot.h>
 
 #include <common/types.h>
 #include <common/console.h>
@@ -10,18 +15,13 @@
 #include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
-#include <gui/terminal.h>
 
+#include <gui/terminal.h>
 #ifdef GRAPHICS_MODE
 #include <gui/graphics.h>
 #include <gui/desktop.h>
 #include <gui/window.h>
 #endif
-
-#include <core/memory.h>
-#include <core/multitasking.h>
-#include <core/gdt.h>
-#include <multiboot.h>
 
 using namespace moos;
 using namespace moos::core;
