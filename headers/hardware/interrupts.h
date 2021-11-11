@@ -3,8 +3,8 @@
 
 #include <common/types.h>
 #include <hardware/port.h>
-#include <multitasking.h>
-#include <gdt.h>
+#include <core/multitasking.h>
+#include <core/gdt.h>
 
 namespace moos
 {
@@ -34,7 +34,7 @@ namespace moos
         protected:
             static InterruptManager *ActivateInterruptManager;
             InterruptHandler *handlers[256];
-            TaskManager *taskManager;
+            core::TaskManager *taskManager;
             common::uint16_t hardwareInterruptOffset;
 
             struct GateDescriptor
@@ -69,8 +69,8 @@ namespace moos
         public:
             InterruptManager(
                 common::uint16_t hardwareInterruptOffset,
-                GlobalDescriptorTable *gdt, 
-                TaskManager *taskManager);
+                core::GlobalDescriptorTable *gdt, 
+                core::TaskManager *taskManager);
             ~InterruptManager();
 
             void Activate();

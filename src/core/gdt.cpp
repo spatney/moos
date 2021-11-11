@@ -1,6 +1,6 @@
-#include <gdt.h>
+#include <core/gdt.h>
 
-using namespace moos;
+using namespace moos::core;
 using namespace moos::common;
 
 GlobalDescriptorTable::GlobalDescriptorTable()

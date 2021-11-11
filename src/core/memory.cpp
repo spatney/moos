@@ -1,7 +1,7 @@
-#include <memorymanagement.h>
+#include <core/memory.h>
 #include <common/console.h>
 
-using namespace moos;
+using namespace moos::core;
 using namespace moos::common;
 
 MemoryManager *MemoryManager::activeMemoryManager = 0;
@@ -133,16 +133,16 @@ void MemoryManager::free(void *ptr)
 
 void *operator new(unsigned size)
 {
-    if (moos::MemoryManager::activeMemoryManager == 0)
+    if (moos::core::MemoryManager::activeMemoryManager == 0)
         return 0;
-    return moos::MemoryManager::activeMemoryManager->malloc(size);
+    return moos::core::MemoryManager::activeMemoryManager->malloc(size);
 }
 
 void *operator new[](unsigned size)
 {
-    if (moos::MemoryManager::activeMemoryManager == 0)
+    if (moos::core::MemoryManager::activeMemoryManager == 0)
         return 0;
-    return moos::MemoryManager::activeMemoryManager->malloc(size);
+    return moos::core::MemoryManager::activeMemoryManager->malloc(size);
 }
 
 void *operator new(unsigned size, void *ptr)
@@ -157,12 +157,12 @@ void *operator new[](unsigned size, void *ptr)
 
 void operator delete(void *ptr, unsigned)
 {
-    if (moos::MemoryManager::activeMemoryManager != 0)
-        moos::MemoryManager::activeMemoryManager->free(ptr);
+    if (moos::core::MemoryManager::activeMemoryManager != 0)
+        moos::core::MemoryManager::activeMemoryManager->free(ptr);
 }
 
 void operator delete[](void *ptr, unsigned)
 {
-    if (moos::MemoryManager::activeMemoryManager != 0)
-        moos::MemoryManager::activeMemoryManager->free(ptr);
+    if (moos::core::MemoryManager::activeMemoryManager != 0)
+        moos::core::MemoryManager::activeMemoryManager->free(ptr);
 }

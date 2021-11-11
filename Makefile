@@ -3,9 +3,9 @@ ASPARAMS = --32
 LDPARAMS = -melf_i386
 
 objects = obj/loader.o \
-		  obj/gdt.o \
-		  obj/multitasking.o \
-		  obj/memorymanagement.o \
+		  obj/core/gdt.o \
+		  obj/core/multitasking.o \
+		  obj/core/memory.o \
 		  obj/common/console.o \
 		  obj/hardware/port.o \
 		  obj/hardware/interruptstubs.o \

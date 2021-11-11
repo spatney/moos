@@ -1,6 +1,6 @@
-#include <multitasking.h>
+#include <core/multitasking.h>
 
-using namespace moos;
+using namespace moos::core;
 using namespace moos::common;
 
 Task::Task(

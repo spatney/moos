@@ -2,21 +2,26 @@
 #include <common/console.h>
 
 using namespace moos::common;
+using namespace moos::core;
 using namespace moos::hardware;
 
-InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager *interruptManager) {
+InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager *interruptManager)
+{
     this->interruptNumber = interruptNumber;
     this->interruptManager = interruptManager;
     interruptManager->handlers[interruptNumber] = this;
 }
 
-InterruptHandler::~InterruptHandler() {
-    if (interruptManager->handlers[interruptNumber] == this) {
+InterruptHandler::~InterruptHandler()
+{
+    if (interruptManager->handlers[interruptNumber] == this)
+    {
         interruptManager->handlers[interruptNumber] = 0;
     }
 }
 
-uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) {
+uint32_t InterruptHandler::HandleInterrupt(uint32_t esp)
+{
     return esp;
 }
 
@@ -24,29 +29,30 @@ InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256]
 InterruptManager *InterruptManager::ActivateInterruptManager = 0;
 
 void InterruptManager::SetInterruptDescriptorTableEntry(
-        uint8_t interruptNumber,
-        uint16_t codeSegmentSelectorOffset,
-        void (*handler)(),
-        uint8_t DescriptorPrivilageLevel,
-        uint8_t DescriptorType) {
+    uint8_t interruptNumber,
+    uint16_t codeSegmentSelectorOffset,
+    void (*handler)(),
+    uint8_t DescriptorPrivilageLevel,
+    uint8_t DescriptorType)
+{
     const uint8_t IDT_DESC_PRESENT = 0X80;
 
-    interruptDescriptorTable[interruptNumber].handlerAddressLowBits = ((uint32_t) handler) & 0xFFFF;
-    interruptDescriptorTable[interruptNumber].handlerAddressHighBits = (((uint32_t) handler) >> 16) & 0xFFFF;
+    interruptDescriptorTable[interruptNumber].handlerAddressLowBits = ((uint32_t)handler) & 0xFFFF;
+    interruptDescriptorTable[interruptNumber].handlerAddressHighBits = (((uint32_t)handler) >> 16) & 0xFFFF;
     interruptDescriptorTable[interruptNumber].gdt_codeSegmentSelector = codeSegmentSelectorOffset;
     interruptDescriptorTable[interruptNumber].access =
-            IDT_DESC_PRESENT | DescriptorType | ((DescriptorPrivilageLevel & 3) << 5);
+        IDT_DESC_PRESENT | DescriptorType | ((DescriptorPrivilageLevel & 3) << 5);
     interruptDescriptorTable[interruptNumber].reserved = 0;
 }
 
 InterruptManager::InterruptManager(
     uint16_t hardwareInterruptOffset,
     GlobalDescriptorTable *gdt,
-    TaskManager *taskManager) :
-        picMasterCommand(0x20),
-        picMasterData(0x21),
-        picSlaveCommand(0xA0),
-        picSlaveData(0xA1) {
+    TaskManager *taskManager) : picMasterCommand(0x20),
+                                picMasterData(0x21),
+                                picSlaveCommand(0xA0),
+                                picSlaveData(0xA1)
+{
 
     this->hardwareInterruptOffset = hardwareInterruptOffset;
     this->taskManager = taskManager;
@@ -54,7 +60,8 @@ InterruptManager::InterruptManager(
     uint16_t CodeSegment = gdt->CodeSegmentSelector();
     const uint8_t IDT_INTERRUPT_GATE = 0xE;
 
-    for (uint16_t i = 0; i < 256; i++) {
+    for (uint16_t i = 0; i < 256; i++)
+    {
         handlers[i] = 0;
         SetInterruptDescriptorTableEntry(i, CodeSegment, &IgnoreInterruptRequest, 0, IDT_INTERRUPT_GATE);
     }
@@ -112,33 +119,39 @@ InterruptManager::InterruptManager(
     picMasterData.Write(0x00);
     picSlaveData.Write(0x00);
 
-
     interruptDescriptorTablePointer idt;
     idt.size = 256 * sizeof(GateDescriptor) - 1;
-    idt.base = (uint32_t) interruptDescriptorTable;
-    asm volatile("lidt %0" : : "m" (idt));
-
+    idt.base = (uint32_t)interruptDescriptorTable;
+    asm volatile("lidt %0"
+                 :
+                 : "m"(idt));
 }
 
-InterruptManager::~InterruptManager() {
+InterruptManager::~InterruptManager()
+{
 }
 
-void InterruptManager::Activate() {
-    if (ActivateInterruptManager != 0) {
+void InterruptManager::Activate()
+{
+    if (ActivateInterruptManager != 0)
+    {
         ActivateInterruptManager->Deactivate();
     }
     ActivateInterruptManager = this;
     asm("sti");
 }
 
-void InterruptManager::Deactivate() {
-    if (ActivateInterruptManager == this) {
+void InterruptManager::Deactivate()
+{
+    if (ActivateInterruptManager == this)
+    {
         ActivateInterruptManager = 0;
         asm("cli");
     }
 }
 
-uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
+uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp)
+{
 
     if (handlers[interruptNumber] != 0)
     {
@@ -149,21 +162,26 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
         Console::Write("UNHANDLED INTERRUPT %x", interruptNumber);
     }
 
-    if(interruptNumber == hardwareInterruptOffset) {
-        esp = (uint32_t)taskManager->Schedule((CPUState*)esp);
+    if (interruptNumber == hardwareInterruptOffset)
+    {
+        esp = (uint32_t)taskManager->Schedule((CPUState *)esp);
     }
 
-    if (0x20 <= interruptNumber && interruptNumber < 0x30) {
+    if (0x20 <= interruptNumber && interruptNumber < 0x30)
+    {
         picMasterCommand.Write(0x20);
-        if (0x28 <= interruptNumber && interruptNumber < 0x30) {
+        if (0x28 <= interruptNumber && interruptNumber < 0x30)
+        {
             picSlaveCommand.Write(0x20);
         }
     }
     return esp;
 }
 
-uint32_t InterruptManager::HandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
-    if (ActivateInterruptManager != 0) {
+uint32_t InterruptManager::HandleInterrupt(uint8_t interruptNumber, uint32_t esp)
+{
+    if (ActivateInterruptManager != 0)
+    {
         return ActivateInterruptManager->DoHandleInterrupt(interruptNumber, esp);
     }
 
