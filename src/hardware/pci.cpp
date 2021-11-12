@@ -90,14 +90,14 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
                     }
                 }
 
-                /*Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
+                Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
                                bus,
                                device,
                                function,
                                dev.vendor_id,
                                dev.device_id,
                                dev.class_id,
-                               dev.subclass_id);*/
+                               dev.subclass_id);
             }
         }
     }
