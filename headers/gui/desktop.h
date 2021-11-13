@@ -10,7 +10,8 @@ namespace moos
 {
     namespace gui
     {
-        class Desktop : public CompositeWidget, public drivers::MouseEventHandler
+        class Desktop : public CompositeWidget,
+                        public drivers::MouseEventHandler
         {
         protected:
             common::int32_t MouseX;
@@ -27,6 +28,8 @@ namespace moos
                 common::int32_t b);
 
             ~Desktop();
+            void OnKeyDown(common::int8_t c);
+            void OnKeyUp(common::int8_t);
             void Draw(gui::GraphicsContext *gc);
             void OnMouseDown(common::uint8_t button);
             void OnMouseUp(common::uint8_t button);

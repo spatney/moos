@@ -1,4 +1,4 @@
-// #define GRAPHICS_MODE
+#define GRAPHICS_MODE
 
 #include <core/memory.h>
 #include <core/multitasking.h>
@@ -71,19 +71,20 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     Console::Write("Loading PCI device drivers ...\n");
     pciController.SelectDrivers(&driverManager, &interruptManager);
 
-    MouseEventHandler *handler;
+    MouseEventHandler *mouseHandler;
+    KeyboardEventHandler *keyboardHandler;
 
 #ifndef GRAPHICS_MODE
     Terminal *terminal = new Terminal();
-    KeyboardDriver *keyboard = new KeyboardDriver(&interruptManager, terminal);
-    driverManager.AddDriver(keyboard);
+    keyboardHandler = terminal;
     handler = terminal;
 #endif
 
 #ifdef GRAPHICS_MODE
     GraphicsContext gc;
     Desktop *desktop = new Desktop(320, 200, 0xFF, 0xFF, 0xFF);
-    handler = desktop;
+    mouseHandler = desktop;
+    keyboardHandler = desktop;
 
     Window win1(desktop, 10, 10, 20, 20, 0xA8, 0, 0);
     Window win2(desktop, 40, 40, 30, 30, 0, 0xA8, 0);
@@ -96,7 +97,9 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     desktop->AddChildWidget(&win4);
 #endif
 
-    MouseDriver mouse(&interruptManager, handler);
+    KeyboardDriver *keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
+    driverManager.AddDriver(keyboard);
+    MouseDriver mouse(&interruptManager, mouseHandler);
     driverManager.AddDriver(&mouse);
 
     Console::Write("Activating driver manager ...\n");

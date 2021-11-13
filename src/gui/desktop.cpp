@@ -80,3 +80,13 @@ void Desktop::OnMouseMove(
     MouseX = newMouseX;
     MouseY = newMouseY;
 }
+
+void Desktop::OnKeyDown(common::int8_t c)
+{
+
+}
+
+void Desktop::OnKeyUp(common::int8_t)
+{
+
+}
