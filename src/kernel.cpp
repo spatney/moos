@@ -1,4 +1,4 @@
-#define GRAPHICS_MODE
+//#define GRAPHICS_MODE
 
 #include <core/memory.h>
 #include <core/multitasking.h>
@@ -76,8 +76,8 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
 #ifndef GRAPHICS_MODE
     Terminal *terminal = new Terminal();
+    mouseHandler = terminal;
     keyboardHandler = terminal;
-    handler = terminal;
 #endif
 
 #ifdef GRAPHICS_MODE
