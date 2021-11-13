@@ -65,6 +65,11 @@ wsl-run: kernel.iso
 	(powershell.exe "taskkill /IM "VirtualBoxVM.exe" /F") || true
 	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &
 
-.phony: qemu
+.phony: docker-build docker qemu qemu-run
+docker-build:
+	docker build --platform linux/x86-64 -t moos .
+docker:
+	docker run --rm -v "$$(pwd)":/moos --platform linux/x86-64 moos
 qemu: 
 	qemu-system-i386 -cdrom kernel.iso -vga virtio -m 1G
+qemu-run: docker qemu
