@@ -64,3 +64,7 @@ run: kernel.iso
 wsl-run: kernel.iso
 	(powershell.exe "taskkill /IM "VirtualBoxVM.exe" /F") || true
 	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &
+
+.phony: qemu
+qemu: 
+	qemu-system-i386 -cdrom kernel.iso -vga virtio -m 1G

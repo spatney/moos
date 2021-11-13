@@ -31,7 +31,8 @@ KeyboardDriver::~KeyboardDriver()
 
 void KeyboardDriver::Activate()
 {
-    while (commandPort.Read() & 0x1)
+    // odly not needed asleast for VMs and emulators
+    /*while (commandPort.Read() & 0x1)
     {
         dataPort.Read();
     }
@@ -41,7 +42,7 @@ void KeyboardDriver::Activate()
     commandPort.Write(0x60); // set state
     dataPort.Write(status);
 
-    dataPort.Write(0xF4); // activate keyboard;
+    dataPort.Write(0xF4); // activate keyboard;*/
 }
 
 uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
