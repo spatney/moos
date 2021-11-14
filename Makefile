@@ -7,6 +7,7 @@ objects = obj/loader.o \
 		  obj/core/multitasking.o \
 		  obj/core/memory.o \
 		  obj/common/console.o \
+		  obj/common/linkedlist.o \
 		  obj/hardware/port.o \
 		  obj/hardware/interruptstubs.o \
 		  obj/hardware/interrupts.o \

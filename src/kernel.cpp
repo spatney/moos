@@ -1,4 +1,4 @@
-#define GRAPHICS_MODE
+//#define GRAPHICS_MODE
 
 #include <core/memory.h>
 #include <core/multitasking.h>
@@ -7,6 +7,7 @@
 
 #include <common/types.h>
 #include <common/console.h>
+#include <common/linkedlist.h>
 
 #include <hardware/video.h>
 #include <hardware/pci.h>
@@ -41,6 +42,7 @@ extern "C" void callConstructors()
 
 void taskA();
 void taskB();
+void listdemo();
 
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
@@ -139,4 +141,57 @@ void taskB()
         Console::Write("D\n");
         Console::Sleep(WAIT);
     }
+}
+
+struct Data
+{
+    int32_t d;
+};
+
+void printlist(LinkedList *list)
+{
+    void *data = 0;
+    int32_t counter = 0;
+
+    Console::Write("HEAD => ");
+
+    do
+    {
+        data = list->PeekAt(counter++);
+        if (data != 0)
+        {
+            Console::Write("%d => ", ((Data *)data)->d);
+        }
+    } while (data != 0);
+
+    Console::Write("TAIL\n");
+}
+
+void *createDataPointer(int32_t n)
+{
+    Data *data = new Data();
+    data->d = n;
+    return data;
+}
+
+void listdemo()
+{
+    LinkedList *list = new LinkedList();
+
+    Console::Write("Linked List Demo \n");
+
+    list->AddFirst(createDataPointer(2));
+    list->AddFirst(createDataPointer(1));
+    list->AddLast(createDataPointer(3));
+    list->AddLast(createDataPointer(4));
+    list->AddFirst(createDataPointer(0));
+
+    printlist(list);
+
+    list->RemoveLast();
+    list->RemoveFirst();
+    list->RemoveLast();
+    list->RemoveFirst();
+
+    printlist(list);
 }
