@@ -22,6 +22,16 @@ namespace moos
     class OSTest
     {
     public:
+        static void SleepDemo()
+        {
+            int count = 0;
+            while (true)
+            {
+                common::Console::Write("BEEP %d\n", count++);
+                common::Console::Sleep(1);
+            }
+        }
+
         static void HeapDemo()
         {
             auto e1 = new Empty();

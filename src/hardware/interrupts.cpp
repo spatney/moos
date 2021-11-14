@@ -159,6 +159,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     }
     else if (interruptNumber == hardwareInterruptOffset)
     {
+        Console::ticks++;
         esp = (uint32_t)taskManager->Schedule((CPUState *)esp);
     }
     else

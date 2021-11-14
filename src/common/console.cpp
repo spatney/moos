@@ -156,18 +156,8 @@ int8_t *Console::itoa(int32_t val, const int32_t base)
 
 void Console::Sleep(int32_t seconds)
 {
-    static int32_t wait_loop0 = 4000;
-    static int32_t wait_loop1 = 6000;
-    int32_t i, j, k;
-    for (i = 0; i < seconds; i++)
-    {
-        for (j = 0; j < wait_loop0; j++)
-        {
-            for (k = 0; k < wait_loop1; k++)
-            {
-                int32_t volatile t = 120 * j * i + k;
-                t = t + 5;
-            }
-        }
-    }
+    auto startTicks = Console::ticks;
+
+    while ((Console::ticks - startTicks) < (seconds * 20))
+        ;
 }

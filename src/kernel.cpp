@@ -112,6 +112,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     Console::Write("\n\nMoOS\a> ");
 
     //OSTest::HeapDemo();
+    //OSTest::SleepDemo();
 
     while (1)
     {
