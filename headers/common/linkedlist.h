@@ -37,6 +37,15 @@ namespace moos
                 return *this;
             }
 
+            LinkedListNodeIterator const &operator--()
+            {
+                if (node != 0)
+                {
+                    node = node->prev;
+                }
+                return *this;
+            }
+
             void *operator*() { return node->data; }
 
             friend bool operator==(const LinkedListNodeIterator &a, const LinkedListNodeIterator &b) { return a.node == b.node; };
