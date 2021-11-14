@@ -1,4 +1,4 @@
-//#define GRAPHICS_MODE
+#define GRAPHICS_MODE
 
 #include <core/memory.h>
 #include <core/multitasking.h>

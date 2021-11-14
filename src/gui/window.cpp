@@ -28,6 +28,11 @@ void Window::OnMouseDown(
     uint8_t button)
 {
     Dragging = button == 1;
+
+    if (Dragging)
+    {
+        ((CompositeWidget *)parent)->BringChildToFront(this);
+    }
 }
 
 void Window::OnMouseUp(
@@ -35,7 +40,7 @@ void Window::OnMouseUp(
     int32_t y,
     uint8_t button)
 {
-    Dragging == false;
+    Dragging = false;
 }
 
 void Window::OnMouseMove(
@@ -49,5 +54,13 @@ void Window::OnMouseMove(
         this->x += newX - oldX;
         this->y += newY - oldY;
     }
-     CompositeWidget::OnMouseMove(oldX, oldY, newX, newY);
+    CompositeWidget::OnMouseMove(oldX, oldY, newX, newY);
+}
+
+void Window::OnMouseLeave()
+{
+}
+
+void Window::OnMouseEnter()
+{
 }

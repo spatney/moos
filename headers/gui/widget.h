@@ -59,6 +59,9 @@ namespace moos
                 common::int32_t newX,
                 common::int32_t newY);
 
+            virtual void OnMouseLeave();
+            virtual void OnMouseEnter();
+
             virtual bool ContainsCoordinate(
                 common::int32_t x,
                 common::int32_t y);
@@ -83,6 +86,8 @@ namespace moos
                 common::int32_t b);
             ~CompositeWidget();
 
+            void BringChildToFront(Widget *child);
+
             virtual void Draw(GraphicsContext *gc);
             virtual void GetFocus(Widget *widget);
             virtual bool AddChildWidget(Widget *widget);
@@ -102,6 +107,9 @@ namespace moos
                 common::int32_t oldY,
                 common::int32_t newX,
                 common::int32_t newY);
+
+            virtual void OnMouseLeave();
+            virtual void OnMouseEnter();
 
             virtual void OnKeyUp(char);
             virtual void OnKeyDown(char);

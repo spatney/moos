@@ -85,12 +85,22 @@ void Widget::OnMouseMove(
 {
 }
 
+void Widget::OnMouseLeave()
+{
+}
+
+void Widget::OnMouseEnter()
+{
+}
+
 bool Widget::ContainsCoordinate(
     int32_t x,
     int32_t y)
 {
-    return this->x <= x && x < this->x + this->w
-        && this->y <= y && y < this->y + this->h;
+    return this->x <= x 
+    && x < this->x + this->w 
+    && this->y <= y 
+    && y < this->y + this->h;
 }
 
 CompositeWidget::CompositeWidget(
@@ -177,29 +187,31 @@ void CompositeWidget::OnMouseMove(
     int32_t newX,
     int32_t newY)
 {
-    int32_t eventFiredOnChild = -1;
 
     for (int32_t i = 0; i < numChildren; ++i)
     {
-        if (children[i]->ContainsCoordinate(oldX - this->x, oldY - this->y))
+        if (children[i]->ContainsCoordinate(oldX - this->x, oldY - this->y) && children[i]->ContainsCoordinate(newX - this->x, newY - this->y))
         {
             children[i]->OnMouseMove(oldX - this->x, oldY - this->y, newX - this->x, newY - this->y);
-            eventFiredOnChild = i;
             break;
         }
-    }
-
-    for (int32_t i = 0; i < numChildren; ++i)
-    {
-        if (children[i]->ContainsCoordinate(newX - this->x, newY - this->y))
+        else if (children[i]->ContainsCoordinate(oldX - this->x, oldY - this->y) && !children[i]->ContainsCoordinate(newX - this->x, newY - this->y))
         {
-            if (i != eventFiredOnChild)
-            {
-                children[i]->OnMouseMove(oldX - this->x, oldY - this->y, newX - this->x, newY - this->y);
-            }
-            break;
+            children[i]->OnMouseLeave();
+        }
+        else if (!children[i]->ContainsCoordinate(oldX - this->x, oldY - this->y) && children[i]->ContainsCoordinate(newX - this->x, newY - this->y))
+        {
+            children[i]->OnMouseEnter();
         }
     }
+}
+
+void CompositeWidget::OnMouseLeave()
+{
+}
+
+void CompositeWidget::OnMouseEnter()
+{
 }
 
 void CompositeWidget::OnKeyDown(char c)
@@ -215,5 +227,26 @@ void CompositeWidget::OnKeyUp(char c)
     if (focussedChild != 0)
     {
         focussedChild->OnKeyUp(c);
+    }
+}
+
+void CompositeWidget::BringChildToFront(Widget *child)
+{
+    uint32_t myIndex = 0;
+
+    for (uint32_t i = 0; i < numChildren; i++)
+    {
+        if (children[i] == child)
+        {
+            myIndex = i;
+            break;
+        }
+    }
+
+    if (myIndex != 0)
+    {
+        Widget *temp = children[0];
+        children[0] = children[myIndex];
+        children[myIndex] = temp;
     }
 }

@@ -40,6 +40,9 @@ namespace moos
                 common::int32_t oldY,
                 common::int32_t newX,
                 common::int32_t newY);
+
+            virtual void OnMouseLeave();
+            virtual void OnMouseEnter();
         };
     }
 }
