@@ -59,6 +59,7 @@ void Window::OnMouseMove(
 
 void Window::OnMouseLeave()
 {
+    Dragging = false;
 }
 
 void Window::OnMouseEnter()
