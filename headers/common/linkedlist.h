@@ -30,17 +30,19 @@ namespace moos
 
             LinkedListNodeIterator const &operator++()
             {
-                node = node->next;
+                if (node != 0)
+                {
+                    node = node->next;
+                }
                 return *this;
             }
 
-            friend bool operator== (const LinkedListNodeIterator& a, const LinkedListNodeIterator& b) { return a.node == b.node; };
-            friend bool operator!= (const LinkedListNodeIterator& a, const LinkedListNodeIterator& b) { return a.node != b.node; }; 
+            friend bool operator==(const LinkedListNodeIterator &a, const LinkedListNodeIterator &b) { return a.node == b.node; };
+            friend bool operator!=(const LinkedListNodeIterator &a, const LinkedListNodeIterator &b) { return a.node != b.node; };
         };
 
         class LinkedList
         {
-            friend LinkedListNodeIterator;
         private:
             LinkedListNode *head;
             LinkedListNode *tail;
@@ -58,7 +60,7 @@ namespace moos
             void *PeekLast();
 
             void *PeekAt(int32_t index);
-            
+
             LinkedListNodeIterator begin() { return LinkedListNodeIterator(head); }
             LinkedListNodeIterator end() { return LinkedListNodeIterator(0); }
         };
