@@ -77,14 +77,14 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     KeyboardEventHandler *keyboardHandler;
 
 #ifndef GRAPHICS_MODE
-    Terminal *terminal = new Terminal();
+    auto *terminal = new Terminal();
     mouseHandler = terminal;
     keyboardHandler = terminal;
 #endif
 
 #ifdef GRAPHICS_MODE
     GraphicsContext gc;
-    Desktop *desktop = new Desktop(320, 200, 0xFF, 0xFF, 0xFF);
+    auto *desktop = new Desktop(320, 200, 0xFF, 0xFF, 0xFF);
     mouseHandler = desktop;
     keyboardHandler = desktop;
 
@@ -99,7 +99,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     desktop->AddChildWidget(&win4);
 #endif
 
-    KeyboardDriver *keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
+    auto *keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
     driverManager.AddDriver(keyboard);
     MouseDriver mouse(&interruptManager, mouseHandler);
     driverManager.AddDriver(&mouse);
@@ -111,6 +111,8 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     interruptManager.Activate();
 
     Console::Write("\n\nMoOS\a> ");
+
+    listdemo();
 
     while (1)
     {
@@ -150,33 +152,33 @@ struct Data
 
 void printlist(LinkedList *list)
 {
-    void *data = 0;
     int32_t counter = 0;
 
     Console::Write("HEAD => ");
 
-    do
+    for (auto it = list->begin(), end = list->end(); it != end; ++it)
     {
-        data = list->PeekAt(counter++);
-        if (data != 0)
+        auto data = list->PeekAt(counter++);
+        if (data == 0)
         {
-            Console::Write("%d => ", ((Data *)data)->d);
+            break;
         }
-    } while (data != 0);
+        Console::Write("%d => ", ((Data *)data)->d);
+    }
 
     Console::Write("TAIL\n");
 }
 
 void *createDataPointer(int32_t n)
 {
-    Data *data = new Data();
+    auto *data = new Data();
     data->d = n;
     return data;
 }
 
 void listdemo()
 {
-    LinkedList *list = new LinkedList();
+    auto *list = new LinkedList();
 
     Console::Write("Linked List Demo \n");
 

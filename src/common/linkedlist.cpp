@@ -53,7 +53,7 @@ void LinkedList::AddLast(void *data)
     }
     else
     {
-        LinkedListNode *temp = tail;
+        auto *temp = tail;
         tail = new LinkedListNode(data);
         tail->prev = temp;
         temp->next = tail;
@@ -67,7 +67,7 @@ void *LinkedList::RemoveFirst()
         return 0;
     }
 
-    void *result = head->data;
+    auto *result = head->data;
     head = head->next;
     head->prev = 0;
 
@@ -81,7 +81,7 @@ void *LinkedList::RemoveLast()
         return 0;
     }
 
-    void *result = tail->data;
+    auto *result = tail->data;
     tail = tail->prev;
     tail->next = 0;
 
@@ -110,7 +110,7 @@ void *LinkedList::PeekLast()
 
 void *LinkedList::PeekAt(int32_t index)
 {
-    LinkedListNode *currNode = head;
+    auto *currNode = head;
     int32_t counter = 0;
 
     while (currNode != 0)

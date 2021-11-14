@@ -9,20 +9,38 @@ namespace moos
     {
         class LinkedListNode
         {
-        private:
+            friend class LinkedListNodeIterator;
+            friend class LinkedList;
+
             LinkedListNode *next;
             LinkedListNode *prev;
+            void *data;
 
             LinkedListNode(void *data);
             ~LinkedListNode();
+        };
+
+        class LinkedListNodeIterator
+        {
+        private:
+            LinkedListNode *node;
 
         public:
-            friend class LinkedList;
-            void *data;
+            LinkedListNodeIterator(LinkedListNode *node) { this->node = node; }
+
+            LinkedListNodeIterator const &operator++()
+            {
+                node = node->next;
+                return *this;
+            }
+
+            friend bool operator== (const LinkedListNodeIterator& a, const LinkedListNodeIterator& b) { return a.node == b.node; };
+            friend bool operator!= (const LinkedListNodeIterator& a, const LinkedListNodeIterator& b) { return a.node != b.node; }; 
         };
 
         class LinkedList
         {
+            friend LinkedListNodeIterator;
         private:
             LinkedListNode *head;
             LinkedListNode *tail;
@@ -40,6 +58,9 @@ namespace moos
             void *PeekLast();
 
             void *PeekAt(int32_t index);
+            
+            LinkedListNodeIterator begin() { return LinkedListNodeIterator(head); }
+            LinkedListNodeIterator end() { return LinkedListNodeIterator(0); }
         };
     }
 }
