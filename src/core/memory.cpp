@@ -42,7 +42,7 @@ void *MemoryManager::malloc(common::size_t size)
         block != 0 && emptyBlock == 0;
         block = block->next)
     {
-        if (block->size > size && !block->allocated)
+        if (block->size >= size && !block->allocated)
         {
             emptyBlock = block;
         }
@@ -100,9 +100,9 @@ void MemoryManager::printFree()
 
 void MemoryManager::free(void *ptr)
 {
+
     MemoryBlock *block = (MemoryBlock *)((size_t)ptr - sizeof(MemoryBlock));
     block->allocated = false;
-    size_t freed = block->size;
 
     if (block->prev != 0 && !block->prev->allocated)
     {

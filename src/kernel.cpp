@@ -1,5 +1,6 @@
 //#define GRAPHICS_MODE
 
+#include <ostest.h>
 #include <core/memory.h>
 #include <core/multitasking.h>
 #include <core/gdt.h>
@@ -42,7 +43,6 @@ extern "C" void callConstructors()
 
 void taskA();
 void taskB();
-void listdemo();
 
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
@@ -58,13 +58,12 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     multiboot_info *multiboot = (multiboot_info_t *)multiBootInfoAddress;
     uint32_t padding = 10 * 1024;
     MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
-
+ 
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
     taskManager.AddTask(&t1);
     taskManager.AddTask(&t2);*/
-
     Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
@@ -112,7 +111,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
     Console::Write("\n\nMoOS\a> ");
 
-    listdemo();
+    //OSTest::HeapDemo();
 
     while (1)
     {
@@ -122,7 +121,6 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     }
 }
 
-#define WAIT 50
 void taskA()
 {
     while (true)
@@ -143,53 +141,4 @@ void taskB()
         Console::Write("D\n");
         Console::Sleep(WAIT);
     }
-}
-
-struct Data
-{
-    int32_t d;
-};
-
-void printlist(LinkedList *list)
-{
-    int32_t counter = 0;
-
-    Console::Write("HEAD => ");
-
-    for (auto it = list->begin(), end = list->end(); it != end; ++it)
-    {
-        auto data = *it;
-        Console::Write("%d => ", ((Data *)data)->d);
-    }
-
-    Console::Write("TAIL\n");
-}
-
-void *createDataPointer(int32_t n)
-{
-    auto *data = new Data();
-    data->d = n;
-    return data;
-}
-
-void listdemo()
-{
-    auto *list = new LinkedList();
-
-    Console::Write("Linked List Demo \n");
-
-    list->AddFirst(createDataPointer(2));
-    list->AddFirst(createDataPointer(1));
-    list->AddLast(createDataPointer(3));
-    list->AddLast(createDataPointer(4));
-    list->AddFirst(createDataPointer(0));
-
-    printlist(list);
-
-    list->RemoveLast();
-    list->RemoveFirst();
-    list->RemoveLast();
-    list->RemoveFirst();
-
-    printlist(list);
 }

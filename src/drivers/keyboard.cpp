@@ -32,10 +32,10 @@ KeyboardDriver::~KeyboardDriver()
 void KeyboardDriver::Activate()
 {
     // odly not needed asleast for VMs and emulators
-    /*while (commandPort.Read() & 0x1)
+    while (commandPort.Read() & 0x1)
     {
         dataPort.Read();
-    }
+    }/*
     commandPort.Write(0xAE); // ask keyboard to start sending interrupts
     commandPort.Write(0x20); // get current state
     uint8_t status = (dataPort.Read() | 1) & ~0x10;

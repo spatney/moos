@@ -163,7 +163,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     }
     else
     {
-        Console::Write("UNHANDLED INTERRUPT %x", interruptNumber);
+        Console::Write("UNHANDLED INTERRUPT %x\n", interruptNumber);
     }
 
     if (0x20 <= interruptNumber && interruptNumber < 0x30)
