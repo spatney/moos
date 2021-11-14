@@ -158,11 +158,7 @@ void printlist(LinkedList *list)
 
     for (auto it = list->begin(), end = list->end(); it != end; ++it)
     {
-        auto data = list->PeekAt(counter++);
-        if (data == 0)
-        {
-            break;
-        }
+        auto data = *it;
         Console::Write("%d => ", ((Data *)data)->d);
     }
 

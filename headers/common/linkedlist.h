@@ -37,6 +37,8 @@ namespace moos
                 return *this;
             }
 
+            void *operator*() { return node->data; }
+
             friend bool operator==(const LinkedListNodeIterator &a, const LinkedListNodeIterator &b) { return a.node == b.node; };
             friend bool operator!=(const LinkedListNodeIterator &a, const LinkedListNodeIterator &b) { return a.node != b.node; };
         };
@@ -58,8 +60,6 @@ namespace moos
 
             void *PeekFirst();
             void *PeekLast();
-
-            void *PeekAt(int32_t index);
 
             LinkedListNodeIterator begin() { return LinkedListNodeIterator(head); }
             LinkedListNodeIterator end() { return LinkedListNodeIterator(0); }

@@ -107,21 +107,3 @@ void *LinkedList::PeekLast()
 
     return tail->data;
 }
-
-void *LinkedList::PeekAt(int32_t index)
-{
-    auto *currNode = head;
-    int32_t counter = 0;
-
-    while (currNode != 0)
-    {
-        if (counter++ == index)
-        {
-            return currNode->data;
-        }
-
-        currNode = currNode->next;
-    }
-
-    return 0;
-}
