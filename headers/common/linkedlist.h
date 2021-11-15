@@ -9,6 +9,7 @@ namespace moos
     {
         class LinkedListNode
         {
+        private:
             friend class LinkedListNodeIterator;
             friend class LinkedList;
 

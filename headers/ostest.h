@@ -7,6 +7,7 @@
 #include <common/linkedlist.h>
 #include <common/console.h>
 #include <core/multitasking.h>
+#include <core/memory.h>
 
 namespace moos
 {
@@ -40,21 +41,22 @@ namespace moos
 
             common::Console::Clear();
 
-            common::Console::Write("Size of Empty: %x\n", sizeof(Empty));
-            common::Console::Write("Size of LinkedList: %x\n", sizeof(common::LinkedList));
+            common::Console::Write("Size of MemoryBlock: %d\n", sizeof(core::MemoryBlock));
+            common::Console::Write("Size of Empty: %d\n", sizeof(Empty));
+            common::Console::Write("Size of LinkedList: %d\n", sizeof(common::LinkedList));
 
-            common::Console::Write("E1 CREATED: %x\n", e1);
-            common::Console::Write("E2 CREATED: %x\n", e2);
-            common::Console::Write("L1 CREATED: %x\n", l1);
+            common::Console::Write("E1 CREATED: 0x%x\n", e1);
+            common::Console::Write("E2 CREATED: 0x%x\n", e2);
+            common::Console::Write("L1 CREATED: 0x%x\n", l1);
 
             common::Console::Write("DELETING E2 ...\n", l1);
             delete e2;
 
             auto l2 = new common::LinkedList();
-            common::Console::Write("L2 CREATED: %x\n", l2);
+            common::Console::Write("L2 CREATED: 0x%x\n", l2);
 
             auto e3 = new Empty();
-            common::Console::Write("E3 CREATED: %x\n", e3);
+            common::Console::Write("E3 CREATED: 0x%x\n", e3);
         }
 
         static void ListDemo()
