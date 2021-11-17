@@ -111,8 +111,8 @@ namespace moos
             virtual void OnMouseLeave();
             virtual void OnMouseEnter();
 
-            virtual void OnKeyUp(char);
-            virtual void OnKeyDown(char);
+            virtual void OnKeyUp(drivers::Key);
+            virtual void OnKeyDown(drivers::Key);
         };
     }
 }

@@ -2,6 +2,7 @@
 
 using namespace moos::gui;
 using namespace moos::common;
+using namespace moos::drivers;
 
 Widget::Widget(
     Widget *parent,
@@ -214,7 +215,7 @@ void CompositeWidget::OnMouseEnter()
 {
 }
 
-void CompositeWidget::OnKeyDown(char c)
+void CompositeWidget::OnKeyDown(Key c)
 {
     if (focussedChild != 0)
     {
@@ -222,7 +223,7 @@ void CompositeWidget::OnKeyDown(char c)
     }
 }
 
-void CompositeWidget::OnKeyUp(char c)
+void CompositeWidget::OnKeyUp(Key c)
 {
     if (focussedChild != 0)
     {

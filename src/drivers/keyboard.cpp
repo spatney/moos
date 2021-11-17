@@ -9,10 +9,10 @@ KeyboardEventHandler::KeyboardEventHandler()
 {
 }
 
-void KeyboardEventHandler::OnKeyDown(int8_t)
+void KeyboardEventHandler::OnKeyDown(Key)
 {
 }
-void KeyboardEventHandler::OnKeyUp(int8_t)
+void KeyboardEventHandler::OnKeyUp(Key)
 {
 }
 
@@ -22,7 +22,6 @@ KeyboardDriver::KeyboardDriver(InterruptManager *manager, KeyboardEventHandler *
       commandPort(0x64)
 {
     this->eventHandler = eventHandler;
-    isShiftDown = false;
 }
 
 KeyboardDriver::~KeyboardDriver()
@@ -35,7 +34,7 @@ void KeyboardDriver::Activate()
     while (commandPort.Read() & 0x1)
     {
         dataPort.Read();
-    }/*
+    } /*
     commandPort.Write(0xAE); // ask keyboard to start sending interrupts
     commandPort.Write(0x20); // get current state
     uint8_t status = (dataPort.Read() | 1) & ~0x10;
@@ -63,172 +62,188 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     switch (key)
     {
     case 0x02:
-    // case 0x02 | 0x80: KEY UP
-        eventHandler->OnKeyDown(isShiftDown ? '!' : '1');
+        eventHandler->OnKeyDown(Key::Num1);
         break;
     case 0x03:
-        eventHandler->OnKeyDown(isShiftDown ? '@' : '2');
+        eventHandler->OnKeyDown(Key::Num2);
         break;
     case 0x04:
-        eventHandler->OnKeyDown(isShiftDown ? '#' : '3');
+        eventHandler->OnKeyDown(Key::Num3);
         break;
     case 0x05:
-        eventHandler->OnKeyDown(isShiftDown ? '$' : '4');
+        eventHandler->OnKeyDown(Key::Num4);
         break;
     case 0x06:
-        eventHandler->OnKeyDown(isShiftDown ? '%' : '5');
+        eventHandler->OnKeyDown(Key::Num5);
         break;
     case 0x07:
-        eventHandler->OnKeyDown(isShiftDown ? '^' : '6');
+        eventHandler->OnKeyDown(Key::Num6);
         break;
     case 0x08:
-        eventHandler->OnKeyDown(isShiftDown ? '&' : '7');
+        eventHandler->OnKeyDown(Key::Num7);
         break;
     case 0x09:
-        eventHandler->OnKeyDown(isShiftDown ? '*' : '8');
+        eventHandler->OnKeyDown(Key::Num8);
         break;
     case 0x0A:
-        eventHandler->OnKeyDown(isShiftDown ? '(' : '9');
+        eventHandler->OnKeyDown(Key::Num9);
         break;
     case 0x0B:
-        eventHandler->OnKeyDown(isShiftDown ? ')' : '0');
+        eventHandler->OnKeyDown(Key::Num0);
         break;
     case 0x0C:
-        eventHandler->OnKeyDown(isShiftDown ? '_' : '-');
+        eventHandler->OnKeyDown(Key::Hyphen);
         break;
     case 0x0D:
-        eventHandler->OnKeyDown(isShiftDown ? '+' : '=');
+        eventHandler->OnKeyDown(Key::Equal);
         break;
-
     case 0x10:
-        eventHandler->OnKeyDown(isShiftDown ? 'Q' :'q');
+        eventHandler->OnKeyDown(Key::Q);
         break;
     case 0x11:
-        eventHandler->OnKeyDown(isShiftDown ? 'W' :'w');
+        eventHandler->OnKeyDown(Key::W);
         break;
     case 0x12:
-        eventHandler->OnKeyDown(isShiftDown ? 'E' :'e');
+        eventHandler->OnKeyDown(Key::E);
         break;
     case 0x13:
-        eventHandler->OnKeyDown(isShiftDown ? 'R' :'r');
+        eventHandler->OnKeyDown(Key::R);
         break;
     case 0x14:
-        eventHandler->OnKeyDown(isShiftDown ? 'T' :'t');
+        eventHandler->OnKeyDown(Key::T);
         break;
     case 0x15:
-        eventHandler->OnKeyDown(isShiftDown ? 'Y' :'y');
+        eventHandler->OnKeyDown(Key::Y);
         break;
     case 0x16:
-        eventHandler->OnKeyDown(isShiftDown ? 'U' :'u');
+        eventHandler->OnKeyDown(Key::U);
         break;
     case 0x17:
-        eventHandler->OnKeyDown(isShiftDown ? 'I' :'i');
+        eventHandler->OnKeyDown(Key::I);
         break;
     case 0x18:
-        eventHandler->OnKeyDown(isShiftDown ? 'O' :'o');
+        eventHandler->OnKeyDown(O);
         break;
     case 0x19:
-        eventHandler->OnKeyDown(isShiftDown ? 'P' :'p');
+        eventHandler->OnKeyDown(Key::P);
         break;
-
     case 0x1A:
-        eventHandler->OnKeyDown(isShiftDown ? '{' :'[');
+        eventHandler->OnKeyDown(Key::LBracket);
         break;
     case 0x1B:
-        eventHandler->OnKeyDown(isShiftDown ? '}' :']');
+        eventHandler->OnKeyDown(Key::RBracket);
         break;
     case 0x2B:
-        eventHandler->OnKeyDown(isShiftDown ? '|' :'\\');
+        eventHandler->OnKeyDown(Key::Backslash);
         break;
-
     case 0x1E:
-        eventHandler->OnKeyDown(isShiftDown ? 'A' :'a');
+        eventHandler->OnKeyDown(Key::A);
         break;
     case 0x1F:
-        eventHandler->OnKeyDown(isShiftDown ? 'S' :'s');
+        eventHandler->OnKeyDown(Key::S);
         break;
     case 0x20:
-        eventHandler->OnKeyDown(isShiftDown ? 'D' :'d');
+        eventHandler->OnKeyDown(Key::D);
         break;
     case 0x21:
-        eventHandler->OnKeyDown(isShiftDown ? 'F' :'f');
+        eventHandler->OnKeyDown(Key::F);
         break;
     case 0x22:
-        eventHandler->OnKeyDown(isShiftDown ? 'G' :'g');
+        eventHandler->OnKeyDown(Key::G);
         break;
     case 0x23:
-        eventHandler->OnKeyDown(isShiftDown ? 'H' :'h');
+        eventHandler->OnKeyDown(Key::H);
         break;
     case 0x24:
-        eventHandler->OnKeyDown(isShiftDown ? 'J' :'j');
+        eventHandler->OnKeyDown(Key::J);
         break;
     case 0x25:
-        eventHandler->OnKeyDown(isShiftDown ? 'K' :'k');
+        eventHandler->OnKeyDown(Key::K);
         break;
     case 0x26:
-        eventHandler->OnKeyDown(isShiftDown ? 'L' :'l');
+        eventHandler->OnKeyDown(Key::L);
         break;
-
     case 0x27:
-        eventHandler->OnKeyDown(isShiftDown ? ':' :';');
+        eventHandler->OnKeyDown(Key::Semicolon);
         break;
     case 0x28:
-        eventHandler->OnKeyDown(isShiftDown ? '"' :'\'');
+        eventHandler->OnKeyDown(Key::Quote);
         break;
     case 0x29:
-        eventHandler->OnKeyDown(isShiftDown ? '~' :'`');
+        eventHandler->OnKeyDown(Key::Tilde);
         break;
-
     case 0x2C:
-        eventHandler->OnKeyDown(isShiftDown ? 'Z' :'z');
+        eventHandler->OnKeyDown(Key::Z);
         break;
     case 0x2D:
-        eventHandler->OnKeyDown(isShiftDown ? 'X' :'x');
+        eventHandler->OnKeyDown(Key::X);
         break;
     case 0x2E:
-        eventHandler->OnKeyDown(isShiftDown ? 'C' :'c');
+        eventHandler->OnKeyDown(Key::C);
         break;
     case 0x2F:
-        eventHandler->OnKeyDown(isShiftDown ? 'V' :'v');
+        eventHandler->OnKeyDown(Key::V);
         break;
     case 0x30:
-        eventHandler->OnKeyDown(isShiftDown ? 'B' :'b');
+        eventHandler->OnKeyDown(Key::B);
         break;
     case 0x31:
-        eventHandler->OnKeyDown(isShiftDown ? 'N' :'n');
+        eventHandler->OnKeyDown(Key::N);
         break;
     case 0x32:
-        eventHandler->OnKeyDown(isShiftDown ? 'M' :'m');
+        eventHandler->OnKeyDown(Key::M);
         break;
     case 0x33:
-        eventHandler->OnKeyDown(isShiftDown ? '<' : ',');
+        eventHandler->OnKeyDown(Key::Comma);
         break;
     case 0x34:
-        eventHandler->OnKeyDown(isShiftDown ? '>' : '.');
+        eventHandler->OnKeyDown(Key::Period);
         break;
     case 0x35:
-        eventHandler->OnKeyDown(isShiftDown ? '?' : '/');
+        eventHandler->OnKeyDown(Key::Slash);
         break;
-
     case 0x1C:
-        eventHandler->OnKeyDown('\n');
+        eventHandler->OnKeyDown(Key::Enter);
         break;
     case 0x39:
-        eventHandler->OnKeyDown(' ');
+        eventHandler->OnKeyDown(Key::Space);
         break;
-        // Special keys
     case 0x0E:
-        eventHandler->OnKeyDown(0X0E);
+        eventHandler->OnKeyDown(Key::Backspace);
         break;
-
     case 0x2A:
+        eventHandler->OnKeyDown(Key::LShift);
+        break;
     case 0x36:
-        isShiftDown = true;
+        eventHandler->OnKeyDown(Key::RShift);
+        break;
+    case 0x3A:
+        eventHandler->OnKeyDown(Key::CapsLock);
+        break;
+    case 0x1D:
+        eventHandler->OnKeyDown(Key::LControl);
+        break;
+        /* case 0x1D:
+        eventHandler->OnKeyDown(Key::RControl);
+        break;*/
+    case 0x38:
+        eventHandler->OnKeyDown(Key::LAlt);
+        break;
+        /*case 0x38:
+        eventHandler->OnKeyDown(Key::RAlt);
+        break;*/
+    case 0xF:
+        eventHandler->OnKeyDown(Key::Tab);
+        break;
+    case 0x5B:
+        eventHandler->OnKeyDown(Key::Menu);
         break;
 
-    case 0xB6:
-    case 0XAA:
-        isShiftDown = false;
+    case 0x2A | 0x80:
+        eventHandler->OnKeyUp(Key::LShift);
+        break;
+    case 0x36 | 0x80:
+        eventHandler->OnKeyUp(Key::RShift);
         break;
 
     default:

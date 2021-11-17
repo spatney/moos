@@ -61,6 +61,7 @@ namespace moos
             Menu,
             LBracket,
             RBracket,
+            CapsLock,
             Semicolon,
             Comma,
             Period,
@@ -122,12 +123,11 @@ namespace moos
         public:
             KeyboardEventHandler();
 
-            virtual void OnKeyDown(common::int8_t);
-            virtual void OnKeyUp(common::int8_t);
+            //virtual void OnKeyDown(common::int8_t);
+            //virtual void OnKeyUp(common::int8_t);
 
-            // Update keyboard to pass enum in future
-            // virtual void OnKeyDown(Keys key);
-            // virtual void OnKeyUp(Keys key);
+            virtual void OnKeyDown(drivers::Key key);
+            virtual void OnKeyUp(drivers::Key key);
         };
 
         class KeyboardDriver : public hardware::InterruptHandler, public Driver
@@ -136,8 +136,6 @@ namespace moos
             hardware::Port8Bit dataPort;
             hardware::Port8Bit commandPort;
             KeyboardEventHandler *eventHandler;
-
-            bool isShiftDown;
 
         public:
             KeyboardDriver(

@@ -6,14 +6,17 @@
 using namespace moos::gui;
 using namespace moos::common;
 using namespace moos::hardware;
+using namespace moos::drivers;
 
-const int8_t* Glyph = "\a> ";
+const int8_t *Glyph = "\a> ";
 
 Terminal::Terminal()
 {
     x = 40;
     y = 12;
     // invertVideoMemoryAt(x, y);
+    isShiftDown = false;
+    isCapsLockOn = false;
 }
 
 Terminal::~Terminal()
@@ -55,20 +58,88 @@ void Terminal::invertVideoMemoryAt(int8_t x, int8_t y)
     VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0x0F00) << 4 | (VideoMemory[80 * y + x] & 0xF000) >> 4 | (VideoMemory[80 * y + x] & 0x00FF);
 }
 
-void Terminal::OnKeyDown(int8_t c)
+uint8_t Terminal::KeyToChar(Key key)
 {
-    if (c == 0X0E)
+    if (key <= Key::Z && key >= Key::A)
     {
-        auto cursor = Console::ReadCursor();
+        return (key - Key::A) + (isShiftDown ^ isCapsLockOn ? 65 : 97);
+    }
+    if (key <= Key::Num9 && key >= Key::Num0 && !isShiftDown)
+    {
+        return (key - Key::Num0) + 48;
+    }
+    if (key == Key::Space)
+    {
+        return ' ';
+    }
 
+    switch (key)
+    {
+    case Key::Num0:
+        return ')';
+    case Key::Num1:
+        return '!';
+    case Key::Num2:
+        return '@';
+    case Key::Num3:
+        return '#';
+    case Key::Num4:
+        return '$';
+    case Key::Num5:
+        return '%';
+    case Key::Num6:
+        return '^';
+    case Key::Num7:
+        return '&';
+    case Key::Num8:
+        return '*';
+    case Key::Num9:
+        return '(';
+
+    default:
+        break;
+    }
+
+    return '\0';
+}
+
+void Terminal::OnKeyUp(Key key)
+{
+    switch (key)
+    {
+    case Key::RShift:
+    case Key::LShift:
+        isShiftDown = false;
+        break;
+
+    default:
+        break;
+    }
+}
+
+void Terminal::OnKeyDown(Key key)
+{
+    auto cursor = Console::ReadCursor();
+    switch (key)
+    {
+    case Key::RShift:
+    case Key::LShift:
+        isShiftDown = true;
+        break;
+    case Key::CapsLock:
+        isCapsLockOn = !isCapsLockOn;
+        break;
+    case Key::Backspace:
         if (cursor.y > promptY || cursor.x > StringUtil::strlen(Glyph))
         {
             Console::Backspace();
         }
-    }
-    else
-    {
-        Console::Write("%c", c);
+
+        break;
+
+    default:
+        Console::Write("%c", KeyToChar(key));
+        break;
     }
 }
 
