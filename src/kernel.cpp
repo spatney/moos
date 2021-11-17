@@ -109,7 +109,9 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     Console::Write("Activating interrupt manager ...\n");
     interruptManager.Activate();
 
+#ifndef GRAPHICS_MODE
     terminal->Reset();
+#endif
 
     //OSTest::HeapDemo();
     //OSTest::SleepDemo();
