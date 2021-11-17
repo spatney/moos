@@ -11,6 +11,7 @@ namespace moos
         {
         public:
             static int32_t strlen(const moos::common::int8_t *s);
+            static int32_t strcmp(const char *X, const char *Y);
         };
     }
 }

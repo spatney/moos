@@ -4,25 +4,35 @@
 #include <common/types.h>
 #include <drivers/mouse.h>
 #include <drivers/keyboard.h>
+#include <common/linkedlist.h>
 
 namespace moos
 {
     namespace gui
     {
+        struct Token
+        {
+            common::uint8_t *str;
+            common::uint8_t len;
+        };
+
         class Terminal : public drivers::MouseEventHandler, public drivers::KeyboardEventHandler
         {
         private:
             common::int32_t x;
             common::int32_t y;
             common::uint8_t promptY;
+            common::uint8_t *buffer;
+            common::int32_t bufferCount;
 
             // all the keyboard state stuff should probably be in a state manager of sorts.
-            // will attempt some other time. 
+            // will attempt some other time.
             bool isShiftDown;
             bool isCapsLockOn;
 
             void drawPrompt();
-            common::uint8_t KeyToChar(drivers::Key key);
+            common::LinkedList *tokenizeBuffer();
+            common::uint8_t keyToChar(drivers::Key key);
 
         public:
             Terminal();

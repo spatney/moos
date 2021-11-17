@@ -17,6 +17,9 @@ Terminal::Terminal()
     // invertVideoMemoryAt(x, y);
     isShiftDown = false;
     isCapsLockOn = false;
+
+    buffer = new uint8_t[400];
+    bufferCount = 0;
 }
 
 Terminal::~Terminal()
@@ -58,7 +61,30 @@ void Terminal::invertVideoMemoryAt(int8_t x, int8_t y)
     VideoMemory[80 * y + x] = (VideoMemory[80 * y + x] & 0x0F00) << 4 | (VideoMemory[80 * y + x] & 0xF000) >> 4 | (VideoMemory[80 * y + x] & 0x00FF);
 }
 
-uint8_t Terminal::KeyToChar(Key key)
+LinkedList *Terminal::tokenizeBuffer()
+{
+    auto list = new LinkedList();
+    uint8_t *tempBuffer = buffer;
+
+    while (*tempBuffer != '\0')
+    {
+        auto token = new Token();
+        token->str = tempBuffer;
+
+        while (*tempBuffer != ' ' && *tempBuffer != '\0')
+        {
+            ++tempBuffer;
+        }
+
+        *tempBuffer++ = '\0';
+
+        list->AddLast(token);
+    }
+
+    return list;
+}
+
+uint8_t Terminal::keyToChar(Key key)
 {
     if (key <= Key::Z && key >= Key::A)
     {
@@ -105,6 +131,8 @@ uint8_t Terminal::KeyToChar(Key key)
         return isShiftDown ? '|' : '\\';
     case Key::Tab:
         return '\t';
+    case Key::Enter:
+        return '\n';
     default:
         break;
     }
@@ -141,13 +169,45 @@ void Terminal::OnKeyDown(Key key)
     case Key::Backspace:
         if (cursor.y > promptY || cursor.x > StringUtil::strlen(Glyph))
         {
+            bufferCount--;
             Console::Backspace();
         }
-
         break;
+    case Key::Enter:
+    {
+        Console::Write("\n");
+
+        buffer[bufferCount] = '\0';
+        auto tokens = tokenizeBuffer();
+
+        if (!StringUtil::strcmp("clear", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        {
+            Console::Clear();
+        }
+        else
+        {
+            // for debugging
+            /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
+            {
+                auto data = *it;
+                common::Console::Write("%s => ", ((Token *)data)->str);
+            }
+            Console::Write("END");*/
+            Console::Write("'%s' command not supported\n", (const char *)(((Token *)tokens->PeekFirst())->str));
+        }
+
+        drawPrompt();
+        bufferCount = 0;
+    }
+    break;
 
     default:
-        Console::Write("%c", KeyToChar(key));
+        auto c = keyToChar(key);
+        if (c != '\0')
+        {
+            buffer[bufferCount++] = c;
+            Console::Write("%c", c);
+        }
         break;
     }
 }

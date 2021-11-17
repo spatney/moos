@@ -12,3 +12,19 @@ int32_t StringUtil::strlen(const int8_t *s)
     }
     return count;
 }
+
+int32_t StringUtil::strcmp(const char *X, const char *Y)
+{
+    while (*X)
+    {
+        if (*X != *Y)
+        {
+            break;
+        }
+
+        X++;
+        Y++;
+    }
+
+    return *(const unsigned char *)X - *(const unsigned char *)Y;
+}
