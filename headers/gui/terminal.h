@@ -14,6 +14,7 @@ namespace moos
         private:
             common::int32_t x;
             common::int32_t y;
+            common::uint8_t promptY;
             
             void drawPrompt();
 

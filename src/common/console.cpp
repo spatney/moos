@@ -42,6 +42,7 @@ void Console::Clear()
     cursor.x = 0;
     cursor.y = 0;
 
+    enableCusor(0,0);
     updateCursor();
 }
 
@@ -183,7 +184,7 @@ void Console::enableCusor(
 
 void Console::updateCursor()
 {
-    uint16_t pos = cursor.y * 80 + cursor.x;
+    uint16_t pos = (cursor.y + 1) * 80 + cursor.x;
 
     dataPort.Write(0x0F);
     commandPort.Write((uint8_t)(pos & 0xFF));

@@ -1,10 +1,13 @@
 #include <gui/terminal.h>
 #include <hardware/video.h>
 #include <common/console.h>
+#include <common/strings.h>
 
 using namespace moos::gui;
 using namespace moos::common;
 using namespace moos::hardware;
+
+const int8_t* Glyph = "\a> ";
 
 Terminal::Terminal()
 {
@@ -58,7 +61,7 @@ void Terminal::OnKeyDown(int8_t c)
     {
         auto cursor = Console::ReadCursor();
 
-        if (cursor.y > 0 || cursor.x > 7)
+        if (cursor.y > promptY || cursor.x > StringUtil::strlen(Glyph))
         {
             Console::Backspace();
         }
@@ -72,10 +75,12 @@ void Terminal::OnKeyDown(int8_t c)
 void Terminal::Reset()
 {
     Console::Clear();
+    Console::Write("Welcome to MoOS!\n\n");
     drawPrompt();
 }
 
 void Terminal::drawPrompt()
 {
-    Console::Write("MoOS\a> ");
+    Console::Write(Glyph);
+    promptY = Console::ReadCursor().y;
 }
