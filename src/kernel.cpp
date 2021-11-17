@@ -77,7 +77,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
 #ifndef GRAPHICS_MODE
     auto *terminal = new Terminal();
-    mouseHandler = terminal;
+    mouseHandler = 0;//terminal;
     keyboardHandler = terminal;
 #endif
 
@@ -109,7 +109,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     Console::Write("Activating interrupt manager ...\n");
     interruptManager.Activate();
 
-    Console::Write("\n\nMoOS\a> ");
+    terminal->Reset();
 
     //OSTest::HeapDemo();
     //OSTest::SleepDemo();

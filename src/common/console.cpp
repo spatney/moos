@@ -2,17 +2,14 @@
 
 #include <stdarg.h>
 #include <hardware/video.h>
+#include <hardware/port.h>
 
 using namespace moos::common;
 using namespace moos::hardware;
 
-struct Cursor
-{
-    int8_t x = 0;
-    int8_t y = 0;
-};
-
 static Cursor cursor;
+static Port8Bit dataPort(0x3D4);
+static Port8Bit commandPort(0x3D5);
 
 void Console::moveCursorBackByOne()
 {
@@ -33,6 +30,8 @@ void Console::Backspace()
     moveCursorBackByOne();
     Write(" ");
     moveCursorBackByOne();
+
+    updateCursor();
 }
 
 void Console::Clear()
@@ -42,6 +41,8 @@ void Console::Clear()
             VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
     cursor.x = 0;
     cursor.y = 0;
+
+    updateCursor();
 }
 
 void Console::Write(const int8_t *message, ...)
@@ -134,6 +135,8 @@ void Console::Write(const int8_t *message, ...)
             break;
         }
     }
+
+    updateCursor();
 }
 
 int8_t *Console::itoa(int32_t val, const int32_t base)
@@ -160,4 +163,36 @@ void Console::Sleep(int32_t seconds)
 
     while ((Console::ticks - startTicks) < (seconds * 20))
         ;
+}
+
+Cursor Console::ReadCursor()
+{
+    return cursor;
+}
+
+void Console::enableCusor(
+    common::uint8_t cursor_start,
+    common::uint8_t cursor_end)
+{
+    dataPort.Write(0x0A);
+    commandPort.Write((commandPort.Read() & 0xC0) | cursor_start);
+
+    dataPort.Write(0x0B);
+    commandPort.Write((commandPort.Read() & 0xE0) | cursor_end);
+}
+
+void Console::updateCursor()
+{
+    uint16_t pos = cursor.y * 80 + cursor.x;
+
+    dataPort.Write(0x0F);
+    commandPort.Write((uint8_t)(pos & 0xFF));
+    dataPort.Write(0x0E);
+    commandPort.Write((uint8_t)((pos >> 8) & 0xFF));
+}
+
+void Console::disableCursor()
+{
+    dataPort.Write(0x0A);
+    commandPort.Write(0x20);
 }

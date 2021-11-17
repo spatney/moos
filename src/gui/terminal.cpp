@@ -10,7 +10,7 @@ Terminal::Terminal()
 {
     x = 40;
     y = 12;
-    invertVideoMemoryAt(x, y);
+    // invertVideoMemoryAt(x, y);
 }
 
 Terminal::~Terminal()
@@ -21,10 +21,12 @@ void Terminal::OnMouseDown(uint8_t button)
 {
     invertVideoMemoryAt(x, y);
 }
+
 void Terminal::OnMouseUp(uint8_t button)
 {
     invertVideoMemoryAt(x, y);
 }
+
 void Terminal::OnMouseMove(int32_t xOffset, int32_t yOffset)
 {
     xOffset /= 4;
@@ -54,10 +56,26 @@ void Terminal::OnKeyDown(int8_t c)
 {
     if (c == 0X0E)
     {
-        Console::Backspace();
+        auto cursor = Console::ReadCursor();
+
+        if (cursor.y > 0 || cursor.x > 7)
+        {
+            Console::Backspace();
+        }
     }
     else
     {
         Console::Write("%c", c);
     }
+}
+
+void Terminal::Reset()
+{
+    Console::Clear();
+    drawPrompt();
+}
+
+void Terminal::drawPrompt()
+{
+    Console::Write("MoOS\a> ");
 }
