@@ -15,6 +15,9 @@ namespace moos
             common::int32_t x;
             common::int32_t y;
             common::uint8_t promptY;
+
+            // all the keyboard state stuff should probably be in a state manager of sorts.
+            // will attempt some other time. 
             bool isShiftDown;
             bool isCapsLockOn;
 

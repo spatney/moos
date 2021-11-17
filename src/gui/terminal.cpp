@@ -95,7 +95,16 @@ uint8_t Terminal::KeyToChar(Key key)
         return '*';
     case Key::Num9:
         return '(';
-
+    case Key::Period:
+        return isShiftDown ? '>' : '.';
+    case Key::Comma:
+        return isShiftDown ? '<' : ',';
+    case Key::Slash:
+        return isShiftDown ? '?' : '/';
+    case Key::Backslash:
+        return isShiftDown ? '|' : '\\';
+    case Key::Tab:
+        return '\t';
     default:
         break;
     }
