@@ -20,6 +20,8 @@ Terminal::Terminal()
 
     buffer = new uint8_t[400];
     bufferCount = 0;
+    promptX = 0;
+    promptY = 0;
 }
 
 Terminal::~Terminal()
@@ -167,7 +169,7 @@ void Terminal::OnKeyDown(Key key)
         isCapsLockOn = !isCapsLockOn;
         break;
     case Key::Backspace:
-        if (cursor.y > promptY || cursor.x > StringUtil::strlen(Glyph))
+        if (cursor.y > promptY || cursor.x > promptX)
         {
             bufferCount--;
             Console::Backspace();
@@ -193,7 +195,10 @@ void Terminal::OnKeyDown(Key key)
                 common::Console::Write("%s => ", ((Token *)data)->str);
             }
             Console::Write("END");*/
-            Console::Write("'%s' command not supported\n", (const char *)(((Token *)tokens->PeekFirst())->str));
+            if (tokens->PeekFirst() != 0)
+            {
+                Console::Write("command not found: '%s'\n", (const char *)(((Token *)tokens->PeekFirst())->str));
+            }
         }
 
         drawPrompt();
@@ -223,4 +228,5 @@ void Terminal::drawPrompt()
 {
     Console::Write(Glyph);
     promptY = Console::ReadCursor().y;
+    promptX = StringUtil::strlen(Glyph);
 }

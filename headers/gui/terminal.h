@@ -21,6 +21,7 @@ namespace moos
         private:
             common::int32_t x;
             common::int32_t y;
+            common::uint8_t promptX;
             common::uint8_t promptY;
             common::uint8_t *buffer;
             common::int32_t bufferCount;
