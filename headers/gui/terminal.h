@@ -13,7 +13,6 @@ namespace moos
         struct Token
         {
             common::uint8_t *str;
-            common::uint8_t len;
         };
 
         class Terminal : public drivers::MouseEventHandler, public drivers::KeyboardEventHandler

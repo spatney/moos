@@ -38,7 +38,7 @@ void *MemoryManager::malloc(common::size_t size)
 {
     MemoryBlock *emptyBlock = 0;
     for (
-        MemoryBlock *block = head;
+        auto block = head;
         block != 0 && emptyBlock == 0;
         block = block->next)
     {
@@ -60,7 +60,7 @@ void *MemoryManager::malloc(common::size_t size)
     }
     else
     {
-        MemoryBlock *newBlock = (MemoryBlock *)((size_t)emptyBlock + sizeof(MemoryBlock) + size);
+        auto newBlock = (MemoryBlock *)((size_t)emptyBlock + sizeof(MemoryBlock) + size);
         newBlock->allocated = false;
         newBlock->size = emptyBlock->size - sizeof(MemoryBlock) - size;
         newBlock->prev = emptyBlock;
@@ -77,12 +77,14 @@ void *MemoryManager::malloc(common::size_t size)
         emptyBlock->allocated = true;
     }
 
+    Console::Write("malloc\n");
+
     return (void *)(((size_t)emptyBlock) + sizeof(MemoryBlock));
 }
 
 void MemoryManager::printFree()
 {
-    MemoryBlock *curr = this->head;
+    auto curr = this->head;
     size_t size = 0;
 
     while (curr != 0)
@@ -101,14 +103,14 @@ void MemoryManager::printFree()
 void MemoryManager::free(void *ptr)
 {
 
-    MemoryBlock *block = (MemoryBlock *)((size_t)ptr - sizeof(MemoryBlock));
+    auto block = (MemoryBlock *)((size_t)ptr - sizeof(MemoryBlock));
     block->allocated = false;
 
     if (block->prev != 0 && !block->prev->allocated)
     {
         block->prev->next = block->next;
 
-        block->prev->size += block->size + sizeof(MemoryBlock);
+        block->prev->size += (block->size + sizeof(MemoryBlock));
 
         if (block->next != 0)
         {
@@ -121,7 +123,7 @@ void MemoryManager::free(void *ptr)
     if (block->next != 0 && !block->next->allocated)
     {
 
-        block->size = block->next->size + sizeof(MemoryBlock);
+        block->size += (block->next->size + sizeof(MemoryBlock));
         block->next = block->next->next;
 
         if (block->next != 0)

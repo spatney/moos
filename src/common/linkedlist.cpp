@@ -82,6 +82,7 @@ void *LinkedList::RemoveLast()
     }
 
     auto *result = tail->data;
+    delete tail;
     tail = tail->prev;
     tail->next = 0;
 

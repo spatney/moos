@@ -2,11 +2,13 @@
 #include <hardware/video.h>
 #include <common/console.h>
 #include <common/strings.h>
+#include <core/memory.h>
 
 using namespace moos::gui;
 using namespace moos::common;
 using namespace moos::hardware;
 using namespace moos::drivers;
+using namespace moos::core;
 
 const int8_t *Glyph = "\a> ";
 
@@ -186,6 +188,14 @@ void Terminal::OnKeyDown(Key key)
         {
             Console::Clear();
         }
+        else if (!StringUtil::strcmp("uname", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        {
+            Console::Write("MoOS kernel v0.1\n");
+        }
+        else if (!StringUtil::strcmp("free", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        {
+            MemoryManager::activeMemoryManager->printFree();
+        }
         else
         {
             // for debugging
@@ -200,6 +210,17 @@ void Terminal::OnKeyDown(Key key)
                 Console::Write("command not found: '%s'\n", (const char *)(((Token *)tokens->PeekFirst())->str));
             }
         }
+
+        // free up list, should add freeList() to LinkedList
+        auto last = tokens->RemoveLast();
+        while (last != 0)
+        {
+            auto token = (Token *)last;
+            delete token;
+            last = tokens->RemoveLast();
+        }
+
+        delete tokens;
 
         drawPrompt();
         bufferCount = 0;
