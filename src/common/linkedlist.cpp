@@ -46,10 +46,10 @@ void LinkedList::AddFirst(void *data)
 
 void LinkedList::AddLast(void *data)
 {
-    if (head == 0)
+    if (tail == 0)
     {
-        head = new LinkedListNode(data);
-        tail = head;
+        tail = new LinkedListNode(data);
+        head = tail;
     }
     else
     {
@@ -68,6 +68,7 @@ void *LinkedList::RemoveFirst()
     }
 
     auto *result = head->data;
+    delete tail;
     head = head->next;
     head->prev = 0;
 
@@ -111,6 +112,12 @@ void *LinkedList::PeekLast()
 
 void LinkedList::FreeList()
 {
-    while(RemoveLast() != 0);
+    auto curr = head;
+    while (curr != 0)
+    {
+        auto temp = curr->next;
+        delete curr;
+        curr = temp;
+    }
     delete this;
 }

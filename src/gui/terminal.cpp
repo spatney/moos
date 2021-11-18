@@ -202,12 +202,12 @@ void Terminal::OnKeyDown(Key key)
         else
         {
             // for debugging
-            for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
+           /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
             {
                 auto data = *it;
                 common::Console::Write("%s => ", ((Token *)data)->str);
             }
-            Console::Write("END\n");
+            Console::Write("END\n");*/
             if (tokens->PeekFirst() != 0)
             {
                 Console::Write("command not found: '%s'\n", (const char *)(((Token *)tokens->PeekFirst())->str));
