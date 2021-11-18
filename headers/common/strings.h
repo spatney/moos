@@ -10,8 +10,8 @@ namespace moos
         class StringUtil
         {
         public:
-            static int32_t strlen(const moos::common::int8_t *s);
-            static int32_t strcmp(const char *X, const char *Y);
+            static int32_t strlen(const common::int8_t *s);
+            static int32_t strcmp(const common::int8_t *X, const common::int8_t *Y);
         };
     }
 }

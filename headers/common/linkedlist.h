@@ -62,6 +62,7 @@ namespace moos
         public:
             LinkedList();
             ~LinkedList();
+            
             void AddFirst(void *data);
             void AddLast(void *data);
 

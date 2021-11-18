@@ -251,15 +251,191 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
         eventHandler->OnKeyDown(Key::Down);
         break;
 
+    case 0x02 | 0x80:
+        eventHandler->OnKeyUp(Key::Num1);
+        break;
+    case 0x03 | 0x80:
+        eventHandler->OnKeyUp(Key::Num2);
+        break;
+    case 0x04 | 0x80:
+        eventHandler->OnKeyUp(Key::Num3);
+        break;
+    case 0x05 | 0x80:
+        eventHandler->OnKeyUp(Key::Num4);
+        break;
+    case 0x06 | 0x80:
+        eventHandler->OnKeyUp(Key::Num5);
+        break;
+    case 0x07 | 0x80:
+        eventHandler->OnKeyUp(Key::Num6);
+        break;
+    case 0x08 | 0x80:
+        eventHandler->OnKeyUp(Key::Num7);
+        break;
+    case 0x09 | 0x80:
+        eventHandler->OnKeyUp(Key::Num8);
+        break;
+    case 0x0A | 0x80:
+        eventHandler->OnKeyUp(Key::Num9);
+        break;
+    case 0x0B | 0x80:
+        eventHandler->OnKeyUp(Key::Num0);
+        break;
+    case 0x0C | 0x80:
+        eventHandler->OnKeyUp(Key::Hyphen);
+        break;
+    case 0x0D | 0x80:
+        eventHandler->OnKeyUp(Key::Equal);
+        break;
+    case 0x10 | 0x80:
+        eventHandler->OnKeyUp(Key::Q);
+        break;
+    case 0x11 | 0x80:
+        eventHandler->OnKeyUp(Key::W);
+        break;
+    case 0x12 | 0x80:
+        eventHandler->OnKeyUp(Key::E);
+        break;
+    case 0x13 | 0x80:
+        eventHandler->OnKeyUp(Key::R);
+        break;
+    case 0x14 | 0x80:
+        eventHandler->OnKeyUp(Key::T);
+        break;
+    case 0x15 | 0x80:
+        eventHandler->OnKeyUp(Key::Y);
+        break;
+    case 0x16 | 0x80:
+        eventHandler->OnKeyUp(Key::U);
+        break;
+    case 0x17 | 0x80:
+        eventHandler->OnKeyUp(Key::I);
+        break;
+    case 0x18 | 0x80:
+        eventHandler->OnKeyUp(O);
+        break;
+    case 0x19 | 0x80:
+        eventHandler->OnKeyUp(Key::P);
+        break;
+    case 0x1A | 0x80:
+        eventHandler->OnKeyUp(Key::LBracket);
+        break;
+    case 0x1B | 0x80:
+        eventHandler->OnKeyUp(Key::RBracket);
+        break;
+    case 0x2B | 0x80:
+        eventHandler->OnKeyUp(Key::Backslash);
+        break;
+    case 0x1E | 0x80:
+        eventHandler->OnKeyUp(Key::A);
+        break;
+    case 0x1F | 0x80:
+        eventHandler->OnKeyUp(Key::S);
+        break;
+    case 0x20 | 0x80:
+        eventHandler->OnKeyUp(Key::D);
+        break;
+    case 0x21 | 0x80:
+        eventHandler->OnKeyUp(Key::F);
+        break;
+    case 0x22 | 0x80:
+        eventHandler->OnKeyUp(Key::G);
+        break;
+    case 0x23 | 0x80:
+        eventHandler->OnKeyUp(Key::H);
+        break;
+    case 0x24 | 0x80:
+        eventHandler->OnKeyUp(Key::J);
+        break;
+    case 0x25 | 0x80:
+        eventHandler->OnKeyUp(Key::K);
+        break;
+    case 0x26 | 0x80:
+        eventHandler->OnKeyUp(Key::L);
+        break;
+    case 0x27 | 0x80:
+        eventHandler->OnKeyUp(Key::Semicolon);
+        break;
+    case 0x28 | 0x80:
+        eventHandler->OnKeyUp(Key::Quote);
+        break;
+    case 0x29 | 0x80:
+        eventHandler->OnKeyUp(Key::Tilde);
+        break;
+    case 0x2C | 0x80:
+        eventHandler->OnKeyUp(Key::Z);
+        break;
+    case 0x2D | 0x80:
+        eventHandler->OnKeyUp(Key::X);
+        break;
+    case 0x2E | 0x80:
+        eventHandler->OnKeyUp(Key::C);
+        break;
+    case 0x2F | 0x80:
+        eventHandler->OnKeyUp(Key::V);
+        break;
+    case 0x30 | 0x80:
+        eventHandler->OnKeyUp(Key::B);
+        break;
+    case 0x31 | 0x80:
+        eventHandler->OnKeyUp(Key::N);
+        break;
+    case 0x32 | 0x80:
+        eventHandler->OnKeyUp(Key::M);
+        break;
+    case 0x33 | 0x80:
+        eventHandler->OnKeyUp(Key::Comma);
+        break;
+    case 0x34 | 0x80:
+        eventHandler->OnKeyUp(Key::Period);
+        break;
+    case 0x35 | 0x80:
+        eventHandler->OnKeyUp(Key::Slash);
+        break;
+    case 0x1C | 0x80:
+        eventHandler->OnKeyUp(Key::Enter);
+        break;
+    case 0x39 | 0x80:
+        eventHandler->OnKeyUp(Key::Space);
+        break;
+    case 0x0E | 0x80:
+        eventHandler->OnKeyUp(Key::Backspace);
+        break;
     case 0x2A | 0x80:
         eventHandler->OnKeyUp(Key::LShift);
         break;
     case 0x36 | 0x80:
         eventHandler->OnKeyUp(Key::RShift);
         break;
+    case 0x3A | 0x80:
+        eventHandler->OnKeyUp(Key::CapsLock);
+        break;
+    case 0x1D | 0x80:
+        eventHandler->OnKeyUp(Key::LControl);
+        break;
+    case 0x38 | 0x80:
+        eventHandler->OnKeyUp(Key::LAlt);
+        break;
+    case 0xF | 0x80:
+        eventHandler->OnKeyUp(Key::Tab);
+        break;
+    case 0x5B | 0x80:
+        eventHandler->OnKeyUp(Key::Menu);
+        break;
+    case 0x48 | 0x80:
+        eventHandler->OnKeyUp(Key::Up);
+        break;
+    case 0x4D | 0x80:
+        eventHandler->OnKeyUp(Key::Right);
+        break;
+    case 0x4B | 0x80:
+        eventHandler->OnKeyUp(Key::Left);
+        break;
+    case 0x50 | 0x80:
+        eventHandler->OnKeyUp(Key::Down);
+        break;
 
     default:
-    {
         if (key >= 0x80)
         {
             // ignore key up
@@ -267,7 +443,6 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
         }
         Console::Write("\nUnknown key pressed => 0x%x", key);
         break;
-    }
     }
 
     return esp;

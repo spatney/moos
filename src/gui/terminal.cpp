@@ -20,7 +20,7 @@ Terminal::Terminal()
     isShiftDown = false;
     isCapsLockOn = false;
 
-    buffer = new uint8_t[400];
+    buffer = new uint8_t[2000];
     bufferCount = 0;
     promptX = 0;
     promptY = 0;
@@ -191,21 +191,21 @@ void Terminal::OnKeyDown(Key key)
         buffer[bufferCount] = '\0';
         auto tokens = tokenizeBuffer();
 
-        if (!StringUtil::strcmp("clear", (const char *)tokens->PeekFirst()))
+        if (!StringUtil::strcmp("clear", (const int8_t *)tokens->PeekFirst()))
         {
             Console::Clear();
         }
-        else if (!StringUtil::strcmp("uname", (const char *)tokens->PeekFirst()))
+        else if (!StringUtil::strcmp("uname", (const int8_t *)tokens->PeekFirst()))
         {
             auto color = Console::SetColor(2);
             Console::Write("MoOS kernel v0.1\n");
             color = Console::SetColor(color);
         }
-        else if (!StringUtil::strcmp("free", (const char *)tokens->PeekFirst()))
+        else if (!StringUtil::strcmp("free", (const int8_t *)tokens->PeekFirst()))
         {
             auto color = Console::SetColor(6);
             auto it = ++tokens->begin();
-            if (it != tokens->end() && !StringUtil::strcmp("-h", (const char *)(*it)))
+            if (it != tokens->end() && !StringUtil::strcmp("-h", (const int8_t *)(*it)))
             {
                 Console::Write("%d KB remaining in heap\n", MemoryManager::activeMemoryManager->GetFree() / 1024);
             }
@@ -219,7 +219,7 @@ void Terminal::OnKeyDown(Key key)
         {
             if (tokens->PeekFirst() != 0)
             {
-                Console::Write("command not found: '%s'\n", (const char *)tokens->PeekFirst());
+                Console::Write("command not found: '%s'\n", (const int8_t *)tokens->PeekFirst());
             }
         }
 

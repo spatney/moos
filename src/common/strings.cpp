@@ -13,7 +13,7 @@ int32_t StringUtil::strlen(const int8_t *s)
     return count;
 }
 
-int32_t StringUtil::strcmp(const char *X, const char *Y)
+int32_t StringUtil::strcmp(const int8_t *X, const int8_t *Y)
 {
     while (*X)
     {
@@ -26,5 +26,5 @@ int32_t StringUtil::strcmp(const char *X, const char *Y)
         Y++;
     }
 
-    return *(const unsigned char *)X - *(const unsigned char *)Y;
+    return *(const uint8_t *)X - *(const uint8_t *)Y;
 }
