@@ -77,8 +77,6 @@ void *MemoryManager::malloc(common::size_t size)
         emptyBlock->allocated = true;
     }
 
-    Console::Write("malloc\n");
-
     return (void *)(((size_t)emptyBlock) + sizeof(MemoryBlock));
 }
 
