@@ -7,6 +7,7 @@ namespace moos
 {
     namespace core
     {
+
         class RefCounter
         {
         private:
@@ -23,37 +24,38 @@ namespace moos
                 return --count;
             }
         };
+
         template <typename T>
         class shared_ptr
         {
         private:
             T *pData;
-            RefCounter *reference;
+            RefCounter *refCounter;
 
         public:
-            shared_ptr() : pData(0), reference(0)
+            shared_ptr() : pData(0), refCounter(0)
             {
-                reference = new RefCounter();
-                reference->Incr();
+                refCounter = new RefCounter();
+                refCounter->Incr();
             }
 
-            shared_ptr(T *pValue) : pData(pValue), reference(0)
+            shared_ptr(T *pValue) : pData(pValue), refCounter(0)
             {
-                reference = new RefCounter();
-                reference->Incr();
+                refCounter = new RefCounter();
+                refCounter->Incr();
             }
 
-            shared_ptr(const shared_ptr<T> &sp) : pData(sp.pData), reference(sp.reference)
+            shared_ptr(const shared_ptr<T> &sp) : pData(sp.pData), refCounter(sp.refCounter)
             {
-                reference->Incr();
+                refCounter->Incr();
             }
 
             ~shared_ptr()
             {
-                if (reference->Decr() == 0)
+                if (refCounter->Decr() == 0)
                 {
                     delete pData;
-                    delete reference;
+                    delete refCounter;
                 }
             }
 
@@ -71,15 +73,14 @@ namespace moos
             {
                 if (this != &sp)
                 {
-                    if (reference->Decr() == 0)
+                    if (refCounter->Decr() == 0)
                     {
                         delete pData;
-                        delete reference;
+                        delete refCounter;
                     }
 
                     pData = sp.pData;
-                    reference = sp.reference;
-                    reference->Incr();
+                    sp.refCounter->Incr();
                 }
                 return *this;
             }

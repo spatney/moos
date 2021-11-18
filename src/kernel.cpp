@@ -76,7 +76,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     KeyboardEventHandler *keyboardHandler;
 
 #ifndef GRAPHICS_MODE
-    auto *terminal = new Terminal();
+    auto terminal = new Terminal();
     mouseHandler = 0;//terminal;
     keyboardHandler = terminal;
 #endif
@@ -98,7 +98,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     desktop->AddChildWidget(&win4);
 #endif
 
-    auto *keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
+    auto keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
     driverManager.AddDriver(keyboard);
     MouseDriver mouse(&interruptManager, mouseHandler);
     driverManager.AddDriver(&mouse);

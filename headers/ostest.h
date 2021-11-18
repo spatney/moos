@@ -24,11 +24,12 @@ namespace moos
     class OSTest
     {
     public:
-        static void SharedPtrDemo()
+        static core::shared_ptr<Empty> SharedPtrDemo()
         {
+            common::Console::Write("\nFREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
+            auto sp = core::shared_ptr(new Empty());
             common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
-            core::shared_ptr<Empty> sp(new Empty());
-            common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
+            return sp;
         }
 
         static void SleepDemo()
@@ -94,7 +95,7 @@ namespace moos
         {
             common::int32_t counter = 0;
 
-            common::Console::Write("HEAD => ");
+            common::Console::Write("\nHEAD => ");
 
             for (auto it = list->begin(), end = list->end(); it != end; ++it)
             {
