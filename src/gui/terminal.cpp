@@ -141,11 +141,14 @@ uint8_t Terminal::keyToChar(Key key)
         return isShiftDown ? '_' : '-';
     case Key::Equal:
         return isShiftDown ? '+' : '=';
-    default:
-        break;
-    }
 
-    return '\0';
+    case Key::Up:
+    case Key::Down:
+    case Key::Left:
+    case Key::Right:
+    default:
+        return '\0';
+    }
 }
 
 void Terminal::OnKeyUp(Key key)
@@ -204,7 +207,7 @@ void Terminal::OnKeyDown(Key key)
             auto it = ++tokens->begin();
             if (it != tokens->end() && !StringUtil::strcmp("-h", (const char *)(*it)))
             {
-                Console::Write("%d MB remaining in heap\n", MemoryManager::activeMemoryManager->GetFree() / 1024);
+                Console::Write("%d KB remaining in heap\n", MemoryManager::activeMemoryManager->GetFree() / 1024);
             }
             else
             {
@@ -214,13 +217,6 @@ void Terminal::OnKeyDown(Key key)
         }
         else
         {
-            // for debugging
-            /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
-            {
-                auto data = *it;
-                common::Console::Write("%s => ", ((Token *)data)->str);
-            }
-            Console::Write("END\n");*/
             if (tokens->PeekFirst() != 0)
             {
                 Console::Write("command not found: '%s'\n", (const char *)tokens->PeekFirst());

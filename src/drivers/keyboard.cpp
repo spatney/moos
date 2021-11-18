@@ -238,6 +238,18 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x5B:
         eventHandler->OnKeyDown(Key::Menu);
         break;
+    case 0x48:
+        eventHandler->OnKeyDown(Key::Up);
+        break;
+    case 0x4D:
+        eventHandler->OnKeyDown(Key::Right);
+        break;
+    case 0x4B:
+        eventHandler->OnKeyDown(Key::Left);
+        break;
+    case 0x50:
+        eventHandler->OnKeyDown(Key::Down);
+        break;
 
     case 0x2A | 0x80:
         eventHandler->OnKeyUp(Key::LShift);
