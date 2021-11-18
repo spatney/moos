@@ -10,6 +10,7 @@ using namespace moos::hardware;
 static Cursor cursor;
 static Port8Bit dataPort(0x3D4);
 static Port8Bit commandPort(0x3D5);
+static uint8_t color = 0x03;
 
 void Console::moveCursorBackByOne()
 {
@@ -38,12 +39,19 @@ void Console::Clear()
 {
     for (cursor.y = 0; cursor.y < 25; cursor.y++)
         for (cursor.x = 0; cursor.x < 80; cursor.x++)
-            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+            VideoMemory[80 * cursor.y + cursor.x] = 0 | ' ';
     cursor.x = 0;
     cursor.y = 0;
 
-    enableCusor(0,0);
+    enableCusor(0, 0);
     updateCursor();
+}
+
+uint8_t Console::SetColor(uint8_t c)
+{
+    uint8_t temp = color;
+    color = c;
+    return temp;
 }
 
 void Console::Write(const int8_t *message, ...)
@@ -67,7 +75,7 @@ void Console::Write(const int8_t *message, ...)
 
             cursor.y++;
             for (cursor.x = 0; cursor.x < 80; cursor.x++)
-                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+                VideoMemory[80 * cursor.y + cursor.x] = (color << 8) | ' ';
 
             cursor.x = 0;
             cursor.y -= 1;
@@ -77,19 +85,19 @@ void Console::Write(const int8_t *message, ...)
         {
         case '\n':
             for (; cursor.x < 80; cursor.x++)
-                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+                VideoMemory[80 * cursor.y + cursor.x] = (color << 8) | ' ';
             cursor.y++;
             cursor.x = 0;
             Write(" ");
             for (; cursor.x < 80; cursor.x++)
-                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+                VideoMemory[80 * cursor.y + cursor.x] = (color << 8) | ' ';
             cursor.x = 0;
             break;
         case '\t':
         {
             int8_t tempX = cursor.x;
             for (; cursor.x < 80; cursor.x++)
-                VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | ' ';
+                VideoMemory[80 * cursor.y + cursor.x] = (color << 8) | ' ';
             cursor.x = tempX;
             cursor.x += 4;
             break;
@@ -131,7 +139,7 @@ void Console::Write(const int8_t *message, ...)
             }
 
         default:
-            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & 0xFF00) | message[i];
+            VideoMemory[80 * cursor.y + cursor.x] = (color << 8) | message[i];
             cursor.x++;
             break;
         }
@@ -149,10 +157,20 @@ int8_t *Console::itoa(int32_t val, const int32_t base)
     ptr = &buffer[49];
     *ptr = '\0';
 
+    int8_t counter = 0;
+
     do
     {
-        *--ptr = Representation[val % base];
-        val /= base;
+        if (counter++ == 3)
+        {
+            *--ptr = ',';
+            counter = 0;
+        }
+        else
+        {
+            *--ptr = Representation[val % base];
+            val /= base;
+        }
     } while (val != 0);
 
     return ptr;

@@ -190,11 +190,15 @@ void Terminal::OnKeyDown(Key key)
         }
         else if (!StringUtil::strcmp("uname", (const char *)tokens->PeekFirst()))
         {
+            auto color = Console::SetColor(2);
             Console::Write("MoOS kernel v0.1\n");
+            color = Console::SetColor(color);
         }
         else if (!StringUtil::strcmp("free", (const char *)tokens->PeekFirst()))
         {
+            auto color = Console::SetColor(13);
             MemoryManager::activeMemoryManager->printFree();
+            color = Console::SetColor(color);
         }
         else
         {

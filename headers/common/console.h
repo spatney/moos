@@ -20,6 +20,7 @@ namespace moos
             inline static common::uint32_t ticks = 0;
 
             static void Clear();
+            static common::uint8_t SetColor(common::uint8_t color);
             static void Write(const common::int8_t *message, ...);
             static void Backspace();
             static void Sleep(common::int32_t);
