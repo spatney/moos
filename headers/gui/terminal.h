@@ -5,6 +5,7 @@
 #include <drivers/mouse.h>
 #include <drivers/keyboard.h>
 #include <common/linkedlist.h>
+#include <core/sharedptr.h>
 
 namespace moos
 {
@@ -19,7 +20,10 @@ namespace moos
 
             common::uint8_t promptX;
             common::uint8_t promptY;
-            common::uint8_t *buffer;
+            common::int8_t *buffer;
+
+            common::LinkedList *history;
+            common::LinkedListNodeIterator historyIt;
 
             // all the keyboard state stuff should probably be in a state manager of sorts.
             // will attempt some other time.
@@ -27,6 +31,8 @@ namespace moos
             bool isCapsLockOn;
 
             void drawPrompt();
+            common::int8_t *copyBuffer();
+            common::size_t copyToBuffer(common::int8_t *src);
             common::LinkedList *tokenizeBuffer();
             common::uint8_t keyToChar(drivers::Key key);
 

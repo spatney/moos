@@ -13,6 +13,9 @@ using namespace moos::core;
 const int8_t *Glyph = "\a> ";
 
 Terminal::Terminal()
+    : history(new LinkedList()),
+      historyIt(history->end()),
+      buffer(new int8_t[2000])
 {
     x = 40;
     y = 12;
@@ -20,7 +23,6 @@ Terminal::Terminal()
     isShiftDown = false;
     isCapsLockOn = false;
 
-    buffer = new uint8_t[2000];
     bufferCount = 0;
     promptX = 0;
     promptY = 0;
@@ -68,7 +70,7 @@ void Terminal::invertVideoMemoryAt(int8_t x, int8_t y)
 LinkedList *Terminal::tokenizeBuffer()
 {
     auto list = new LinkedList();
-    uint8_t *tempBuffer = buffer;
+    auto tempBuffer = buffer;
 
     while (*tempBuffer != '\0')
     {
@@ -141,11 +143,6 @@ uint8_t Terminal::keyToChar(Key key)
         return isShiftDown ? '_' : '-';
     case Key::Equal:
         return isShiftDown ? '+' : '=';
-
-    case Key::Up:
-    case Key::Down:
-    case Key::Left:
-    case Key::Right:
     default:
         return '\0';
     }
@@ -170,6 +167,34 @@ void Terminal::OnKeyDown(Key key)
     auto cursor = Console::ReadCursor();
     switch (key)
     {
+    case Key::Up:
+    {
+        // TODO: refactor to use for both up/down
+        if (historyIt == history->end())
+        {
+            historyIt = history->begin();
+        }
+        else
+        {
+            ++historyIt;
+            if (historyIt == history->end())
+            {
+                historyIt = history->begin();
+            }
+        }
+
+        if (historyIt != history->end())
+        {
+            for (size_t i = 0; i < bufferCount; i++)
+            {
+                // should add a count param to Backspace()
+                Console::Backspace();
+            }
+            bufferCount = copyToBuffer((int8_t *)*historyIt);
+            Console::Write("%s", buffer);
+        }
+    }
+    break;
     case Key::RShift:
     case Key::LShift:
         isShiftDown = true;
@@ -189,6 +214,13 @@ void Terminal::OnKeyDown(Key key)
         Console::Write("\n");
 
         buffer[bufferCount] = '\0';
+
+        if (StringUtil::strcmp((const int8_t *)history->PeekFirst(), buffer))
+        {
+            history->AddFirst(copyBuffer());
+        }
+        historyIt = history->end();
+
         auto tokens = tokenizeBuffer();
 
         if (!StringUtil::strcmp("clear", (const int8_t *)tokens->PeekFirst()))
@@ -223,6 +255,8 @@ void Terminal::OnKeyDown(Key key)
             }
         }
 
+        auto copy = shared_ptr(copyBuffer());
+
         tokens->FreeList();
         drawPrompt();
         bufferCount = 0;
@@ -252,4 +286,34 @@ void Terminal::drawPrompt()
     Console::Write(Glyph);
     promptY = Console::ReadCursor().y;
     promptX = StringUtil::strlen(Glyph);
+}
+
+int8_t *Terminal::copyBuffer()
+{
+    size_t size = 0;
+    while (buffer[size++] != '\0')
+        ;
+
+    auto bufferCopy = new int8_t[size];
+
+    for (size_t i = 0; i < size; i++)
+    {
+        bufferCopy[i] = buffer[i];
+    }
+
+    return bufferCopy;
+}
+
+size_t Terminal::copyToBuffer(int8_t *src)
+{
+    size_t i = 0;
+
+    while (src[i] != '\0')
+    {
+        buffer[i] = src[i];
+        i++;
+    }
+    buffer[i] = '\0';
+
+    return i;
 }
