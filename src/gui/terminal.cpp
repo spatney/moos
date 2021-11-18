@@ -72,8 +72,7 @@ LinkedList *Terminal::tokenizeBuffer()
 
     while (*tempBuffer != '\0')
     {
-        auto token = new Token();
-        token->str = tempBuffer;
+        list->AddLast(tempBuffer);
 
         while (*tempBuffer != ' ' && *tempBuffer != '\0')
         {
@@ -84,8 +83,6 @@ LinkedList *Terminal::tokenizeBuffer()
         {
             *tempBuffer++ = '\0';
         }
-
-        list->AddLast(token);
     }
 
     return list;
@@ -187,22 +184,22 @@ void Terminal::OnKeyDown(Key key)
         buffer[bufferCount] = '\0';
         auto tokens = tokenizeBuffer();
 
-        if (!StringUtil::strcmp("clear", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        if (!StringUtil::strcmp("clear", (const char *)tokens->PeekFirst()))
         {
             Console::Clear();
         }
-        else if (!StringUtil::strcmp("uname", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        else if (!StringUtil::strcmp("uname", (const char *)tokens->PeekFirst()))
         {
             Console::Write("MoOS kernel v0.1\n");
         }
-        else if (!StringUtil::strcmp("free", (const char *)(((Token *)tokens->PeekFirst())->str)))
+        else if (!StringUtil::strcmp("free", (const char *)tokens->PeekFirst()))
         {
             MemoryManager::activeMemoryManager->printFree();
         }
         else
         {
             // for debugging
-           /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
+            /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
             {
                 auto data = *it;
                 common::Console::Write("%s => ", ((Token *)data)->str);
@@ -210,18 +207,11 @@ void Terminal::OnKeyDown(Key key)
             Console::Write("END\n");*/
             if (tokens->PeekFirst() != 0)
             {
-                Console::Write("command not found: '%s'\n", (const char *)(((Token *)tokens->PeekFirst())->str));
+                Console::Write("command not found: '%s'\n", (const char *)tokens->PeekFirst());
             }
         }
 
-        for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
-        {
-            auto data = (Token *)*it;
-            delete data;
-        }
-
         tokens->FreeList();
-
         drawPrompt();
         bufferCount = 0;
     }

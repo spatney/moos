@@ -10,20 +10,16 @@ namespace moos
 {
     namespace gui
     {
-        struct Token
-        {
-            common::uint8_t *str;
-        };
-
         class Terminal : public drivers::MouseEventHandler, public drivers::KeyboardEventHandler
         {
         private:
             common::int32_t x;
             common::int32_t y;
+            common::int32_t bufferCount;
+
             common::uint8_t promptX;
             common::uint8_t promptY;
             common::uint8_t *buffer;
-            common::int32_t bufferCount;
 
             // all the keyboard state stuff should probably be in a state manager of sorts.
             // will attempt some other time.
