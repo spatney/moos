@@ -8,6 +8,7 @@
 #include <common/console.h>
 #include <core/multitasking.h>
 #include <core/memory.h>
+#include <core/sharedptr.h>
 
 namespace moos
 {
@@ -23,6 +24,13 @@ namespace moos
     class OSTest
     {
     public:
+        static void SharedPtrDemo()
+        {
+            common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
+            core::shared_ptr<Empty> sp(new Empty());
+            common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
+        }
+
         static void SleepDemo()
         {
             int count = 0;

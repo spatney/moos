@@ -113,6 +113,8 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     terminal->Reset();
 #endif
 
+    //OSTest::SharedPtrDemo();
+    //common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
     //OSTest::HeapDemo();
     //OSTest::SleepDemo();
 
