@@ -31,7 +31,7 @@ namespace moos
 
             void *malloc(common::size_t size);
             void free(void *ptr);
-            void printFree();
+            common::size_t GetFree();
         };
     }
 }

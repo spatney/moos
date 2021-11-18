@@ -80,7 +80,7 @@ void *MemoryManager::malloc(common::size_t size)
     return (void *)(((size_t)emptyBlock) + sizeof(MemoryBlock));
 }
 
-void MemoryManager::printFree()
+size_t MemoryManager::GetFree()
 {
     auto curr = this->head;
     size_t size = 0;
@@ -95,7 +95,7 @@ void MemoryManager::printFree()
         curr = curr->next;
     }
 
-    Console::Write("%d bytes remaining in heap\n", size);
+    return size;
 }
 
 void MemoryManager::free(void *ptr)

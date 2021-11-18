@@ -137,6 +137,10 @@ uint8_t Terminal::keyToChar(Key key)
         return '\t';
     case Key::Enter:
         return '\n';
+    case Key::Hyphen:
+        return isShiftDown ? '_' : '-';
+    case Key::Equal:
+        return isShiftDown ? '+' : '=';
     default:
         break;
     }
@@ -196,8 +200,16 @@ void Terminal::OnKeyDown(Key key)
         }
         else if (!StringUtil::strcmp("free", (const char *)tokens->PeekFirst()))
         {
-            auto color = Console::SetColor(13);
-            MemoryManager::activeMemoryManager->printFree();
+            auto color = Console::SetColor(6);
+            auto it = ++tokens->begin();
+            if (it != tokens->end() && !StringUtil::strcmp("-h", (const char *)(*it)))
+            {
+                Console::Write("%d MB remaining in heap\n", MemoryManager::activeMemoryManager->GetFree() / 1024);
+            }
+            else
+            {
+                Console::Write("%d bytes remaining in heap\n", MemoryManager::activeMemoryManager->GetFree());
+            }
             color = Console::SetColor(color);
         }
         else
