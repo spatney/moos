@@ -14,9 +14,9 @@ namespace moos
             common::size_t count;
 
         public:
-            void Incr()
+            common::size_t Incr()
             {
-                count++;
+                return ++count;
             }
 
             common::size_t Decr()

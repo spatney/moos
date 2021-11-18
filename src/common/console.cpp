@@ -39,7 +39,7 @@ void Console::Clear()
 {
     for (cursor.y = 0; cursor.y < 25; cursor.y++)
         for (cursor.x = 0; cursor.x < 80; cursor.x++)
-            VideoMemory[80 * cursor.y + cursor.x] = 0 | ' ';
+            VideoMemory[80 * cursor.y + cursor.x] = (VideoMemory[80 * cursor.y + cursor.x] & (color << 8)) | ' ';
     cursor.x = 0;
     cursor.y = 0;
 
