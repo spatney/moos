@@ -1,4 +1,4 @@
-//#define GRAPHICS_MODE
+// #define GRAPHICS_MODE
 
 #include <ostest.h>
 #include <core/memory.h>

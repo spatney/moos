@@ -108,3 +108,9 @@ void *LinkedList::PeekLast()
 
     return tail->data;
 }
+
+void LinkedList::FreeList()
+{
+    while(RemoveLast() != 0);
+    delete this;
+}

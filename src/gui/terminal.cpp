@@ -80,7 +80,10 @@ LinkedList *Terminal::tokenizeBuffer()
             ++tempBuffer;
         }
 
-        *tempBuffer++ = '\0';
+        if (*tempBuffer != '\0')
+        {
+            *tempBuffer++ = '\0';
+        }
 
         list->AddLast(token);
     }
@@ -199,28 +202,25 @@ void Terminal::OnKeyDown(Key key)
         else
         {
             // for debugging
-            /*for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
+            for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
             {
                 auto data = *it;
                 common::Console::Write("%s => ", ((Token *)data)->str);
             }
-            Console::Write("END");*/
+            Console::Write("END\n");
             if (tokens->PeekFirst() != 0)
             {
                 Console::Write("command not found: '%s'\n", (const char *)(((Token *)tokens->PeekFirst())->str));
             }
         }
 
-        // free up list, should add freeList() to LinkedList
-        auto last = tokens->RemoveLast();
-        while (last != 0)
+        for (auto it = tokens->begin(), end = tokens->end(); it != end; ++it)
         {
-            auto token = (Token *)last;
-            delete token;
-            last = tokens->RemoveLast();
+            auto data = (Token *)*it;
+            delete data;
         }
 
-        delete tokens;
+        tokens->FreeList();
 
         drawPrompt();
         bufferCount = 0;

@@ -71,6 +71,8 @@ namespace moos
             void *PeekFirst();
             void *PeekLast();
 
+            void FreeList();
+
             LinkedListNodeIterator begin() { return LinkedListNodeIterator(head); }
             LinkedListNodeIterator end() { return LinkedListNodeIterator(0); }
         };
