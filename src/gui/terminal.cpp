@@ -251,7 +251,10 @@ void Terminal::OnKeyDown(Key key)
         {
             if (tokens->PeekFirst() != 0)
             {
-                Console::Write("command not found: '%s'\n", (const int8_t *)tokens->PeekFirst());
+                Console::Write("command not found: ");
+                auto color = Console::SetColor(12);
+                Console::Write("'%s'\n"), (const int8_t *)tokens->PeekFirst();
+                Console::SetColor(color);
             }
         }
 
