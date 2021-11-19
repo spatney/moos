@@ -162,7 +162,7 @@ int8_t *Console::itoa(int32_t val, const int32_t base)
 
     do
     {
-        if (counter++ == 3)
+        if (base == 10 && counter++ == 3)
         {
             *--ptr = ',';
             counter = 0;

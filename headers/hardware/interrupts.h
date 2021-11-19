@@ -32,7 +32,6 @@ namespace moos
             friend class InterruptHandler;
 
         protected:
-            static InterruptManager *ActivateInterruptManager;
             InterruptHandler *handlers[256];
             core::TaskManager *taskManager;
             common::uint16_t hardwareInterruptOffset;
@@ -67,9 +66,10 @@ namespace moos
             Port8BitSlow picSlaveData;
 
         public:
+            static InterruptManager *ActivateInterruptManager;
             InterruptManager(
                 common::uint16_t hardwareInterruptOffset,
-                core::GlobalDescriptorTable *gdt, 
+                core::GlobalDescriptorTable *gdt,
                 core::TaskManager *taskManager);
             ~InterruptManager();
 
@@ -78,7 +78,6 @@ namespace moos
 
             static common::uint32_t HandleInterrupt(common::uint8_t interruptNumber, common::uint32_t esp);
             common::uint32_t DoHandleInterrupt(common::uint8_t interruptNumber, common::uint32_t esp);
-            
 
             static void IgnoreInterruptRequest();
             static void HandleInterruptRequest0x00(); //timer

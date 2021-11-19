@@ -3,6 +3,8 @@
 #include <common/console.h>
 #include <common/strings.h>
 #include <core/memory.h>
+#include <hardware/pci.h>
+#include <hardware/interrupts.h>
 
 using namespace moos::gui;
 using namespace moos::common;
@@ -238,6 +240,16 @@ void Terminal::OnKeyDown(Key key)
         {
             auto color = Console::SetColor(10);
             Console::Write("MoOS kernel v0.1\n");
+            Console::SetColor(color);
+        }
+        else if (!StringUtil::strcmp("lspci", (const int8_t *)tokens->PeekFirst()))
+        {
+            DriverManager driverManager;
+            PeripheralComponentInterconnectController pciController;
+            auto color = Console::SetColor(0xE);
+
+            Console::Write("Listing PCI device drivers ...\n\n");
+            pciController.SelectDrivers(&driverManager, InterruptManager::ActivateInterruptManager);
             Console::SetColor(color);
         }
         else if (!StringUtil::strcmp("free", (const int8_t *)tokens->PeekFirst()))
