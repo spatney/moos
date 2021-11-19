@@ -74,16 +74,23 @@ LinkedList *Terminal::tokenizeBuffer()
 
     while (*tempBuffer != '\0')
     {
-        list->AddLast(tempBuffer);
-
-        while (*tempBuffer != ' ' && *tempBuffer != '\0')
+        if (*tempBuffer != ' ')
         {
-            ++tempBuffer;
+            list->AddLast(tempBuffer);
+
+            while (*tempBuffer != ' ' && *tempBuffer != '\0')
+            {
+                ++tempBuffer;
+            }
+
+            if (*tempBuffer != '\0')
+            {
+                *tempBuffer++ = '\0';
+            }
         }
-
-        if (*tempBuffer != '\0')
+        else
         {
-            *tempBuffer++ = '\0';
+            *tempBuffer++;
         }
     }
 
@@ -231,7 +238,7 @@ void Terminal::OnKeyDown(Key key)
         {
             auto color = Console::SetColor(10);
             Console::Write("MoOS kernel v0.1\n");
-            color = Console::SetColor(color);
+            Console::SetColor(color);
         }
         else if (!StringUtil::strcmp("free", (const int8_t *)tokens->PeekFirst()))
         {
@@ -245,7 +252,7 @@ void Terminal::OnKeyDown(Key key)
             {
                 Console::Write("%d bytes remaining in heap\n", MemoryManager::activeMemoryManager->GetFree());
             }
-            color = Console::SetColor(color);
+            Console::SetColor(color);
         }
         else
         {
@@ -286,7 +293,7 @@ void Terminal::drawPrompt()
 {
     Console::Write(Glyph);
     promptY = Console::ReadCursor().y;
-    promptX = Console::ReadCursor().x + StringUtil::strlen(Glyph);
+    promptX = StringUtil::strlen(Glyph);
 }
 
 int8_t *Terminal::copyBuffer()
