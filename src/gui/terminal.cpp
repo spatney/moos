@@ -229,7 +229,7 @@ void Terminal::OnKeyDown(Key key)
         }
         else if (!StringUtil::strcmp("uname", (const int8_t *)tokens->PeekFirst()))
         {
-            auto color = Console::SetColor(2);
+            auto color = Console::SetColor(10);
             Console::Write("MoOS kernel v0.1\n");
             color = Console::SetColor(color);
         }
@@ -279,8 +279,6 @@ void Terminal::OnKeyDown(Key key)
 
 void Terminal::Reset()
 {
-    Console::Clear();
-    Console::Write("Welcome to MoOS!\n\n");
     drawPrompt();
 }
 
@@ -288,7 +286,7 @@ void Terminal::drawPrompt()
 {
     Console::Write(Glyph);
     promptY = Console::ReadCursor().y;
-    promptX = StringUtil::strlen(Glyph);
+    promptX = Console::ReadCursor().x + StringUtil::strlen(Glyph);
 }
 
 int8_t *Terminal::copyBuffer()

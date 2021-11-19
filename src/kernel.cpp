@@ -58,7 +58,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     multiboot_info *multiboot = (multiboot_info_t *)multiBootInfoAddress;
     uint32_t padding = 10 * 1024;
     MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
- 
+
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
@@ -77,7 +77,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
 #ifndef GRAPHICS_MODE
     auto terminal = new Terminal();
-    mouseHandler = 0;//terminal;
+    mouseHandler = 0; //terminal;
     keyboardHandler = terminal;
 #endif
 
@@ -110,6 +110,8 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     interruptManager.Activate();
 
 #ifndef GRAPHICS_MODE
+    Console::Clear();
+    Console::Write("Welcome to MoOS!\n\n");
     terminal->Reset();
 #endif
 
