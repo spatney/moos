@@ -112,6 +112,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifndef GRAPHICS_MODE
     Console::Clear();
     Console::Write("Welcome to MoOS!\n\n");
+    //OSTest::HardDiskTest();
     //OSTest::SharedPtrDemo();
     //OSTest::HeapDemo();
     //OSTest::SleepDemo();

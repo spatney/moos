@@ -13,6 +13,7 @@
 #include <drivers/driver.h>
 #include <hardware/pci.h>
 #include <common/strings.h>
+#include <drivers/ata.h>
 
 namespace moos
 {
@@ -28,6 +29,31 @@ namespace moos
     class OSTest
     {
     public:
+        static void HardDiskTest()
+        {
+            // interrupt 14
+            drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
+            //Console::Write("ATA Primary Master: ");
+            //ata0m.Indentify();
+            drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
+            //Console::Write("ATA Primary Slave: ");
+            //ata0s.Indentify();
+
+            // interrupt 15
+            //drivers::AdvancedTechnologyAttachment ata1m(0x170, true);
+            //drivers::AdvancedTechnologyAttachment ata1s(0x170, false);
+
+            auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
+            ata0s.Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
+            ata0s.Flush();
+
+            auto *buffer = new common::uint8_t[common::StringUtil::strlen((common::int8_t *)data)];
+
+            ata0s.Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
+
+            // third: 0x1E8
+            // fourth: 0x168
+        }
         static void NetworkCardDemo(
             drivers::DriverManager *manager)
         {
@@ -45,8 +71,8 @@ namespace moos
                 common::Console::Write("Free mem: %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
             }
 
-            common::Console::Write("(going out of scope, should free the pointer)\nFree mem: %d bytes\n", 
-            core::MemoryManager::activeMemoryManager->GetFree());
+            common::Console::Write("going out of scope, should free the pointer ... \nFree mem: %d bytes\n",
+                                   core::MemoryManager::activeMemoryManager->GetFree());
         }
 
         static void SleepDemo()
