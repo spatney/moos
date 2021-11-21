@@ -53,11 +53,14 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     TaskManager taskManager;
     InterruptManager interruptManager(0x20, &gdt, &taskManager);
 
-    size_t heapSize = 10 * 1024 * 1024; // 10MB;
+    auto *multiboot = (multiboot_info_t *)multiBootInfoAddress;
+    size_t leftPadding = 1024 * 1024 * 10;
+    size_t rightPadding = 10 * 1024;
+    size_t heapSize = multiboot->mem_upper * 1024 - leftPadding - rightPadding;
+
     Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
-    multiboot_info *multiboot = (multiboot_info_t *)multiBootInfoAddress;
-    uint32_t padding = 10 * 1024;
-    MemoryManager memoryManager(multiboot->mem_upper * 1024 - heapSize - padding, heapSize);
+
+    MemoryManager memoryManager(leftPadding, heapSize);
 
     // multi-tasking demo
     /*Task t1(&gdt, taskA);
