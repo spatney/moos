@@ -25,7 +25,7 @@ AdvancedTechnologyAttachment::~AdvancedTechnologyAttachment()
 {
 }
 
-void AdvancedTechnologyAttachment::Identify()
+bool AdvancedTechnologyAttachment::Identify()
 {
     devicePort.Write(master ? 0xA0 : 0xB0); // who to talk to.
     controlPort.Write(0);                   // clear HOB bit
@@ -36,7 +36,7 @@ void AdvancedTechnologyAttachment::Identify()
     if (status == 0xFF)
     {
         Console::Write("No device\n");
-        return;
+        return false;
     }
 
     devicePort.Write(master ? 0xA0 : 0xB0);
@@ -51,7 +51,7 @@ void AdvancedTechnologyAttachment::Identify()
     if (status == 0)
     {
         Console::Write("No device 2\n");
-        return;
+        return false;
     }
 
     while (((status & 0x80) == 0x80) && ((status & 0x01) != 0x01))
@@ -62,7 +62,7 @@ void AdvancedTechnologyAttachment::Identify()
     if (status & 0x01)
     {
         Console::Write("ATA Error\n");
-        return;
+        return false;
     }
 
     for (uint16_t i = 0; i < 256; i++)
@@ -74,7 +74,8 @@ void AdvancedTechnologyAttachment::Identify()
         Console::Write("%s", foo);
     }
 
-    Console::Write("\n Done Identify \n");
+    Console::Write("\n");
+    return true;
 }
 
 void AdvancedTechnologyAttachment::Read28(

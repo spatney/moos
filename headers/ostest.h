@@ -31,17 +31,31 @@ namespace moos
     public:
         static void HardDiskTest()
         {
-            // interrupt 14
-            drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
-            //Console::Write("ATA Primary Master: ");
-            //ata0m.Indentify();
-            drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
-            //Console::Write("ATA Primary Slave: ");
-            //ata0s.Indentify();
+            AdvancedTechnologyAttachment ata0m(0x1F0, true);
+            Console::Write("ATA 0 Master: ");
+            ata0m.Identify();
+            AdvancedTechnologyAttachment ata0s(0x1F0, false);
+            Console::Write("ATA 0 Slave: ");
+            ata0s.Identify();
+            /*AdvancedTechnologyAttachment ata1m(0x170, true);
+            Console::Write("ATA 1 Master: ");
+            ata1m.Identify();
+            AdvancedTechnologyAttachment ata1s(0x170, false);
+            Console::Write("ATA 1 Slave: ");
+            ata1s.Identify();
 
-            // interrupt 15
-            //drivers::AdvancedTechnologyAttachment ata1m(0x170, true);
-            //drivers::AdvancedTechnologyAttachment ata1s(0x170, false);
+            AdvancedTechnologyAttachment ata2m(0x1E8, true);
+            Console::Write("ATA 2 Master: ");
+            ata2m.Identify();
+            AdvancedTechnologyAttachment ata2s(0x1E8, false);
+            Console::Write("ATA 2 Slave: ");
+            ata2s.Identify();
+            AdvancedTechnologyAttachment ata3m(0x168, true);
+            Console::Write("ATA 3 Master: ");
+            ata3m.Identify();
+            AdvancedTechnologyAttachment ata3s(0x168, false);
+            Console::Write("ATA 3 Slave: ");
+            ata3s.Identify();*/
 
             auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
             ata0s.Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));

@@ -31,7 +31,7 @@ namespace moos
                 bool master);
             ~AdvancedTechnologyAttachment();
 
-            void Identify();
+            bool Identify();
             void Read28(common::uint32_t sector,
                 common::uint8_t *data,
                 common::int32_t count);
