@@ -62,9 +62,14 @@ namespace moos
                 hardware::InterruptManager *interrupts);
             ~amd_am79c973();
 
-            virtual void Activate();
-            virtual common::int32_t Reset();
-            virtual common::uint32_t HandleInterrupt(common::uint32_t esp);
+            void Activate();
+            common::int32_t Reset();
+            common::uint32_t HandleInterrupt(common::uint32_t esp);
+
+            void Send(
+                common::uint8_t *buffer,
+                common::int32_t size);
+            void Recieve();
         };
     }
 }

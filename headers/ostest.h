@@ -9,6 +9,10 @@
 #include <core/multitasking.h>
 #include <core/memory.h>
 #include <core/sharedptr.h>
+#include <drivers/amd_am79c973.h>
+#include <drivers/driver.h>
+#include <hardware/pci.h>
+#include <common/strings.h>
 
 namespace moos
 {
@@ -24,12 +28,25 @@ namespace moos
     class OSTest
     {
     public:
-        static core::shared_ptr<Empty> SharedPtrDemo()
+        static void NetworkCardDemo(
+            drivers::DriverManager *manager)
         {
-            common::Console::Write("\nFREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
-            auto sp = core::shared_ptr(new Empty());
-            common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
-            return sp;
+            auto networkCard = (drivers::amd_am79c973 *)manager->drivers[0];
+            auto str = "Hello Network";
+            common::Console::Write("Sending data ...\n");
+            networkCard->Send((common::uint8_t *)str, common::StringUtil::strlen(str));
+        }
+
+        static void SharedPtrDemo()
+        {
+            {
+                common::Console::Write("Free mem: %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
+                auto sp = core::shared_ptr(new Empty());
+                common::Console::Write("Free mem: %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
+            }
+
+            common::Console::Write("(going out of scope, should free the pointer)\nFree mem: %d bytes\n", 
+            core::MemoryManager::activeMemoryManager->GetFree());
         }
 
         static void SleepDemo()

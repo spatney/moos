@@ -112,13 +112,12 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifndef GRAPHICS_MODE
     Console::Clear();
     Console::Write("Welcome to MoOS!\n\n");
-    terminal->Reset();
-#endif
-
     //OSTest::SharedPtrDemo();
-    //common::Console::Write("FREE %d\n",core::MemoryManager::activeMemoryManager->GetFree());
     //OSTest::HeapDemo();
     //OSTest::SleepDemo();
+    //OSTest::NetworkCardDemo(&driverManager);
+    terminal->Reset();
+#endif
 
     while (1)
     {

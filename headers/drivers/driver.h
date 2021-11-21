@@ -5,6 +5,8 @@
 
 namespace moos
 {
+    class OSTest;
+    
     namespace drivers
     {
         class Driver
@@ -20,6 +22,8 @@ namespace moos
 
         class DriverManager
         {
+            friend OSTest; // for testing only, will remove
+
         private:
             Driver *drivers[255];
             common::int32_t numDrivers;
