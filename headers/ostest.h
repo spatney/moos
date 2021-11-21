@@ -31,21 +31,33 @@ namespace moos
     public:
         static void HardDiskTest()
         {
+            drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
+
             drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
             common::Console::Write("ATA 0 Master: ");
-            ata0m.Identify();
+            if (ata0m.Identify())
+            {
+                selectedDisk = &ata0m;
+            }
+
             drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
             common::Console::Write("ATA 0 Slave: ");
-            ata0s.Identify();
+            if (ata0s.Identify())
+            {
+                selectedDisk = &ata0s;
+            }
 
-            auto selectedDisk = ata0m;
+            if(selectedDisk == 0) {
+                common::Console::Write("No useable disk found ... \n");
+                return;
+            }
+
             /*AdvancedTechnologyAttachment ata1m(0x170, true);
             Console::Write("ATA 1 Master: ");
             ata1m.Identify();
             AdvancedTechnologyAttachment ata1s(0x170, false);
             Console::Write("ATA 1 Slave: ");
             ata1s.Identify();
-
             AdvancedTechnologyAttachment ata2m(0x1E8, true);
             Console::Write("ATA 2 Master: ");
             ata2m.Identify();
@@ -60,15 +72,15 @@ namespace moos
             ata3s.Identify();*/
 
             auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
-            selectedDisk.Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
-            selectedDisk.Flush();
-
             auto *buffer = new common::uint8_t[common::StringUtil::strlen((common::int8_t *)data)];
 
-            selectedDisk.Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
+            selectedDisk->Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
+            selectedDisk->Flush();
+            selectedDisk->Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
 
-            // third: 0x1E8
-            // fourth: 0x168
+            delete buffer;
+            delete data;
+            delete selectedDisk;
         }
         static void NetworkCardDemo(
             drivers::DriverManager *manager)
