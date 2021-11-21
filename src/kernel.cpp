@@ -54,9 +54,10 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     InterruptManager interruptManager(0x20, &gdt, &taskManager);
 
     auto *multiboot = (multiboot_info_t *)multiBootInfoAddress;
+    size_t memUpperInBytes = multiboot->mem_upper * 1024;
     size_t leftPadding = 1024 * 1024 * 10;
     size_t rightPadding = 10 * 1024;
-    size_t heapSize = multiboot->mem_upper * 1024 - leftPadding - rightPadding;
+    size_t heapSize = memUpperInBytes - leftPadding - rightPadding;
 
     Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
 
