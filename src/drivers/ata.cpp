@@ -35,7 +35,7 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status == 0xFF)
     {
-        Console::Write("No device\n");
+        Console::Write("No device found.\n");
         return false;
     }
 
@@ -50,7 +50,7 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status == 0)
     {
-        Console::Write("No device 2\n");
+        Console::Write("No device found.\n");
         return false;
     }
 
@@ -61,7 +61,7 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status & 0x01)
     {
-        Console::Write("ATA Error\n");
+        Console::Write("ATA Error.\n");
         return false;
     }
 
