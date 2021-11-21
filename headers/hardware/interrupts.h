@@ -34,7 +34,6 @@ namespace moos
         protected:
             InterruptHandler *handlers[256];
             core::TaskManager *taskManager;
-            common::uint16_t hardwareInterruptOffset;
 
             struct GateDescriptor
             {
@@ -66,6 +65,7 @@ namespace moos
             Port8BitSlow picSlaveData;
 
         public:
+            common::uint16_t hardwareInterruptOffset;
             static InterruptManager *ActivateInterruptManager;
             InterruptManager(
                 common::uint16_t hardwareInterruptOffset,

@@ -1,5 +1,6 @@
 #include <hardware/pci.h>
 #include <common/console.h>
+#include <drivers/amd_am79c973.h>
 
 using namespace moos::hardware;
 using namespace moos::common;
@@ -81,13 +82,13 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
                     {
                         dev.portBase = (uint32_t)bar.address;
                     }
+                }
 
-                    Driver *driver = GetDriver(dev, interruptManager);
+                Driver *driver = GetDriver(dev, interruptManager);
 
-                    if (driver != 0)
-                    {
-                        driverManager->AddDriver(driver);
-                    }
+                if (driver != 0)
+                {
+                    driverManager->AddDriver(driver);
                 }
 
                 Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
@@ -177,15 +178,17 @@ BaseAddressRegister PeripheralComponentInterconnectController::GetBaseAddressReg
 
 Driver *PeripheralComponentInterconnectController::GetDriver(
     PeripheralComponentInterconnectDeviceDescriptor descriptor,
-    InterruptManager *InterruptManager)
+    InterruptManager *interruptManager)
 {
+    Driver *driver = 0;
     switch (descriptor.vendor_id)
     {
     case 0x1022: // AMD
         switch (descriptor.device_id)
         {
         case 0x2000: //am79c973
-            break;
+            driver = (Driver *)new amd_am79c973(&descriptor, interruptManager);
+            return driver;
         }
         break;
     case 0x8086: // Intel
