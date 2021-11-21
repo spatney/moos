@@ -31,11 +31,11 @@ namespace moos
     public:
         static void HardDiskTest()
         {
-            AdvancedTechnologyAttachment ata0m(0x1F0, true);
-            Console::Write("ATA 0 Master: ");
+            drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
+            common::Console::Write("ATA 0 Master: ");
             ata0m.Identify();
-            AdvancedTechnologyAttachment ata0s(0x1F0, false);
-            Console::Write("ATA 0 Slave: ");
+            drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
+            common::Console::Write("ATA 0 Slave: ");
             ata0s.Identify();
             /*AdvancedTechnologyAttachment ata1m(0x170, true);
             Console::Write("ATA 1 Master: ");
