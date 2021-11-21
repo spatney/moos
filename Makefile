@@ -75,5 +75,5 @@ build-docker-image:
 docker:
 	docker run --rm -v "$$(pwd)":/moos --platform linux/x86-64 moos
 qemu: 
-	qemu-system-i386 -cdrom kernel.iso -vga virtio -m 1G
+	qemu-system-i386 -hda disk.img -cdrom kernel.iso -vga virtio -m 1G
 qemu-run: docker qemu

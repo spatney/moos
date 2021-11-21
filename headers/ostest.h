@@ -37,6 +37,8 @@ namespace moos
             drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
             common::Console::Write("ATA 0 Slave: ");
             ata0s.Identify();
+
+            auto selectedDisk = ata0m;
             /*AdvancedTechnologyAttachment ata1m(0x170, true);
             Console::Write("ATA 1 Master: ");
             ata1m.Identify();
@@ -58,12 +60,12 @@ namespace moos
             ata3s.Identify();*/
 
             auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
-            ata0s.Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
-            ata0s.Flush();
+            selectedDisk.Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
+            selectedDisk.Flush();
 
             auto *buffer = new common::uint8_t[common::StringUtil::strlen((common::int8_t *)data)];
 
-            ata0s.Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
+            selectedDisk.Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
 
             // third: 0x1E8
             // fourth: 0x168
