@@ -65,16 +65,28 @@ bool AdvancedTechnologyAttachment::Identify()
         return false;
     }
 
-    for (uint16_t i = 0; i < 256; i++)
+    auto buffer = new int8_t[512];
+
+    for (int32_t i = 0; i < 512; i += 2)
     {
-        uint16_t data = dataPort.Read();
-        int8_t *foo = "  \0";
-        foo[0] = (data >> 8) & 0x00FF;
-        foo[1] = data & 0x00FF;
-        Console::Write("%s", foo);
+        auto data = dataPort.Read();
+        buffer[i] = (data >> 8) & 0x00FF;
+        buffer[i + 1] = data & 0x00FF;
     }
 
-    Console::Write("\n");
+    int32_t offset = 46;
+    int32_t len = 94 - offset;
+    auto identifier = new int8_t[len + 1];
+
+    for (int32_t i = 0; i < len; i++)
+    {
+        auto value = buffer[i + offset];
+        identifier[i] = value == '\0' ? ' ' : value;
+    }
+
+    identifier[len] = '\0';
+
+    Console::Write("%s\n", identifier);
     return true;
 }
 
@@ -193,18 +205,17 @@ void AdvancedTechnologyAttachment::Write28(
 
 void AdvancedTechnologyAttachment::Flush()
 {
-    devicePort.Write( master ? 0xE0 : 0xF0 );
+    devicePort.Write(master ? 0xE0 : 0xF0);
     commandPort.Write(0xE7);
 
     uint8_t status = commandPort.Read();
-    if(status == 0x00)
+    if (status == 0x00)
         return;
-    
-    while(((status & 0x80) == 0x80)
-       && ((status & 0x01) != 0x01))
+
+    while (((status & 0x80) == 0x80) && ((status & 0x01) != 0x01))
         status = commandPort.Read();
-        
-    if(status & 0x01)
+
+    if (status & 0x01)
     {
         Console::Write("ERROR\n");
         return;
