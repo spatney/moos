@@ -42,9 +42,6 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-void taskA();
-void taskB();
-
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
     Console::Clear();
@@ -64,13 +61,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
 
     MemoryManager memoryManager(leftPadding, heapSize);
-
-    // multi-tasking demo
-    /*Task t1(&gdt, taskA);
-    Task t2(&gdt, taskB);
-    taskManager.AddTask(&t1);
-    taskManager.AddTask(&t2);
-    Console::Write("Initializing driver manager ...\n");*/
+    Console::Write("Initializing driver manager ...\n");
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
@@ -118,6 +109,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifndef GRAPHICS_MODE
     Console::Clear();
     Console::Write("Welcome to MoOS!\n\n");
+    //OSTest::MultiTaskingTest(&taskManager, &gdt);
     //OSTest::SysCallTest();
     //OSTest::HardDiskTest();
     //OSTest::SharedPtrDemo();
@@ -132,28 +124,5 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifdef GRAPHICS_MODE
         desktop->Draw(&gc);
 #endif
-    }
-}
-
-void sysprintf(char *str)
-{
-    asm("int $0x80"
-        :
-        : "a"(4), "b"(str));
-}
-
-void taskA()
-{
-    while (true)
-    {
-        sysprintf("A");
-    }
-}
-
-void taskB()
-{
-    while (true)
-    {
-        sysprintf("B");
     }
 }

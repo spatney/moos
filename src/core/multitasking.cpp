@@ -5,7 +5,7 @@ using namespace moos::common;
 
 Task::Task(
     GlobalDescriptorTable *gdt,
-    void entryPoint())
+    void (*func)())
 {
     cpuState = (CPUState *)(stack + 4096 - sizeof(CPUState));
 
@@ -28,7 +28,7 @@ Task::Task(
     // cpuState->error = 0;
 
     //cpuState->esp = 0;
-    cpuState->eip = (uint32_t)entryPoint;
+    cpuState->eip = (uint32_t)func;
     cpuState->cs = gdt->CodeSegmentSelector();
     // cpuState->ss = 0;
     cpuState->eflags = 0x202;

@@ -29,6 +29,28 @@ namespace moos
     class OSTest
     {
     public:
+        static void MultiTaskingTest(
+            core::TaskManager *taskManager,
+            core::GlobalDescriptorTable *gdt)
+        {
+            auto t1 = new core::Task(gdt, []()
+                          {
+                              while (true)
+                              {
+                                  common::Console::Write("A ");
+                              }
+                          });
+            auto t2 = new core::Task(gdt, []()
+                          {
+                              while (true)
+                              {
+                                  common::Console::Write("B ");
+                              }
+                          });
+            taskManager->AddTask(t1);
+            taskManager->AddTask(t2);
+        }
+
         static void SysCallTest()
         {
             auto str = "Print this string via a system call";
@@ -36,6 +58,7 @@ namespace moos
                 :
                 : "a"(4), "b"(str));
         }
+
         static void HardDiskTest()
         {
             drivers::AdvancedTechnologyAttachment *selectedDisk = 0;

@@ -43,7 +43,7 @@ namespace moos
         public:
             Task(
                 GlobalDescriptorTable *gdt,
-                void entryPoint());
+                void (*func)());
             ~Task();
         };
 
