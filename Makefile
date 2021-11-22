@@ -58,7 +58,7 @@ kernel.iso: kernel.bin
 	rm -rf iso
 	rm kernel.bin
 
-.phony: clean
+.phony: clean wsl-launch
 clean:
 	rm -rf obj iso kernel.bin kernel.iso
 
@@ -66,9 +66,10 @@ run: kernel.iso
 	(pkill VirtualBoxVM) || true
 	VirtualBoxVM --startvm "MoOS" &
 
-wsl-run: kernel.iso
+wsl-launch:
 	(powershell.exe "taskkill /IM "VirtualBoxVM.exe" /F") || true
 	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &
+wsl-run: kernel.iso wsl-launch
 
 .phony: build-docker-image docker qemu qemu-run
 build-docker-image:
