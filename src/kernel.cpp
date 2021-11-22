@@ -1,21 +1,14 @@
-// #define GRAPHICS_MODE
+//#define GRAPHICS_MODE
 
 #include <ostest.h>
-#include <core/memory.h>
-#include <core/multitasking.h>
-#include <core/gdt.h>
-#include <core/multiboot.h>
-#include <core/syscall.h>
 
+#include <core/multiboot.h>
+#include <core/gdt.h>
+#include <core/syscall.h>
+#include <core/memory.h>
 #include <common/types.h>
 #include <common/console.h>
-#include <common/linkedlist.h>
-
-#include <hardware/video.h>
 #include <hardware/pci.h>
-#include <hardware/interrupts.h>
-
-#include <drivers/driver.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
 

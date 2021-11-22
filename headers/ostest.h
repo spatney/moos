@@ -150,8 +150,6 @@ namespace moos
             auto e2 = new Empty();
             auto l1 = new common::LinkedList();
 
-            common::Console::Clear();
-
             common::Console::Write("Size of MemoryBlock: %d\n", sizeof(core::MemoryBlock));
             common::Console::Write("Size of Empty: %d\n", sizeof(Empty));
             common::Console::Write("Size of LinkedList: %d\n", sizeof(common::LinkedList));
