@@ -2,10 +2,6 @@
 
 Nothing special, just me trying to figure out how things work to better understand OS design. 
 
-```sudo apt install make g++ binutils libc6-dev-i386 grub-common xorriso```
+[One time setup] ```make build-docker-image``` or ```docker build --platform linux/x86-64 -t moos .``` do this once to build a docker image. This image will be used to perform builds.
 
-```sudo apt install grub-pc-bin``` needed for WSL based distros
-
-```make kernel.bin``` check if everything compiles
-
-```make kernel.iso``` build a bootable iso with GRUB as the bootloader
+```make docker``` or ```docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos``` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
