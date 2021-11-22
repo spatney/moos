@@ -11,7 +11,7 @@ objects = obj/loader.o \
 		  obj/common/linkedlist.o \
 		  obj/common/strings.o \
 		  obj/hardware/port.o \
-		  obj/hardware/interruptstubs.o \
+		  obj/hardware/interrupts_asm.o \
 		  obj/hardware/interrupts.o \
 		  obj/hardware/pci.o \
 		  obj/drivers/driver.o \
