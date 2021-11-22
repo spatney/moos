@@ -29,31 +29,37 @@ namespace moos
     class OSTest
     {
     public:
+        static void sysPrint(const char *str)
+        {
+            asm("int $0x80"
+                :
+                : "a"(4), "b"(str));
+        }
         static void MultiTaskingTest(
             core::TaskManager *taskManager,
             core::GlobalDescriptorTable *gdt)
         {
             auto t1 = new core::Task(gdt, []()
-                          {
-                              while (true)
-                              {
-                                  common::Console::Write("A ");
-                              }
-                          });
+                                     {
+                                         while (true)
+                                         {
+                                             OSTest::sysPrint("A ");
+                                         }
+                                     });
             auto t2 = new core::Task(gdt, []()
-                          {
-                              while (true)
-                              {
-                                  common::Console::Write("B ");
-                              }
-                          });
+                                     {
+                                         while (true)
+                                         {
+                                             OSTest::sysPrint("B ");
+                                         }
+                                     });
             taskManager->AddTask(t1);
             taskManager->AddTask(t2);
         }
 
         static void SysCallTest()
         {
-            auto str = "Print this string via a system call";
+            auto str = "Print this string via a system call\n";
             asm("int $0x80"
                 :
                 : "a"(4), "b"(str));

@@ -25,7 +25,7 @@ uint32_t SyscallHandler::HandleInterrupt(uint32_t esp)
     switch (cpuState->eax)
     {
     case 4:
-        Console::Write("%s\n", cpuState->ebx);
+        Console::Write("%s", cpuState->ebx);
         break;
     default:
         Console::Write("Syscall '%d' not supported", cpuState->eax);
