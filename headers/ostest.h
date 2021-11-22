@@ -102,7 +102,7 @@ namespace moos
             }
 
             drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
-            common::Console::Write("ATA 0 Slave: ");
+            common::Console::Write("ATA 0 Alternate: ");
             if (ata0s.Identify())
             {
                 selectedDisk = &ata0s;
@@ -118,19 +118,19 @@ namespace moos
             Console::Write("ATA 1 Master: ");
             ata1m.Identify();
             AdvancedTechnologyAttachment ata1s(0x170, false);
-            Console::Write("ATA 1 Slave: ");
+            Console::Write("ATA 1 Alternate: ");
             ata1s.Identify();
             AdvancedTechnologyAttachment ata2m(0x1E8, true);
             Console::Write("ATA 2 Master: ");
             ata2m.Identify();
             AdvancedTechnologyAttachment ata2s(0x1E8, false);
-            Console::Write("ATA 2 Slave: ");
+            Console::Write("ATA 2 Alternate: ");
             ata2s.Identify();
             AdvancedTechnologyAttachment ata3m(0x168, true);
             Console::Write("ATA 3 Master: ");
             ata3m.Identify();
             AdvancedTechnologyAttachment ata3s(0x168, false);
-            Console::Write("ATA 3 Slave: ");
+            Console::Write("ATA 3 Alternate: ");
             ata3s.Identify();*/
 
             auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
