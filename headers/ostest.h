@@ -186,7 +186,10 @@ namespace moos
             common::Console::Write("Size of LinkedList: %d\n", sizeof(common::LinkedList));
 
             common::Console::Write("E1 CREATED: 0x%x\n", e1);
-            common::Console::Write("E2 CREATED: 0x%x\n", e2);
+            common::Console::Write("E2 CREATED: ");
+            auto color = common::Console::SetColor(10);
+            common::Console::Write("0x%x\n", e2);
+            common::Console::SetColor(color);
             common::Console::Write("L1 CREATED: 0x%x\n", l1);
 
             common::Console::Write("DELETING E2 ...\n", l1);
@@ -196,7 +199,10 @@ namespace moos
             common::Console::Write("L2 CREATED: 0x%x\n", l2);
 
             auto e3 = new Empty();
-            common::Console::Write("E3 CREATED: 0x%x\n", e3);
+            common::Console::Write("E3 CREATED: ");
+            color = common::Console::SetColor(10);
+            common::Console::Write("0x%x\n", e3);
+            common::Console::SetColor(color);
         }
 
         static void ListDemo()
