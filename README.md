@@ -7,9 +7,10 @@ Nothing special, just me trying to figure out how things work to better understa
 ```make docker``` or ```docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos``` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
 
 ## MoOS Terminal
+#### A basic shell with the ability to execute some commands.
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosterminal2.gif)
 
-## MoOS is 'Graphics Mode'
-#### Just some window movement, doesn't offer any real functionality
+## MoOS in 'Graphics Mode'
+#### Just some window movement, doesn't offer any real functionality.
 
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx2.gif)
