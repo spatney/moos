@@ -12,4 +12,4 @@ Nothing special, just me trying to figure out how things work to better understa
 ## MoOS is 'Graphics Mode'
 #### Just some window movement, doesn't offer any real functionality
 
-![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx.gif)
+![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx2.gif)
