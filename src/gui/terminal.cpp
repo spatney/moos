@@ -5,7 +5,9 @@
 #include <core/memory.h>
 #include <hardware/pci.h>
 #include <hardware/interrupts.h>
+#include <ostest.h>
 
+using namespace moos;
 using namespace moos::gui;
 using namespace moos::common;
 using namespace moos::hardware;
@@ -263,6 +265,20 @@ void Terminal::OnKeyDown(Key key)
             else
             {
                 Console::Write("%d bytes remaining in heap\n", MemoryManager::activeMemoryManager->GetFree());
+            }
+            Console::SetColor(color);
+        }
+        else if (!StringUtil::strcmp("test", (const int8_t *)tokens->PeekFirst()))
+        {
+            auto color = Console::SetColor(6);
+            auto it = ++tokens->begin();
+            if (it != tokens->end())
+            {
+                OSTest::RunTest(StringUtil::atoi((const int8_t *)(*it)));
+            }
+            else
+            {
+                Console::Write("Missing test number\n");
             }
             Console::SetColor(color);
         }

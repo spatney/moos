@@ -68,9 +68,10 @@ void *LinkedList::RemoveFirst()
     }
 
     auto *result = head->data;
-    delete tail;
+    auto temp = head;
     head = head->next;
     head->prev = 0;
+    delete temp;
 
     return result;
 }
@@ -83,9 +84,10 @@ void *LinkedList::RemoveLast()
     }
 
     auto *result = tail->data;
-    delete tail;
+    auto temp = tail;
     tail = tail->prev;
     tail->next = 0;
+    delete temp;
 
     return result;
 }

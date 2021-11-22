@@ -28,13 +28,39 @@ namespace moos
 
     class OSTest
     {
+
     public:
-        static void sysPrint(const char *str)
+        static void RunTest(common::int32_t num)
         {
-            asm("int $0x80"
-                :
-                : "a"(4), "b"(str));
+            switch (num)
+            {
+            case 1:
+                common::Console::Write("Linked list demo\n\n");
+                ListDemo();
+                break;
+            case 2:
+                common::Console::Write("Virtual memory demo\n\n");
+                HeapDemo();
+                break;
+            case 3:
+                common::Console::Write("Shared pointer demo\n\n");
+                SharedPtrDemo();
+                break;
+            case 4:
+                common::Console::Write("Hard-disk demo\n\n");
+                HardDiskTest();
+                break;
+            case 5:
+                common::Console::Write("System call demo\n\n");
+                SysCallTest();
+                break;
+
+            default:
+                common::Console::Write("Invalid test number\n");
+                break;
+            }
         }
+
         static void MultiTaskingTest(
             core::TaskManager *taskManager,
             core::GlobalDescriptorTable *gdt)
@@ -64,7 +90,6 @@ namespace moos
                 :
                 : "a"(4), "b"(str));
         }
-
         static void HardDiskTest()
         {
             drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
@@ -131,9 +156,9 @@ namespace moos
         static void SharedPtrDemo()
         {
             {
-                common::Console::Write("Free mem: %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
+                common::Console::Write("Free mem (before alloc): %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
                 auto sp = core::shared_ptr(new Empty());
-                common::Console::Write("Free mem: %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
+                common::Console::Write("Free mem (after  alloc): %d bytes\n", core::MemoryManager::activeMemoryManager->GetFree());
             }
 
             common::Console::Write("going out of scope, should free the pointer ... \nFree mem: %d bytes\n",
@@ -178,8 +203,6 @@ namespace moos
         {
             auto *list = new common::LinkedList();
 
-            common::Console::Write("Linked List Demo \n");
-
             list->AddFirst(createDataPointer(2));
             list->AddFirst(createDataPointer(1));
             list->AddLast(createDataPointer(3));
@@ -187,6 +210,7 @@ namespace moos
             list->AddFirst(createDataPointer(0));
 
             printlist(list);
+            common::Console::Write("Performing: RemoveLast, RemoveFirst, RemoveLast, RemoveFirst\n");
 
             list->RemoveLast();
             list->RemoveFirst();
@@ -201,7 +225,7 @@ namespace moos
         {
             common::int32_t counter = 0;
 
-            common::Console::Write("\nHEAD => ");
+            common::Console::Write("HEAD => ");
 
             for (auto it = list->begin(), end = list->end(); it != end; ++it)
             {
@@ -217,6 +241,13 @@ namespace moos
             auto *data = new Data();
             data->d = n;
             return data;
+        }
+
+        static void sysPrint(const char *str)
+        {
+            asm("int $0x80"
+                :
+                : "a"(4), "b"(str));
         }
     };
 }
