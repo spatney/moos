@@ -8,3 +8,8 @@ Nothing special, just me trying to figure out how things work to better understa
 
 ## MoOS Terminal
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moos.png)
+
+## MoOS is 'Graphics Mode'
+#### Just some window movement, doesn't offer any real functionality
+
+![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx.gif)
