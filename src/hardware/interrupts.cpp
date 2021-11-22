@@ -103,6 +103,7 @@ InterruptManager::InterruptManager(
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0D, CodeSegment, &HandleInterruptRequest0x0D, 0, IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0E, CodeSegment, &HandleInterruptRequest0x0E, 0, IDT_INTERRUPT_GATE);
     SetInterruptDescriptorTableEntry(hardwareInterruptOffset + 0x0F, CodeSegment, &HandleInterruptRequest0x0F, 0, IDT_INTERRUPT_GATE);
+    SetInterruptDescriptorTableEntry(0x80, CodeSegment, &HandleInterruptRequest0x80, 0, IDT_INTERRUPT_GATE);
 
     picMasterCommand.Write(0x11);
     picSlaveCommand.Write(0x11);
@@ -164,7 +165,7 @@ uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t e
     }
     else
     {
-        //Console::Write("UNHANDLED INTERRUPT %x\n", interruptNumber);
+        Console::Write("UNHANDLED INTERRUPT %x\n", interruptNumber);
     }
 
     if (0x20 <= interruptNumber && interruptNumber < 0x30)

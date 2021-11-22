@@ -6,6 +6,7 @@ objects = obj/loader.o \
 		  obj/core/gdt.o \
 		  obj/core/multitasking.o \
 		  obj/core/memory.o \
+		  obj/core/syscall.o \
 		  obj/common/console.o \
 		  obj/common/linkedlist.o \
 		  obj/common/strings.o \

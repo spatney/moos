@@ -29,6 +29,13 @@ namespace moos
     class OSTest
     {
     public:
+        static void SysCallTest()
+        {
+            auto str = "Print this string via a system call";
+            asm("int $0x80"
+                :
+                : "a"(4), "b"(str));
+        }
         static void HardDiskTest()
         {
             drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
@@ -47,7 +54,8 @@ namespace moos
                 selectedDisk = &ata0s;
             }
 
-            if(selectedDisk == 0) {
+            if (selectedDisk == 0)
+            {
                 common::Console::Write("No useable disk found ... \n");
                 return;
             }

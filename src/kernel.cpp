@@ -5,6 +5,7 @@
 #include <core/multitasking.h>
 #include <core/gdt.h>
 #include <core/multiboot.h>
+#include <core/syscall.h>
 
 #include <common/types.h>
 #include <common/console.h>
@@ -52,6 +53,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     GlobalDescriptorTable gdt;
     TaskManager taskManager;
     InterruptManager interruptManager(0x20, &gdt, &taskManager);
+    SyscallHandler syscalls(&interruptManager, 0x80);
 
     auto *multiboot = (multiboot_info_t *)multiBootInfoAddress;
     size_t memUpperInBytes = multiboot->mem_upper * 1024;
@@ -67,8 +69,8 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     /*Task t1(&gdt, taskA);
     Task t2(&gdt, taskB);
     taskManager.AddTask(&t1);
-    taskManager.AddTask(&t2);*/
-    Console::Write("Initializing driver manager ...\n");
+    taskManager.AddTask(&t2);
+    Console::Write("Initializing driver manager ...\n");*/
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
@@ -116,6 +118,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifndef GRAPHICS_MODE
     Console::Clear();
     Console::Write("Welcome to MoOS!\n\n");
+    //OSTest::SysCallTest();
     //OSTest::HardDiskTest();
     //OSTest::SharedPtrDemo();
     //OSTest::HeapDemo();
@@ -132,14 +135,18 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     }
 }
 
+void sysprintf(char *str)
+{
+    asm("int $0x80"
+        :
+        : "a"(4), "b"(str));
+}
+
 void taskA()
 {
     while (true)
     {
-        Console::Write("A\n");
-        Console::Sleep(WAIT);
-        Console::Write("C\n");
-        Console::Sleep(WAIT);
+        sysprintf("A");
     }
 }
 
@@ -147,9 +154,6 @@ void taskB()
 {
     while (true)
     {
-        Console::Write("B\n");
-        Console::Sleep(WAIT);
-        Console::Write("D\n");
-        Console::Sleep(WAIT);
+        sysprintf("B");
     }
 }

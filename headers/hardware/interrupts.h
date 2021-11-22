@@ -97,6 +97,7 @@ namespace moos
             static void HandleInterruptRequest0x0E();
             static void HandleInterruptRequest0x0F();
             static void HandleInterruptRequest0x31();
+            static void HandleInterruptRequest0x80(); // Sys calls interrupt
 
             static void HandleException0x00();
             static void HandleException0x01();
