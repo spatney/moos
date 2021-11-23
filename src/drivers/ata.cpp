@@ -130,7 +130,7 @@ void AdvancedTechnologyAttachment::Read28(
         return;
     }
 
-    for (uint16_t i = 0; i < count; i += 2)
+    for (auto i = 0; i < count; i += 2)
     {
         uint16_t wdata = dataPort.Read();
 
@@ -139,7 +139,7 @@ void AdvancedTechnologyAttachment::Read28(
             data[i + 1] = (wdata >> 8) & 0x00FF;
     }
 
-    for (uint16_t i = count + (count % 2); i < bytesPerSector; i += 2)
+    for (auto i = count; i < bytesPerSector; i += 2)
     {
         dataPort.Read();
     }
