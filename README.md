@@ -14,3 +14,15 @@ Attempting to implement a bare-metal OS, for the x86 processor architecture, fro
 #### Just some window movement, doesn't offer any real functionality.
 
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx2.gif)
+
+## Useful commands
+
+### Creating a FAT32 volume with 'mtools' with a text file in it
+
+```dd if=/dev/zero of=disk.img bs=256m count=2``` create a disk 256MB (min for FAT 32) in size
+
+```format -F -i disk.img ::``` format disk with FAT32
+
+```mcopy -i disk.img example.txt ::``` copy text file into image
+
+```mdir -i disk.img ::``` list files in root
