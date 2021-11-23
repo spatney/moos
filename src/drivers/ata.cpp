@@ -97,12 +97,13 @@ void AdvancedTechnologyAttachment::Read28(
 {
     if (sector & 0xF0000000)
     {
-        Console::Write("Cannot read from sector larger than 512\n");
+        Console::Write("Read Error 'sector & 0xF0000000 == 0'\n");
         return;
     }
 
     if (count > bytesPerSector)
     {
+        Console::Write("Cannot read from sector larger than 512\n");
         return;
     }
 
@@ -112,7 +113,7 @@ void AdvancedTechnologyAttachment::Read28(
 
     lbaLowPort.Write((sector & 0x000000FF));
     lbaMidPort.Write((sector & 0x0000FF00) >> 8);
-    lbaHighPort.Write((sector & 0x00FF0000) >> 8);
+    lbaHighPort.Write((sector & 0x00FF0000) >> 16);
 
     commandPort.Write(0x20);
 
