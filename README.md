@@ -2,9 +2,9 @@
 
 Attempting to implement a bare-metal OS, for the x86 processor architecture, from scratch. This project is just for fun, and so will not provide much (if any) value for folks looking for a more serious reference to OS design.
 
-[One time setup] ```make build-docker-image``` or ```docker build --platform linux/x86-64 -t moos .``` do this once to build a docker image. This image will be used to perform builds.
+[One time setup] `make build-docker-image` or `docker build --platform linux/x86-64 -t moos .` do this once to build a docker image. This image will be used to perform builds.
 
-```make docker``` or ```docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos``` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
+`make docker` or `docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
 
 ## MoOS Terminal
 #### A basic shell with the ability to execute some commands.
@@ -17,12 +17,12 @@ Attempting to implement a bare-metal OS, for the x86 processor architecture, fro
 
 ## Useful commands
 
-### Creating a FAT32 volume with 'mtools' with a text file in it
+#### Creating a FAT32 volume with 'mtools' with a text file in it.
 
-```dd if=/dev/zero of=disk.img bs=256m count=2``` create a disk 256MB (min for FAT 32) in size
+`dd if=/dev/zero of=disk.img bs=256m count=2` create a disk 256MB (min for FAT 32) in size
 
-```format -F -i disk.img ::``` format disk with FAT32
+`format -F -i disk.img ::` format disk with FAT32
 
-```mcopy -i disk.img example.txt ::``` copy text file into image
+`mcopy -i disk.img example.txt ::` copy text file into image
 
-```mdir -i disk.img ::``` list files in root
+`mdir -i disk.img ::` list files in root
