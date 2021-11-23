@@ -14,6 +14,7 @@
 #include <hardware/pci.h>
 #include <common/strings.h>
 #include <drivers/ata.h>
+#include <file_system/msdos_partition.h>
 
 namespace moos
 {
@@ -114,6 +115,10 @@ namespace moos
                 return;
             }
 
+            common::Console::Write("Reading partition table ... \n");
+
+            file_system::PartitionTable::ReadPartitions(selectedDisk);
+
             /*AdvancedTechnologyAttachment ata1m(0x170, true);
             Console::Write("ATA 1 Master: ");
             ata1m.Identify();
@@ -133,7 +138,7 @@ namespace moos
             Console::Write("ATA 3 Alternate: ");
             ata3s.Identify();*/
 
-            auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
+            /*auto *data = (common::uint8_t *)"This text will be saved to the hard-disk!";
             auto *buffer = new common::uint8_t[common::StringUtil::strlen((common::int8_t *)data)];
 
             selectedDisk->Write28(0, data, common::StringUtil::strlen((common::int8_t *)data));
@@ -141,7 +146,9 @@ namespace moos
             selectedDisk->Read28(0, buffer, common::StringUtil::strlen((common::int8_t *)data));
 
             delete buffer;
-            delete data;
+            delete data;*/
+
+
             delete selectedDisk;
         }
         static void NetworkCardDemo(

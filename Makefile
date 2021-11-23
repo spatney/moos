@@ -19,6 +19,7 @@ objects = obj/loader.o \
 		  obj/drivers/keyboard.o \
 		  obj/drivers/mouse.o \
 		  obj/drivers/vga.o \
+		  obj/file_system/msdos_partition.o \
 		  obj/drivers/amd_am79c973.o \
 		  obj/drivers/ata.o \
 		  obj/gui/terminal.o \

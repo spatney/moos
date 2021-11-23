@@ -125,20 +125,13 @@ void AdvancedTechnologyAttachment::Read28(
 
     if (status & 0x01)
     {
-        Console::Write("ATA Error\n");
+        Console::Write("ATA read error\n");
         return;
     }
-
-    Console::Write("Reading from ATA: ");
 
     for (uint16_t i = 0; i < count; i += 2)
     {
         uint16_t wdata = dataPort.Read();
-
-        int8_t *foo = "  \0";
-        foo[1] = (wdata >> 8) & 0x00FF;
-        foo[0] = wdata & 0x00FF;
-        Console::Write("%s", foo);
 
         data[i] = wdata & 0x00FF;
         if (i + 1 < count)
@@ -149,8 +142,6 @@ void AdvancedTechnologyAttachment::Read28(
     {
         dataPort.Read();
     }
-
-    Console::Write("\n");
 }
 
 void AdvancedTechnologyAttachment::Write28(
