@@ -6,7 +6,7 @@ using namespace moos::common;
 using namespace moos::file_system;
 using namespace moos::drivers;
 
-void moos::file_system::ReadBiosBlock(
+void FATReader::ReadBiosBlock(
     AdvancedTechnologyAttachment *disk,
     uint32_t partitionOffset)
 {
@@ -63,7 +63,6 @@ void moos::file_system::ReadBiosBlock(
         auto content = new uint8_t[size + 1];
         content[size] = '\0';
 
-        Console::Write("File contents: ");
         while (size > 0)
         {
             uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (nextFileCluster - 2);
@@ -90,7 +89,7 @@ void moos::file_system::ReadBiosBlock(
             nextFileCluster = ((uint32_t *)&fatBuffer)[fatOffsetInSectorForCurrentCluster] & 0x0FFFFFFF;
         }
 
-        Console::Write("%s\n", content);
+        Console::Write("File contents: %s\n", content);
         delete content;
     }
 }

@@ -50,6 +50,6 @@ void PartitionTable::ReadPartitions(AdvancedTechnologyAttachment *disk)
             partition->partiotion_id,
             partition->start_lba);
 
-        ReadBiosBlock(disk, partition->start_lba);
+        FATReader::ReadBiosBlock(disk, partition->start_lba);
     }
 }

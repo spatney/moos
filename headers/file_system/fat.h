@@ -59,9 +59,14 @@ namespace moos
             common::uint32_t size;
         } __attribute__((packed));
 
-        void ReadBiosBlock(
-            drivers::AdvancedTechnologyAttachment *disk,
-            common::uint32_t partitionOffset);
+        class FATReader
+        {
+
+        public:
+            static void ReadBiosBlock(
+                drivers::AdvancedTechnologyAttachment *disk,
+                common::uint32_t partitionOffset);
+        };
 
     }
 }
