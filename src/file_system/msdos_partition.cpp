@@ -6,14 +6,6 @@ using namespace moos::file_system;
 using namespace moos::common;
 using namespace moos::drivers;
 
-PartitionTable::PartitionTable()
-{
-}
-
-PartitionTable::~PartitionTable()
-{
-}
-
 void PartitionTable::ReadPartitions(AdvancedTechnologyAttachment *disk)
 {
     MasterBootRecord mbr;
@@ -37,7 +29,8 @@ void PartitionTable::ReadPartitions(AdvancedTechnologyAttachment *disk)
     for (int32_t i = 0; i < 4; i++)
     {
         auto partition = &mbr.primaryPartition[i];
-        if(partition->partiotion_id == 0x00) {
+        if (partition->partiotion_id == 0x00)
+        {
             continue;
         }
 
@@ -53,7 +46,7 @@ void PartitionTable::ReadPartitions(AdvancedTechnologyAttachment *disk)
         }
 
         Console::Write(
-            "0x%x, start LBA: 0x%x\n", 
+            "0x%x, start LBA: 0x%x\n",
             partition->partiotion_id,
             partition->start_lba);
 

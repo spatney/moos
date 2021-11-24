@@ -4,8 +4,10 @@
 #include <common/types.h>
 #include <drivers/ata.h>
 
-namespace moos {
-    namespace file_system {
+namespace moos
+{
+    namespace file_system
+    {
         struct BiosParameterBlock32
         {
             common::uint8_t jump[3];
@@ -36,7 +38,7 @@ namespace moos {
             common::uint32_t volumeId;
             common::uint8_t volumeLabel[11];
             common::uint8_t fatTypeLable[8];
-        }__attribute__((packed));
+        } __attribute__((packed));
 
         struct DirectoryEntryFat32
         {
@@ -48,21 +50,19 @@ namespace moos {
             common::uint16_t cTime;
             common::uint16_t cDate;
             common::uint16_t aTime;
-            
+
             common::uint16_t firstClusterHi;
 
             common::uint16_t wTime;
             common::uint16_t wDate;
             common::uint16_t firstClusterLow;
             common::uint32_t size;
-        }__attribute__((packed));
-        
-        
+        } __attribute__((packed));
 
         void ReadBiosBlock(
             drivers::AdvancedTechnologyAttachment *disk,
             common::uint32_t partitionOffset);
-        
+
     }
 }
 

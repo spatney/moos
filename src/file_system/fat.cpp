@@ -30,6 +30,8 @@ void moos::file_system::ReadBiosBlock(
     DirectoryEntryFat32 directoryEntries[16];
     disk->Read28(rootStart, (uint8_t *)&directoryEntries[0], sizeof(DirectoryEntryFat32) * 16);
 
+    // Console::Write("Sectors per cluster: %d\n", bpb.sectorsPerCluster);
+
     // Console::Write("RootStart: 0x%x\n", rootStart);
 
     for (auto i = 0; i < 16; i++)
@@ -52,12 +54,43 @@ void moos::file_system::ReadBiosBlock(
             continue;
         }
 
-        uint32_t fileCluster = ((uint32_t)entry->firstClusterHi << 16) | ((uint32_t)entry->firstClusterLow);
-        uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (fileCluster - 2);
+        uint32_t firstFileCluster = ((uint32_t)entry->firstClusterHi << 16) | ((uint32_t)entry->firstClusterLow);
 
-        uint8_t buffer[512];
-        disk->Read28(fileSector, buffer, 512);
-        buffer[entry->size] = '\0';
-        Console::Write("File contents: %s\n", buffer);
+        int32_t size = entry->size;
+        int32_t nextFileCluster = firstFileCluster;
+
+        uint8_t fatBuffer[513];
+        auto content = new uint8_t[size + 1];
+        content[size] = '\0';
+
+        Console::Write("File contents: ");
+        while (size > 0)
+        {
+            uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (nextFileCluster - 2);
+            int32_t sectorOffset = 0;
+
+            for (; size > 0; size -= 512)
+            {
+                if (sectorOffset >= bpb.sectorsPerCluster)
+                {
+                    break;
+                }
+
+                disk->Read28(fileSector + sectorOffset, &content[entry->size - size], size > 512 ? 512 : size);
+
+                sectorOffset++;
+            }
+
+            uint32_t fatSectorForCurrentCluster = nextFileCluster / (512 / sizeof(uint32_t));
+
+            disk->Read28(fatStart + fatSectorForCurrentCluster, fatBuffer, 512);
+
+            uint32_t fatOffsetInSectorForCurrentCluster = nextFileCluster % (512 / sizeof(uint32_t));
+
+            nextFileCluster = ((uint32_t *)&fatBuffer)[fatOffsetInSectorForCurrentCluster] & 0x0FFFFFFF;
+        }
+
+        Console::Write("%s\n", content);
+        delete content;
     }
 }

@@ -36,6 +36,7 @@ MemoryManager::~MemoryManager()
 
 void *MemoryManager::malloc(common::size_t size)
 {
+    Console::Write("Allocating %d bytes\n", size);
     MemoryBlock *emptyBlock = 0;
     for (
         auto block = head;
