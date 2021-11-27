@@ -74,11 +74,22 @@ wsl-launch:
 	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &
 wsl-run: kernel.iso wsl-launch
 
-.phony: build-docker-image docker qemu qemu-run
+.phony: build-docker-image docker qemu qemu-run qemu-disk-image
+
 build-docker-image:
 	docker build --platform linux/x86-64 -t moos .
+
 docker:
 	docker run --rm -v "$$(pwd)":/moos --platform linux/x86-64 moos
+
 qemu: 
 	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw -m 1G
+
 qemu-run: docker qemu
+
+qemu-disk-image:
+	rm disk.img
+	dd if=/dev/zero of=disk.img bs=256m count=2
+	mformat -F -i disk.img ::
+	mcopy -i disk.img file1.txt ::
+	mdir -i disk.img ::

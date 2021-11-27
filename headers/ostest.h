@@ -210,6 +210,11 @@ namespace moos
             color = common::Console::SetColor(10);
             common::Console::Write("0x%x\n", e3);
             common::Console::SetColor(color);
+
+            delete e1;
+            delete l1;
+            delete e3;
+            delete l2;
         }
 
         static void ListDemo()
