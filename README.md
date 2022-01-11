@@ -2,7 +2,7 @@
 
 Attempting to implement a bare-metal OS, for the x86 processor architecture, from scratch. This project is just for fun, and so will not provide much (if any) value for folks looking for a more serious reference to OS design.
 
-If you are looking for the most basic, hello world, type OS impelmentation then refer to the [Barebones](barebones/)
+If you are looking for the most basic, hello world, type OS impelmentation then refer to the [barebones folder](barebones/).
 
 [One time setup] `make build-docker-image` or `docker build --platform linux/x86-64 -t moos .` do this once to build a docker image. This image will be used to perform builds.
 
