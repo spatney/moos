@@ -179,18 +179,37 @@ void Terminal::OnKeyDown(Key key)
     switch (key)
     {
     case Key::Up:
+    case Key::Down:
     {
-        // TODO: refactor to use for both up/down
-        if (historyIt == history->end())
+
+        if (key == Key::Down)
         {
-            historyIt = history->begin();
+            if (historyIt == history->begin())
+            {
+                historyIt = history->last();
+            }
+            else
+            {
+                --historyIt;
+                if (historyIt == history->end())
+                {
+                    historyIt = history->begin();
+                }
+            }
         }
         else
         {
-            ++historyIt;
             if (historyIt == history->end())
             {
                 historyIt = history->begin();
+            }
+            else
+            {
+                ++historyIt;
+                if (historyIt == history->end())
+                {
+                    historyIt = history->begin();
+                }
             }
         }
 
@@ -204,8 +223,8 @@ void Terminal::OnKeyDown(Key key)
             bufferCount = copyToBuffer((int8_t *)*historyIt);
             Console::Write("%s", buffer);
         }
+        break;
     }
-    break;
     case Key::RShift:
     case Key::LShift:
         isShiftDown = true;

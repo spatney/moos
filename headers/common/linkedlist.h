@@ -62,7 +62,7 @@ namespace moos
         public:
             LinkedList();
             ~LinkedList();
-            
+
             void AddFirst(void *data);
             void AddLast(void *data);
 
@@ -76,6 +76,7 @@ namespace moos
 
             LinkedListNodeIterator begin() { return LinkedListNodeIterator(head); }
             LinkedListNodeIterator end() { return LinkedListNodeIterator(0); }
+            LinkedListNodeIterator last() { return LinkedListNodeIterator(tail); }
         };
     }
 }
