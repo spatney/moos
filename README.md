@@ -25,7 +25,7 @@ Some scripts / commands to help with the development workflow.
 
 `dd if=/dev/zero of=disk.img bs=256m count=2` create a disk 256MB (min for FAT 32) in size
 
-`format -F -i disk.img ::` format disk with FAT32
+`mformat -F -i disk.img ::` format disk with FAT32
 
 `mcopy -i disk.img example.txt ::` copy text file into image
 

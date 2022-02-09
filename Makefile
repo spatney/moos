@@ -78,6 +78,11 @@ run: kernel.iso
 	(pkill VirtualBoxVM) || true
 	VirtualBoxVM --startvm "MoOS" &
 
+wsl-launch-qemu:
+	(powershell.exe "taskkill /IM "qemu-system-i386.exe" /F") || true
+	powershell.exe -File "c:\scripts\run.ps1" &
+wsl-run-qemu: kernel.iso wsl-launch-qemu
+
 wsl-launch:
 	(powershell.exe "taskkill /IM "VirtualBoxVM.exe" /F") || true
 	/mnt/c/Program\ Files/Oracle/VirtualBox/VirtualBoxVM.exe --startvm "MoOS" &

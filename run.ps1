@@ -1,0 +1,1 @@
+. 'C:\Program Files\qemu\qemu-system-i386.exe' -boot d -cdrom \\wsl.localhost\Debian\home\sachinio\code\moos\kernel.iso -drive file=\\wsl.localhost\Debian\home\sachinio\code\moos\disk.img,format=raw -m 1G
