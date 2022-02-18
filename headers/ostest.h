@@ -86,7 +86,7 @@ namespace moos
 
         static void SysCallTest()
         {
-            auto str = "Print this string via a system call\n";
+            auto str = "Hey System! do something with this string?\n";
             asm("int $0x80"
                 :
                 : "a"(4), "b"(str));
