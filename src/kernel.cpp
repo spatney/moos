@@ -35,6 +35,7 @@ extern "C" void callConstructors()
         (*i)();
 }
 
+extern "C" bool kernal_running = true;
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
     Console::Clear();
@@ -112,10 +113,11 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     terminal->Reset();
 #endif
 
-    while (1)
+    while (kernal_running)
     {
 #ifdef GRAPHICS_MODE
         desktop->Draw(&gc);
 #endif
     }
+    Console::Write("\n\nMoOS kernal halted!");
 }

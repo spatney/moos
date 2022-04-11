@@ -55,6 +55,10 @@ namespace moos
                 common::Console::Write("System call demo\n\n");
                 SysCallTest();
                 break;
+            case 6:
+                common::Console::Write("Halt kernal demo\n\n");
+                HaltKernalTest();
+                break;
 
             default:
                 common::Console::Write("Invalid test number\n");
@@ -91,6 +95,13 @@ namespace moos
                 :
                 : "a"(4), "b"(str));
         }
+
+        static void HaltKernalTest() {
+            asm("int $0x80"
+                :
+                : "a"(60), "b"(0));
+        }
+
         static void HardDiskTest()
         {
             drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
