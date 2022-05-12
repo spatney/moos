@@ -5,7 +5,7 @@ using namespace moos::core;
 using namespace moos::hardware;
 using namespace moos::common;
 
-extern "C" bool kernal_running;
+extern bool kernel_running;
 
 SyscallHandler::SyscallHandler(
     InterruptManager *interruptManager,
@@ -30,7 +30,7 @@ uint32_t SyscallHandler::HandleInterrupt(uint32_t esp)
         Console::Write("%s", cpuState->ebx);
         break;
     case 60:
-        kernal_running = false;
+        kernel_running = false;
         break;
     default:
         Console::Write("Syscall '%d' not supported", cpuState->eax);

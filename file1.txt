@@ -1,0 +1,15 @@
+
+A file allocation table (FAT) is a table that an operating system
+maintains on a hard disk that provides a map of the clusters 
+(the basic units of logical storage on a hard disk) that a file
+has been stored in. When you write a new file to a hard disk, the
+file is stored in one or more clusters that are not necessarily
+next to each other; they may be rather widely scattered over the
+disk. A typical cluster size is 2,048 bytes, 4,096 bytes,
+or 8,192 bytes. The operating system creates a FAT entry for the
+new file that records where each cluster is located and their
+sequential order. When you read a file, the operating system
+reassembles the file from clusters and places it as an entire
+file where you want to read it. For example, if this is a long
+Web page, it may very well be stored on more than one cluster
+on your hard disk.

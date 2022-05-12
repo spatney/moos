@@ -35,7 +35,7 @@ extern "C" void callConstructors()
         (*i)();
 }
 
-extern "C" bool kernal_running = true;
+bool kernel_running = true;
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
     Console::Clear();
@@ -68,7 +68,7 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
 #ifndef GRAPHICS_MODE
     auto terminal = new Terminal();
-    mouseHandler = 0; //terminal;
+    mouseHandler = 0; // terminal;
     keyboardHandler = terminal;
 #endif
 
@@ -103,17 +103,17 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 #ifndef GRAPHICS_MODE
     Console::Clear();
     Console::Write("Welcome to MoOS!\n\n");
-    //OSTest::MultiTaskingTest(&taskManager, &gdt);
-    //OSTest::SysCallTest();
-    //OSTest::HardDiskTest();
-    //OSTest::SharedPtrDemo();
-    //OSTest::HeapDemo();
-    //OSTest::SleepDemo();
-    //OSTest::NetworkCardDemo(&driverManager);
+    // OSTest::MultiTaskingTest(&taskManager, &gdt);
+    // OSTest::SysCallTest();
+    // OSTest::HardDiskTest();
+    // OSTest::SharedPtrDemo();
+    // OSTest::HeapDemo();
+    // OSTest::SleepDemo();
+    // OSTest::NetworkCardDemo(&driverManager);
     terminal->Reset();
 #endif
 
-    while (kernal_running)
+    while (kernel_running)
     {
 #ifdef GRAPHICS_MODE
         desktop->Draw(&gc);

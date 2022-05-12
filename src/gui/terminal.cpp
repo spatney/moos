@@ -307,7 +307,7 @@ void Terminal::OnKeyDown(Key key)
             {
                 Console::Write("command not found: ");
                 auto color = Console::SetColor(12);
-                Console::Write("'%s'\n"), (const int8_t *)tokens->PeekFirst();
+                Console::Write("'%s'\n", (const int8_t *)tokens->PeekFirst());
                 Console::SetColor(color);
             }
         }
