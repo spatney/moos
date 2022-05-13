@@ -1,6 +1,7 @@
 **/*.o
 *.bin
 *.iso
+.vscode/*.log
 obj/
 disk.img
 example.txt
