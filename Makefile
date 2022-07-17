@@ -99,11 +99,14 @@ docker:
 qemu: 
 	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw -m 1G
 
-qemu-run: docker qemu
+qemu-none-graphics-mode: # use this if running within a container
+	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw -m 1G -curses
+
+qemu-run: qemu-disk-image docker qemu
 
 qemu-disk-image:
-	rm disk.img
-	dd if=/dev/zero of=disk.img bs=256m count=2
+	rm -f disk.img
+	dd if=/dev/zero of=disk.img bs=25M count=2
 	mformat -F -i disk.img ::
 	mcopy -i disk.img file1.txt ::
 	mdir -i disk.img ::
