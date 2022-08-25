@@ -89,7 +89,7 @@ void FATReader::ReadBiosBlock(
             nextFileCluster = ((uint32_t *)&fatBuffer)[fatOffsetInSectorForCurrentCluster] & 0x0FFFFFFF;
         }
 
-        Console::Write("File contents: %s\n", content);
+        Console::Write("\n%s\n", content);
         delete content;
     }
 }
