@@ -39,6 +39,9 @@ namespace moos
         class PartitionTable
         {
         public:
+            static common::int8_t *ReadFileContents(
+                drivers::AdvancedTechnologyAttachment *disk,
+                const common::int8_t *name);
             static void ReadPartitions(drivers::AdvancedTechnologyAttachment *disk);
         };
     }

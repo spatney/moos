@@ -75,15 +75,13 @@ namespace moos
                                          while (true)
                                          {
                                              OSTest::sysPrint("A ");
-                                         }
-                                     });
+                                         } });
             auto t2 = new core::Task(gdt, []()
                                      {
                                          while (true)
                                          {
                                              OSTest::sysPrint("B ");
-                                         }
-                                     });
+                                         } });
             taskManager->AddTask(t1);
             taskManager->AddTask(t2);
         }
@@ -96,7 +94,8 @@ namespace moos
                 : "a"(4), "b"(str));
         }
 
-        static void HaltKernalTest() {
+        static void HaltKernalTest()
+        {
             asm("int $0x80"
                 :
                 : "a"(60), "b"(0));
@@ -107,14 +106,12 @@ namespace moos
             drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
 
             drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
-            common::Console::Write("ATA 0 Master: ");
             if (ata0m.Identify())
             {
                 selectedDisk = &ata0m;
             }
 
             drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
-            common::Console::Write("ATA 0 Alternate: ");
             if (ata0s.Identify())
             {
                 selectedDisk = &ata0s;
@@ -126,9 +123,11 @@ namespace moos
                 return;
             }
 
-            common::Console::Write("Reading partition table ... \n");
+            common::Console::Write("Reading a test file ... \n");
 
-            file_system::PartitionTable::ReadPartitions(selectedDisk);
+            auto contents = file_system::PartitionTable::ReadFileContents(selectedDisk, "FILE1");
+
+            common::Console::Write("%s\n", contents);
 
             /*AdvancedTechnologyAttachment ata1m(0x170, true);
             Console::Write("ATA 1 Master: ");
@@ -158,7 +157,6 @@ namespace moos
 
             delete buffer;
             delete data;*/
-
 
             delete selectedDisk;
         }

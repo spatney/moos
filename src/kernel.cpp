@@ -26,6 +26,34 @@ using namespace moos::drivers;
 using namespace moos::common;
 using namespace moos::gui;
 
+static void DrawLogo()
+{
+    drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
+
+    drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
+    if (ata0m.Identify())
+    {
+        selectedDisk = &ata0m;
+    }
+
+    drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
+    if (ata0s.Identify())
+    {
+        selectedDisk = &ata0s;
+    }
+
+    if (selectedDisk == 0)
+    {
+        return;
+    }
+
+    auto contents = file_system::PartitionTable::ReadFileContents(selectedDisk, "LOGO");
+
+    auto color = Console::SetColor(10);
+    common::Console::Write("%s\n\n", contents);
+    Console::SetColor(color);
+}
+
 typedef void (*constructor)();
 extern "C" constructor start_ctors;
 extern "C" constructor end_ctors;
@@ -102,14 +130,15 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 
 #ifndef GRAPHICS_MODE
     Console::Clear();
-    Console::Write("Welcome to MoOS!\n\n");
-    // OSTest::MultiTaskingTest(&taskManager, &gdt);
-    // OSTest::SysCallTest();
-    // OSTest::HardDiskTest();
-    // OSTest::SharedPtrDemo();
-    // OSTest::HeapDemo();
-    // OSTest::SleepDemo();
-    // OSTest::NetworkCardDemo(&driverManager);
+    DrawLogo();
+    // Console::Write("Welcome to MoOS!\n\n");
+    //  OSTest::MultiTaskingTest(&taskManager, &gdt);
+    //  OSTest::SysCallTest();
+    //  OSTest::HardDiskTest();
+    //  OSTest::SharedPtrDemo();
+    //  OSTest::HeapDemo();
+    //  OSTest::SleepDemo();
+    //  OSTest::NetworkCardDemo(&driverManager);
     terminal->Reset();
 #endif
 

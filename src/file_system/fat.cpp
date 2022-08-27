@@ -1,10 +1,104 @@
 #include <file_system/fat.h>
 #include <common/console.h>
+#include <common/strings.h>
 
 using namespace moos;
 using namespace moos::common;
 using namespace moos::file_system;
 using namespace moos::drivers;
+
+int8_t *FATReader::ReadFileContents(
+    const int8_t *name,
+    drivers::AdvancedTechnologyAttachment *disk,
+    uint32_t partitionOffset)
+{
+    BiosParameterBlock32 bpb;
+    disk->Read28(partitionOffset, (uint8_t *)&bpb, sizeof(BiosParameterBlock32));
+    uint32_t fatStart = partitionOffset + bpb.reservedSectors;
+    uint32_t fatSize = bpb.tableSize;
+    uint32_t dataStart = fatStart + fatSize * bpb.fatCopies;
+    uint32_t rootStart = dataStart + bpb.sectorsPerCluster * (bpb.rootCluster - 2);
+
+    DirectoryEntryFat32 directoryEntries[16];
+    disk->Read28(rootStart, (uint8_t *)&directoryEntries[0], sizeof(DirectoryEntryFat32) * 16);
+
+    for (auto i = 0; i < 16; i++)
+    {
+        auto entry = &directoryEntries[i];
+        if (entry->name[0] == 0x00)
+        {
+            break;
+        }
+
+        if ((entry->attributes & 0x0F) == 0x0F)
+        {
+            continue;
+        }
+
+        if ((entry->attributes & 0x10) == 0x10) // directory
+        {
+            continue;
+        }
+
+        // Yup, super hacky indeed :)
+        // but again, this isn't a serious OS
+        auto match = true;
+        for (auto i = 0; i < 8; i++)
+        {
+            if (name[i] == '\0')
+                break;
+            if (name[i] != entry->name[i])
+            {
+                match = false;
+                break;
+            }
+        }
+
+        if (!match)
+        {
+            continue;
+        }
+
+        uint32_t firstFileCluster = ((uint32_t)entry->firstClusterHi << 16) | ((uint32_t)entry->firstClusterLow);
+
+        int32_t size = entry->size;
+        int32_t nextFileCluster = firstFileCluster;
+
+        uint8_t fatBuffer[513];
+        auto content = new uint8_t[size + 1];
+        content[size] = '\0';
+
+        while (size > 0)
+        {
+            uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (nextFileCluster - 2);
+            int32_t sectorOffset = 0;
+
+            for (; size > 0; size -= 512)
+            {
+                if (sectorOffset >= bpb.sectorsPerCluster)
+                {
+                    break;
+                }
+
+                disk->Read28(fileSector + sectorOffset, &content[entry->size - size], size > 512 ? 512 : size);
+
+                sectorOffset++;
+            }
+
+            uint32_t fatSectorForCurrentCluster = nextFileCluster / (512 / sizeof(uint32_t));
+
+            disk->Read28(fatStart + fatSectorForCurrentCluster, fatBuffer, 512);
+
+            uint32_t fatOffsetInSectorForCurrentCluster = nextFileCluster % (512 / sizeof(uint32_t));
+
+            nextFileCluster = ((uint32_t *)&fatBuffer)[fatOffsetInSectorForCurrentCluster] & 0x0FFFFFFF;
+        }
+        delete content;
+        return (int8_t *)content;
+    }
+
+    return nullptr;
+}
 
 void FATReader::ReadBiosBlock(
     AdvancedTechnologyAttachment *disk,

@@ -66,6 +66,11 @@ namespace moos
             static void ReadBiosBlock(
                 drivers::AdvancedTechnologyAttachment *disk,
                 common::uint32_t partitionOffset);
+
+            static common::int8_t *ReadFileContents(
+                const common::int8_t *name,
+                drivers::AdvancedTechnologyAttachment *disk,
+                common::uint32_t partitionOffset);
         };
 
     }

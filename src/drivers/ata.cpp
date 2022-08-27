@@ -35,7 +35,6 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status == 0xFF)
     {
-        Console::Write("No device found.\n");
         return false;
     }
 
@@ -50,7 +49,6 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status == 0)
     {
-        Console::Write("No device found.\n");
         return false;
     }
 
@@ -86,7 +84,6 @@ bool AdvancedTechnologyAttachment::Identify()
 
     identifier[len] = '\0';
 
-    Console::Write("%s\n", identifier);
     return true;
 }
 

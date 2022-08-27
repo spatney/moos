@@ -6,6 +6,38 @@ using namespace moos::file_system;
 using namespace moos::common;
 using namespace moos::drivers;
 
+int8_t *PartitionTable::ReadFileContents(
+    AdvancedTechnologyAttachment *disk,
+    const int8_t *name)
+{
+    MasterBootRecord mbr;
+    disk->Read28(0, (uint8_t *)&mbr, sizeof(MasterBootRecord));
+
+    if (mbr.magicNumber != 0xAA55)
+    {
+        Console::Write("illegal MBR\n");
+        return nullptr;
+    }
+
+    for (int32_t i = 0; i < 4; i++)
+    {
+        auto partition = &mbr.primaryPartition[i];
+        if (partition->partiotion_id == 0x00)
+        {
+            continue;
+        }
+
+        auto value = FATReader::ReadFileContents(name, disk, partition->start_lba);
+
+        if (value != nullptr)
+        {
+            return value;
+        }
+    }
+
+    return "";
+}
+
 void PartitionTable::ReadPartitions(AdvancedTechnologyAttachment *disk)
 {
     MasterBootRecord mbr;

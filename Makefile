@@ -109,4 +109,5 @@ qemu-disk-image:
 	dd if=/dev/zero of=disk.img bs=25M count=2
 	mformat -F -i disk.img ::
 	mcopy -i disk.img file1.txt ::
+	mcopy -i disk.img logo.txt ::
 	mdir -i disk.img ::
