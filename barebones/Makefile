@@ -45,3 +45,8 @@ docker:
 qemu: 
 	qemu-system-i386 -cdrom kernel.iso -vga virtio -m 1G
 qemu-run: docker qemu
+
+wsl-launch-qemu:
+	(powershell.exe "taskkill /IM "qemu-system-i386.exe" /F") || true
+	powershell.exe -File "c:\scripts\run2.ps1" &
+wsl-run-qemu: kernel.iso wsl-launch-qemu
