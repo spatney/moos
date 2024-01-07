@@ -18,17 +18,22 @@ extern "C" void kernel_main()
     // we are going to try and print this to the screen
     auto message = "Hello! this is the Barebones OS. Bye!";
     auto color = 0x08;
+    auto skip_lines = 80 * 2;
 
-    for (auto i = 0; message[i] != '\0'; ++i)
+    for (auto lines = 0; lines < 10; ++lines)
     {
-        if (message[i] == ' ')
+        for (auto i = 0; message[i] != '\0'; ++i)
         {
-            // switch color at wordbreak
-            color = (color + 1) % 0x0F;
+            if (message[i] == ' ')
+            {
+                color = (color + 1) % 0x0f;
+                if (color == 14)
+                    color++;
+            }
+            // first byte is the character, second byte is the color
+            videoMemory[i + skip_lines] = color << 8 | message[i];
         }
-
-        // first byte is color, second is the text
-        videoMemory[i] = color << 8 | message[i];
+        skip_lines += 80;
     }
     while (1)
         ;
