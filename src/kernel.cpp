@@ -1,4 +1,4 @@
-//#define GRAPHICS_MODE
+// #define GRAPHICS_MODE
 
 #include <ostest.h>
 
@@ -50,7 +50,7 @@ static void DrawLogo()
     auto contents = file_system::PartitionTable::ReadFileContents(selectedDisk, "LOGO");
 
     auto color = Console::SetColor(10);
-    common::Console::Write("%s\n\n", contents);
+    common::Console::Write("\n\n%s\n\n", contents);
     Console::SetColor(color);
 }
 
