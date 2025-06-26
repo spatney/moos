@@ -27,6 +27,7 @@ default_objects = obj/loader.o \
 		  obj/gui/terminal.o \
 		  obj/kernel.o
 
+# gfx = 1
 ifdef gfx
 GCCFLAGS = $(GCCPARAMSGFX)
 objects = $(default_objects) \
