@@ -9,16 +9,19 @@ If you are looking for the most basic, hello world, type OS impelmentation then 
 `make docker` or `docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
 
 ## MoOS Terminal
-__A basic shell with the ability to execute some commands.__
+
+**A basic shell with the ability to execute some commands.**
 
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosterminal2.gif)
 
 ## MoOS in 'Graphics Mode'
-__Just some window movement, doesn't offer any real functionality.__
+
+**Just some window movement, doesn't offer any real functionality.**
 
 ![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx2.gif)
 
 ## Useful commands
+
 Some scripts / commands to help with the development workflow.
 
 #### Creating a FAT32 volume with 'mtools' with a text file in it.
@@ -30,3 +33,8 @@ Some scripts / commands to help with the development workflow.
 `mcopy -i disk.img example.txt ::` copy text file into image
 
 `mdir -i disk.img ::` list files in root
+
+#### Installing QEMU
+
+sudo apt install qemu-system-x86 -y # Install QEMU for x86 emulation
+sudo apt install qemu qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager -y
