@@ -128,6 +128,7 @@ namespace moos
 
             virtual void OnKeyDown(drivers::Key key);
             virtual void OnKeyUp(drivers::Key key);
+            virtual void OnActivate() {}  // Called when handler becomes active
         };
 
         class KeyboardDriver : public hardware::InterruptHandler, public Driver

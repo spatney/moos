@@ -56,6 +56,7 @@ namespace moos
             void Reset();
             void OnKeyDown(drivers::Key key);
             void OnKeyUp(drivers::Key key);
+            void OnActivate() override;
             void OnMouseDown(common::uint8_t button);
             void OnMouseUp(common::uint8_t button);
 

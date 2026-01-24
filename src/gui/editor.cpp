@@ -38,6 +38,11 @@ Editor::~Editor()
 
 void Editor::Open(const int8_t *name, int8_t *contents)
 {
+    // Hide hardware cursor and clear screen
+    Console::HideCursor();
+    for (int i = 0; i < 80 * 25; i++)
+        VideoMemory[i] = 0x0700 | ' ';
+    
     // Copy filename
     int i = 0;
     while (name[i] != '\0' && i < 31)
@@ -381,7 +386,9 @@ void Editor::exit()
 {
     running = false;
     Console::Clear();
+    Console::ShowCursor();
     keyboardDriver->SetEventHandler(previousHandler);
+    previousHandler->OnActivate();
 }
 
 uint8_t Editor::keyToChar(Key key)

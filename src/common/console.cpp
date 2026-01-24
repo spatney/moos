@@ -59,6 +59,21 @@ void Console::SetCursor(int x, int y)
 int Console::GetCursorX() { return cursorX; }
 int Console::GetCursorY() { return cursorY; }
 
+void Console::HideCursor()
+{
+    vgaIndexPort.Write(0x0A);
+    vgaDataPort.Write(0x20);  // Bit 5 disables cursor
+}
+
+void Console::ShowCursor()
+{
+    vgaIndexPort.Write(0x0A);
+    vgaDataPort.Write(0x0E);  // Scanline 14
+    vgaIndexPort.Write(0x0B);
+    vgaDataPort.Write(0x0F);  // Scanline 15
+    UpdateHardwareCursor();
+}
+
 uint8_t Console::SetColor(uint8_t color)
 {
     uint8_t old = currentColor;

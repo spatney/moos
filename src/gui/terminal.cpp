@@ -167,14 +167,6 @@ uint8_t Terminal::keyToChar(Key key)
 
 void Terminal::OnKeyDown(Key key)
 {
-    // Clean up editor if it exited
-    if (activeEditor != nullptr && !activeEditor->IsRunning())
-    {
-        delete activeEditor;
-        activeEditor = nullptr;
-        drawPrompt();
-    }
-    
     switch (key)
     {
     case Key::Up:
@@ -609,6 +601,17 @@ void Terminal::redrawInput()
 
 void Terminal::Reset()
 {
+    drawPrompt();
+}
+
+void Terminal::OnActivate()
+{
+    // Called when terminal becomes active again (e.g., after editor exits)
+    if (activeEditor != nullptr)
+    {
+        delete activeEditor;
+        activeEditor = nullptr;
+    }
     drawPrompt();
 }
 

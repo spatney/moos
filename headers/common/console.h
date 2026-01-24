@@ -26,6 +26,8 @@ namespace moos
             static void SetCursor(int x, int y);
             static int GetCursorX();
             static int GetCursorY();
+            static void HideCursor();
+            static void ShowCursor();
             
             // Color control (returns previous color)
             static uint8_t SetColor(uint8_t color);
