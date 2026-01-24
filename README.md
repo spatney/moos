@@ -1,40 +1,130 @@
 # MoOS
 
-Attempting to implement a bare-metal OS, for the x86 processor architecture, from scratch. This project is just for fun, and so will not provide much (if any) value for folks looking for a more serious reference to OS design.
+A hobby operating system for x86 architecture, built from scratch in C++.
 
-If you are looking for the most basic, hello world, type OS impelmentation then refer to the [barebones folder](barebones/).
+```
+   ╔═══╗  ╔═══╗
+   ║ ♦ ║  ║ ♦ ║   MoOS v1.0
+   ╚═╦═╝  ╚═╦═╝   Modern Operating System
+   ╔═╩════╩═╗
+   ║ ░░░░░░ ║
+   ╚════════╝
+```
 
-[One time setup] `make build-docker-image` or `docker build --platform linux/x86-64 -t moos .` do this once to build a docker image. This image will be used to perform builds.
+## Features
 
-`make docker` or `docker run --rm -v "$(pwd)":/moos --platform linux/x86-64 moos` build a bootable iso with GRUB as the bootloader via docker. You can run the iso via a virtualization / emulation tool of your choice. Refer to the 'Makefile' for examples of virtual box and qemu.
+- **Shell** - Command-line interface with history, inline editing, and tab completion
+- **Text Editor** - Nano-like editor with file save/create support
+- **FAT32 Filesystem** - Read and write files to disk
+- **Keyboard & Mouse** - Full input device support
+- **VGA Text Mode** - 80x25 color console with Unicode (CP437) support
 
-## MoOS Terminal
+### Shell Commands
 
-**A basic shell with the ability to execute some commands.**
+| Command | Description |
+|---------|-------------|
+| `help` | Show available commands |
+| `clear` | Clear the screen |
+| `ls` | List files on disk |
+| `cat <file>` | Display file contents |
+| `nano <file>` | Edit or create a file |
+| `echo <text>` | Print text to console |
+| `pwd` | Print working directory |
+| `uname` | Show kernel version |
+| `uptime` | Show system uptime |
+| `free` | Show memory usage |
+| `lspci` | List PCI devices |
+| `reboot` | Reboot the system |
+| `halt` | Shutdown (exits QEMU) |
 
-![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosterminal2.gif)
+### Editor (nano)
 
-## MoOS in 'Graphics Mode'
+- **Arrow keys** - Navigate
+- **Type** - Insert text
+- **Backspace/Delete** - Delete characters
+- **Shift+O** - Save file
+- **Esc** - Exit editor
 
-**Just some window movement, doesn't offer any real functionality.**
+## Building
 
-![MoOS Terminal Screenshot](https://envy.blob.core.windows.net/moos/moosgfx2.gif)
+### Prerequisites
 
-## Useful commands
+Docker is required for building. One-time setup:
 
-Some scripts / commands to help with the development workflow.
+```bash
+make build-docker-image
+```
 
-#### Creating a FAT32 volume with 'mtools' with a text file in it.
+### Build & Run
 
-`dd if=/dev/zero of=disk.img bs=256m count=2` create a disk 256MB (min for FAT 32) in size
+```bash
+# Build the kernel ISO
+make docker
 
-`mformat -F -i disk.img ::` format disk with FAT32
+# Run in QEMU (terminal mode)
+make qemu-run-terminal
 
-`mcopy -i disk.img example.txt ::` copy text file into image
+# Run in QEMU (GUI mode)
+make qemu
+```
 
-`mdir -i disk.img ::` list files in root
+### Quick Start
 
-#### Installing QEMU
+```bash
+make build-docker-image  # First time only
+make qemu-run-terminal   # Build and run
+```
 
-sudo apt install qemu-system-x86 -y # Install QEMU for x86 emulation
+## Project Structure
+
+```
+moos/
+├── src/
+│   ├── kernel.cpp          # Kernel entry point
+│   ├── core/               # GDT, memory management, syscalls
+│   ├── common/             # Console, strings, utilities
+│   ├── drivers/            # Keyboard, mouse, ATA disk
+│   ├── file_system/        # FAT32 implementation
+│   ├── gui/                # Terminal, editor
+│   └── hardware/           # Interrupts, PCI, ports
+├── headers/                # Header files
+├── barebones/              # Minimal "hello world" OS example
+├── Makefile
+└── Dockerfile
+```
+
+## Barebones Example
+
+For the most basic "hello world" OS implementation, see the [barebones folder](barebones/).
+
+## Useful Commands
+
+### Creating a FAT32 disk image with mtools
+
+```bash
+# Create 50MB disk image
+dd if=/dev/zero of=disk.img bs=1M count=50
+
+# Format with FAT32
+mformat -i disk.img -F ::
+
+# Copy a file to the disk
+mcopy -i disk.img example.txt ::
+
+# List files
+mdir -i disk.img ::
+```
+
+### Installing QEMU
+
+```bash
+# Ubuntu/Debian
+sudo apt install qemu-system-x86 -y
+
+# With full virtualization support
 sudo apt install qemu qemu-kvm libvirt-daemon-system libvirt-clients bridge-utils virt-manager -y
+```
+
+## License
+
+This project is just for fun and learning. See [LICENSE](LICENSE) for details.
