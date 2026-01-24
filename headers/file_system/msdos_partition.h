@@ -42,7 +42,13 @@ namespace moos
             static common::int8_t *ReadFileContents(
                 drivers::AdvancedTechnologyAttachment *disk,
                 const common::int8_t *name);
+            static bool WriteFileContents(
+                drivers::AdvancedTechnologyAttachment *disk,
+                const common::int8_t *name,
+                const common::int8_t *data,
+                common::uint32_t dataSize);
             static void ReadPartitions(drivers::AdvancedTechnologyAttachment *disk);
+            static void ListFiles(drivers::AdvancedTechnologyAttachment *disk);
         };
     }
 }

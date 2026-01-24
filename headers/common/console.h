@@ -7,37 +7,49 @@ namespace moos
 {
     namespace common
     {
-
-        struct Cursor
-        {
-            int8_t x = 0;
-            int8_t y = 0;
-        };
-
         class Console
         {
         public:
-            inline static common::uint32_t ticks = 0;
-
+            static const int WIDTH = 80;
+            static const int HEIGHT = 25;
+            
+            // System tick counter (incremented by timer interrupt)
+            inline static uint32_t ticks = 0;
+            
+            // Initialize console
+            static void Init();
+            
+            // Clear screen
             static void Clear();
-            static common::uint8_t SetColor(common::uint8_t color);
-            static void Write(const common::int8_t *message, ...);
+            
+            // Cursor control
+            static void SetCursor(int x, int y);
+            static int GetCursorX();
+            static int GetCursorY();
+            
+            // Color control (returns previous color)
+            static uint8_t SetColor(uint8_t color);
+            static uint8_t GetColor();
+            
+            // Output
+            static void PutChar(char c);
+            static void PutCP437(uint8_t c);  // Direct CP437 character
+            static void Print(const char *str);
+            static void Printf(const char *format, ...);
+            
+            // Input helpers
             static void Backspace();
-            static void Sleep(common::int32_t);
-            static Cursor ReadCursor();
-
+            
+            // Scrolling
+            static void ScrollUp();
+            
+            // Timing
+            static void Sleep(int32_t milliseconds);
+            
         private:
-            static void enableCusor(
-                common::uint8_t cursor_start,
-                common::uint8_t cursor_end);
-
-            static void updateCursor();
-            static void disableCursor();
-            static void moveCursorBackByOne();
-
-            static common::int8_t *itoa(
-                common::int32_t val,
-                const common::int32_t base);
+            static void UpdateHardwareCursor();
+            static void PutCharAt(char c, int x, int y, uint8_t color);
+            static char *IntToStr(int32_t val, int base, char *buf);
         };
     }
 }

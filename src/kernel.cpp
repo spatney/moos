@@ -11,6 +11,7 @@
 #include <hardware/pci.h>
 #include <drivers/keyboard.h>
 #include <drivers/mouse.h>
+#include <drivers/disk.h>
 
 #include <gui/terminal.h>
 #ifdef GRAPHICS_MODE
@@ -28,30 +29,65 @@ using namespace moos::gui;
 
 static void DrawLogo()
 {
-    drivers::AdvancedTechnologyAttachment *selectedDisk = 0;
-
-    drivers::AdvancedTechnologyAttachment ata0m(0x1F0, true);
-    if (ata0m.Identify())
-    {
-        selectedDisk = &ata0m;
-    }
-
-    drivers::AdvancedTechnologyAttachment ata0s(0x1F0, false);
-    if (ata0s.Identify())
-    {
-        selectedDisk = &ata0s;
-    }
-
-    if (selectedDisk == 0)
-    {
-        return;
-    }
-
-    auto contents = file_system::PartitionTable::ReadFileContents(selectedDisk, "LOGO");
-
-    auto color = Console::SetColor(10);
-    common::Console::Write("\n\n%s\n\n", contents);
-    Console::SetColor(color);
+    // CP437 box drawing: C9=╔ CD=═ BB=╗ BA=║ C8=╚ BC=╝ CB=╦ CA=╩ B0=░
+    Console::Print("\n");
+    Console::SetColor(0x0B); // Cyan
+    
+    // Line 1: ╔═══╗  ╔═══╗
+    Console::Print("   ");
+    Console::PutCP437(0xC9); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xBB);
+    Console::Print("  ");
+    Console::PutCP437(0xC9); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xBB);
+    Console::Print("\n");
+    
+    // Line 2: ║ ◆ ║  ║ ◆ ║   MoOS v1.0
+    Console::Print("   ");
+    Console::PutCP437(0xBA); Console::Print(" ");
+    Console::SetColor(0x0E); Console::PutCP437(0x04); // Diamond
+    Console::SetColor(0x0B); Console::Print(" "); Console::PutCP437(0xBA);
+    Console::Print("  ");
+    Console::PutCP437(0xBA); Console::Print(" ");
+    Console::SetColor(0x0E); Console::PutCP437(0x04);
+    Console::SetColor(0x0B); Console::Print(" "); Console::PutCP437(0xBA);
+    Console::Print("   ");
+    Console::SetColor(0x0F);
+    Console::Print("MoOS v1.0\n");
+    
+    // Line 3: ╚═╦═╝  ╚═╦═╝   Modern Operating System
+    Console::SetColor(0x0B);
+    Console::Print("   ");
+    Console::PutCP437(0xC8); Console::PutCP437(0xCD); Console::PutCP437(0xCB); Console::PutCP437(0xCD); Console::PutCP437(0xBC);
+    Console::Print("  ");
+    Console::PutCP437(0xC8); Console::PutCP437(0xCD); Console::PutCP437(0xCB); Console::PutCP437(0xCD); Console::PutCP437(0xBC);
+    Console::Print("   ");
+    Console::SetColor(0x07);
+    Console::Print("Modern Operating System\n");
+    
+    // Line 4: ╔═╩════╩═╗
+    Console::SetColor(0x0B);
+    Console::Print("   ");
+    Console::PutCP437(0xC9); Console::PutCP437(0xCD); Console::PutCP437(0xCA); Console::PutCP437(0xCD); Console::PutCP437(0xCD);
+    Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCA); Console::PutCP437(0xCD); Console::PutCP437(0xBB);
+    Console::Print("\n");
+    
+    // Line 5: ║ ░░░░░░ ║
+    Console::Print("   ");
+    Console::PutCP437(0xBA); Console::Print(" ");
+    Console::SetColor(0x0F);
+    Console::PutCP437(0xB0); Console::PutCP437(0xB0); Console::PutCP437(0xB0); Console::PutCP437(0xB0); Console::PutCP437(0xB0); Console::PutCP437(0xB0);
+    Console::SetColor(0x0B);
+    Console::Print(" "); Console::PutCP437(0xBA);
+    Console::Print("\n");
+    
+    // Line 6: ╚════════╝
+    Console::Print("   ");
+    Console::PutCP437(0xC8); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD);
+    Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xCD); Console::PutCP437(0xBC);
+    Console::Print("\n\n");
+    
+    Console::SetColor(0x08);
+    Console::Print("   Type 'help' for available commands.\n\n");
+    Console::SetColor(0x07);
 }
 
 typedef void (*constructor)();
@@ -66,8 +102,8 @@ extern "C" void callConstructors()
 bool kernel_running = true;
 extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
 {
-    Console::Clear();
-    Console::Write("Booting MoOS Kernel ...\n\n");
+    Console::Init();
+    Console::Printf("Booting MoOS Kernel ...\n\n");
 
     GlobalDescriptorTable gdt;
     TaskManager taskManager;
@@ -80,23 +116,28 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     size_t rightPadding = 10 * 1024;
     size_t heapSize = memUpperInBytes - leftPadding - rightPadding;
 
-    Console::Write("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
+    Console::Printf("Initializing heap of %d MB...\n", heapSize / (1024 * 1024));
 
     MemoryManager memoryManager(leftPadding, heapSize);
-    Console::Write("Initializing driver manager ...\n");
+    Console::Printf("Initializing driver manager ...\n");
 
     DriverManager driverManager;
     PeripheralComponentInterconnectController pciController;
 
-    Console::Write("Loading PCI device drivers ...\n");
+    Console::Printf("Loading PCI device drivers ...\n");
     pciController.SelectDrivers(&driverManager, &interruptManager);
+
+    // Initialize disk subsystem
+    DiskManager::Initialize();
 
     MouseEventHandler *mouseHandler;
     KeyboardEventHandler *keyboardHandler;
 
 #ifndef GRAPHICS_MODE
-    auto terminal = new Terminal();
-    mouseHandler = 0; // terminal;
+    auto keyboard = new KeyboardDriver(&interruptManager, nullptr);
+    auto terminal = new Terminal(keyboard);
+    keyboard->SetEventHandler(terminal);
+    mouseHandler = 0;
     keyboardHandler = terminal;
 #endif
 
@@ -115,30 +156,23 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
     desktop->AddChildWidget(&win2);
     desktop->AddChildWidget(&win3);
     desktop->AddChildWidget(&win4);
-#endif
 
     auto keyboard = new KeyboardDriver(&interruptManager, keyboardHandler);
+#endif
+
     driverManager.AddDriver(keyboard);
     MouseDriver mouse(&interruptManager, mouseHandler);
     driverManager.AddDriver(&mouse);
 
-    Console::Write("Activating driver manager ...\n");
+    Console::Printf("Activating driver manager ...\n");
     driverManager.ActivateAll();
 
-    Console::Write("Activating interrupt manager ...\n");
+    Console::Printf("Activating interrupt manager ...\n");
     interruptManager.Activate();
 
 #ifndef GRAPHICS_MODE
     Console::Clear();
     DrawLogo();
-    // Console::Write("Welcome to MoOS!\n\n");
-    //  OSTest::MultiTaskingTest(&taskManager, &gdt);
-    //  OSTest::SysCallTest();
-    //  OSTest::HardDiskTest();
-    //  OSTest::SharedPtrDemo();
-    //  OSTest::HeapDemo();
-    //  OSTest::SleepDemo();
-    //  OSTest::NetworkCardDemo(&driverManager);
     terminal->Reset();
 #endif
 
@@ -148,5 +182,5 @@ extern "C" void kernel_main(uint32_t multiBootInfoAddress, uint32_t magic)
         desktop->Draw(&gc);
 #endif
     }
-    Console::Write("\n\nMoOS kernal halted!");
+    Console::Printf("\n\nMoOS kernel halted!");
 }

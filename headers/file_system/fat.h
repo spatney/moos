@@ -71,6 +71,20 @@ namespace moos
                 const common::int8_t *name,
                 drivers::AdvancedTechnologyAttachment *disk,
                 common::uint32_t partitionOffset);
+
+            static void ListFiles(
+                drivers::AdvancedTechnologyAttachment *disk,
+                common::uint32_t partitionOffset);
+
+            static bool WriteFileContents(
+                const common::int8_t *name,
+                const common::int8_t *data,
+                common::uint32_t dataSize,
+                drivers::AdvancedTechnologyAttachment *disk,
+                common::uint32_t partitionOffset);
+                
+            static common::uint32_t GetPartitionOffset(
+                drivers::AdvancedTechnologyAttachment *disk);
         };
 
     }

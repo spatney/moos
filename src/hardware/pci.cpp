@@ -91,7 +91,7 @@ void PeripheralComponentInterconnectController::SelectDrivers(DriverManager *dri
                     driverManager->AddDriver(driver);
                 }
 
-                Console::Write("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
+                Console::Printf("BUS %x, DEVICE %x, FUNC %x, VENDOR %x, DEVICE %x, CLS %x - %x\n",
                                bus,
                                device,
                                function,
@@ -150,7 +150,7 @@ BaseAddressRegister PeripheralComponentInterconnectController::GetBaseAddressReg
 
     if (result.type == MemmoryMap)
     {
-        // Console::Write("MEMORY MAPPED BAR NOT SUPPORTED");
+        // Console::Printf("MEMORY MAPPED BAR NOT SUPPORTED");
         switch ((bar_value >> 1) & 0x3)
         {
         // TBD
@@ -201,7 +201,7 @@ Driver *PeripheralComponentInterconnectController::GetDriver(
         switch (descriptor.subclass_id)
         {
         case 0x00: // VGA
-            // Console::Write("Loading VGA driver ... \n");
+            // Console::Printf("Loading VGA driver ... \n");
             break;
         }
     }

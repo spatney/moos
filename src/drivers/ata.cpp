@@ -59,7 +59,7 @@ bool AdvancedTechnologyAttachment::Identify()
 
     if (status & 0x01)
     {
-        Console::Write("ATA Error.\n");
+        Console::Printf("ATA Error.\n");
         return false;
     }
 
@@ -94,13 +94,13 @@ void AdvancedTechnologyAttachment::Read28(
 {
     if (sector & 0xF0000000)
     {
-        Console::Write("Read Error 'sector & 0xF0000000 == 0'\n");
+        Console::Printf("Read Error 'sector & 0xF0000000 == 0'\n");
         return;
     }
 
     if (count > bytesPerSector)
     {
-        Console::Write("Cannot read from sector larger than 512\n");
+        Console::Printf("Cannot read from sector larger than 512\n");
         return;
     }
 
@@ -123,7 +123,7 @@ void AdvancedTechnologyAttachment::Read28(
 
     if (status & 0x01)
     {
-        Console::Write("ATA read error\n");
+        Console::Printf("ATA read error\n");
         return;
     }
 
@@ -148,48 +148,37 @@ void AdvancedTechnologyAttachment::Write28(
     int32_t count)
 {
     if (sector & 0xF0000000)
-    {
-        Console::Write("Cannot write to sector larger than 512\n");
         return;
-    }
 
     if (count > bytesPerSector)
-    {
         return;
-    }
 
-    devicePort.Write((master ? 0xE0 : 0xF0) | ((sector & 0X0F000000) >> 24));
+    devicePort.Write((master ? 0xE0 : 0xF0) | ((sector & 0x0F000000) >> 24));
     errorPort.Write(0);
-    sectorCountPort.Write(1); // single sector
+    sectorCountPort.Write(1);
 
     lbaLowPort.Write((sector & 0x000000FF));
     lbaMidPort.Write((sector & 0x0000FF00) >> 8);
-    lbaHighPort.Write((sector & 0x00FF0000) >> 8);
+    lbaHighPort.Write((sector & 0x00FF0000) >> 16);
 
     commandPort.Write(0x30);
 
-    Console::Write("Writing to ATA: ");
+    auto status = commandPort.Read();
+    while (((status & 0x80) == 0x80) && ((status & 0x01) != 0x01))
+        status = commandPort.Read();
 
-    for (uint16_t i = 0; i < count; i += 2)
+    if (status & 0x01)
+        return;
+
+    for (int32_t i = 0; i < bytesPerSector; i += 2)
     {
-        uint16_t wdata = data[i];
+        uint16_t wdata = 0;
+        if (i < count)
+            wdata = data[i];
         if (i + 1 < count)
             wdata |= ((uint16_t)data[i + 1]) << 8;
-
-        int8_t *foo = "  \0";
-        foo[1] = (wdata >> 8) & 0x00FF;
-        foo[0] = wdata & 0x00FF;
-        Console::Write("%s", foo);
-
         dataPort.Write(wdata);
     }
-
-    for (uint16_t i = count + (count % 2); i < bytesPerSector; i += 2)
-    {
-        dataPort.Write(0);
-    }
-
-    Console::Write("\n");
 }
 
 void AdvancedTechnologyAttachment::Flush()
@@ -206,7 +195,7 @@ void AdvancedTechnologyAttachment::Flush()
 
     if (status & 0x01)
     {
-        Console::Write("ERROR\n");
+        Console::Printf("ERROR\n");
         return;
     }
 }

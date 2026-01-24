@@ -145,6 +145,8 @@ namespace moos
             ~KeyboardDriver();
             virtual common::uint32_t HandleInterrupt(common::uint32_t esp);
             virtual void Activate();
+            void SetEventHandler(KeyboardEventHandler *handler) { eventHandler = handler; }
+            KeyboardEventHandler *GetEventHandler() { return eventHandler; }
         };
     }
 }

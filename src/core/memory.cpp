@@ -36,7 +36,7 @@ MemoryManager::~MemoryManager()
 
 void *MemoryManager::malloc(common::size_t size)
 {
-    // Console::Write("Allocating %d bytes\n", size);
+    // Console::Printf("Allocating %d bytes\n", size);
     MemoryBlock *emptyBlock = 0;
     for (
         auto block = head;
@@ -51,7 +51,7 @@ void *MemoryManager::malloc(common::size_t size)
 
     if (emptyBlock == 0)
     {
-        Console::Write("Out of Memory!! \n");
+        Console::Printf("Out of Memory!! \n");
         return 0;
     }
 
@@ -163,6 +163,18 @@ void operator delete(void *ptr, unsigned)
 }
 
 void operator delete[](void *ptr, unsigned)
+{
+    if (moos::core::MemoryManager::activeMemoryManager != 0)
+        moos::core::MemoryManager::activeMemoryManager->free(ptr);
+}
+
+void operator delete(void *ptr)
+{
+    if (moos::core::MemoryManager::activeMemoryManager != 0)
+        moos::core::MemoryManager::activeMemoryManager->free(ptr);
+}
+
+void operator delete[](void *ptr)
 {
     if (moos::core::MemoryManager::activeMemoryManager != 0)
         moos::core::MemoryManager::activeMemoryManager->free(ptr);

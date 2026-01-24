@@ -11,12 +11,15 @@ namespace moos
 {
     namespace gui
     {
+        class Editor;
+        
         class Terminal : public drivers::MouseEventHandler, public drivers::KeyboardEventHandler
         {
         private:
             common::int32_t x;
             common::int32_t y;
             common::int32_t bufferCount;
+            common::int32_t cursorPos;  // Position within buffer for inline editing
 
             common::uint8_t promptX;
             common::uint8_t promptY;
@@ -25,19 +28,29 @@ namespace moos
             common::LinkedList *history;
             common::LinkedListNodeIterator historyIt;
 
-            // all the keyboard state stuff should probably be in a state manager of sorts.
-            // will attempt some other time.
+            drivers::KeyboardDriver *keyboardDriver;
+            Editor *activeEditor;
+
             bool isShiftDown;
             bool isCapsLockOn;
+            bool isCtrlDown;
 
             void drawPrompt();
+            void redrawInput();
+            void insertCharAtCursor(common::int8_t c);
+            void deleteCharAtCursor();
+            void moveCursorLeft();
+            void moveCursorRight();
+            void moveCursorToStart();
+            void moveCursorToEnd();
+            void clearInput();
             common::int8_t *copyBuffer();
             common::size_t copyToBuffer(common::int8_t *src);
             common::LinkedList *tokenizeBuffer();
             common::uint8_t keyToChar(drivers::Key key);
 
         public:
-            Terminal();
+            Terminal(drivers::KeyboardDriver *keyboardDriver);
             ~Terminal();
 
             void Reset();

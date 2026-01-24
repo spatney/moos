@@ -98,39 +98,39 @@ int32_t amd_am79c973::Reset()
 
 uint32_t amd_am79c973::HandleInterrupt(common::uint32_t esp)
 {
-    Console::Write("INTERRUPT FROM 'amd_am79c973' (NETWORK CARD)\n");
+    Console::Printf("INTERRUPT FROM 'amd_am79c973' (NETWORK CARD)\n");
 
     registerAddressPort.Write(0);
     uint32_t temp = registerDataPort.Read();
 
     if ((temp & 0x8000) == 0x8000)
     {
-        Console::Write("General Error\n");
+        Console::Printf("General Error\n");
     }
 
     if ((temp & 0x2000) == 0x2000)
     {
-        Console::Write("Collision Error\n");
+        Console::Printf("Collision Error\n");
     }
 
     if ((temp & 0x1000) == 0x1000)
     {
-        Console::Write("Missed Frame\n");
+        Console::Printf("Missed Frame\n");
     }
 
     if ((temp & 0x0800) == 0x0800)
     {
-        Console::Write("Memory Error");
+        Console::Printf("Memory Error");
     }
 
     if ((temp & 0x0400) == 0x0400)
     {
-        Console::Write("GOT DATA\n");
+        Console::Printf("GOT DATA\n");
     }
 
     if ((temp & 0x0200) == 0x0200)
     {
-        Console::Write("DATA SENT\n");
+        Console::Printf("DATA SENT\n");
     }
 
     // ack
@@ -139,7 +139,7 @@ uint32_t amd_am79c973::HandleInterrupt(common::uint32_t esp)
 
     if ((temp & 0x0100) == 0x0100)
     {
-        Console::Write("INIT DONE\n");
+        Console::Printf("INIT DONE\n");
     }
 
     return esp;
@@ -172,7 +172,7 @@ void amd_am79c973::Send(uint8_t *buffer, int32_t size)
 
 void amd_am79c973::Recieve()
 {
-    Console::Write("RECIEVE\n");
+    Console::Printf("RECIEVE\n");
 
     for (; (recvBufferDescr[currentRecvBuffer].flags & 0x80000000) == 0;
          currentRecvBuffer = (currentRecvBuffer + 1) % 8)
@@ -190,7 +190,7 @@ void amd_am79c973::Recieve()
 
             for (int32_t i = 0; i < size; i++)
             {
-                Console::Write("%x ", buffer[i]);
+                Console::Printf("%x ", buffer[i]);
             }
         }
 

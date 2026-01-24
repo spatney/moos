@@ -238,6 +238,9 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x5B:
         eventHandler->OnKeyDown(Key::Menu);
         break;
+    case 0x01:
+        eventHandler->OnKeyDown(Key::Escape);
+        break;
     case 0x48:
         eventHandler->OnKeyDown(Key::Up);
         break;
@@ -422,6 +425,9 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
     case 0x5B | 0x80:
         eventHandler->OnKeyUp(Key::Menu);
         break;
+    case 0x01 | 0x80:
+        eventHandler->OnKeyUp(Key::Escape);
+        break;
     case 0x48 | 0x80:
         eventHandler->OnKeyUp(Key::Up);
         break;
@@ -441,7 +447,7 @@ uint32_t KeyboardDriver::HandleInterrupt(uint32_t esp)
             // ignore key up
             break;
         }
-        Console::Write("\nUnknown key pressed => 0x%x", key);
+        Console::Printf("\nUnknown key pressed => 0x%x", key);
         break;
     }
 

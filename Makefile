@@ -20,11 +20,13 @@ default_objects = obj/loader.o \
 		  obj/drivers/keyboard.o \
 		  obj/drivers/mouse.o \
 		  obj/drivers/vga.o \
+		  obj/drivers/disk.o \
 		  obj/file_system/msdos_partition.o \
 		  obj/file_system/fat.o \
 		  obj/drivers/amd_am79c973.o \
 		  obj/drivers/ata.o \
 		  obj/gui/terminal.o \
+		  obj/gui/editor.o \
 		  obj/kernel.o
 
 # gfx = 1
@@ -105,10 +107,14 @@ qemu-none-graphics-mode: # use this if running within a container
 
 qemu-run: qemu-disk-image docker qemu
 
+qemu-run-terminal: docker
+	@if [ ! -f disk.img ]; then $(MAKE) qemu-disk-image; fi
+	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw -m 1G -display curses
+
 qemu-disk-image:
 	rm -f disk.img
-	dd if=/dev/zero of=disk.img bs=25M count=2
-	mformat -F -i disk.img ::
+	dd if=/dev/zero of=disk.img bs=1M count=50
+	mformat -i disk.img -F ::
 	mcopy -i disk.img file1.txt ::
 	mcopy -i disk.img logo.txt ::
 	mdir -i disk.img ::
