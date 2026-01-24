@@ -109,7 +109,7 @@ qemu-run: qemu-disk-image docker qemu
 
 qemu-run-terminal: docker
 	@if [ ! -f disk.img ]; then $(MAKE) qemu-disk-image; fi
-	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw -m 1G -display curses
+	qemu-system-i386 -boot d -cdrom kernel.iso -drive file=disk.img,format=raw,cache=writethrough -m 1G -display curses
 
 qemu-disk-image:
 	rm -f disk.img

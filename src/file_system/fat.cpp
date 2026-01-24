@@ -336,22 +336,23 @@ bool FATReader::WriteFileContents(
     DirectoryEntryFat32 directoryEntries[16];
     disk->Read28(rootStart, (uint8_t *)&directoryEntries[0], sizeof(DirectoryEntryFat32) * 16);
 
+    // First pass: look for existing file to update
     for (auto i = 0; i < 16; i++)
     {
         auto entry = &directoryEntries[i];
         if (entry->name[0] == 0x00)
         {
-            break;
+            break;  // No more entries
         }
 
         if ((entry->attributes & 0x0F) == 0x0F)
         {
-            continue;
+            continue;  // Long filename entry
         }
 
         if ((entry->attributes & 0x10) == 0x10)
         {
-            continue;
+            continue;  // Directory
         }
 
         // Build filename from entry for comparison
@@ -434,7 +435,7 @@ bool FATReader::WriteFileContents(
     int freeEntry = -1;
     for (int i = 0; i < 16; i++)
     {
-        if (directoryEntries[i].name[0] == 0x00 || directoryEntries[i].name[0] == 0xE5)
+        if (directoryEntries[i].name[0] == 0x00 || (uint8_t)directoryEntries[i].name[0] == 0xE5)
         {
             freeEntry = i;
             break;
@@ -444,33 +445,38 @@ bool FATReader::WriteFileContents(
     if (freeEntry < 0)
         return false; // No free directory entry
     
-    // Find a free cluster in FAT
-    uint8_t fatBuffer[512];
     uint32_t freeCluster = 0;
     
-    for (uint32_t fatSector = 0; fatSector < fatSize && freeCluster == 0; fatSector++)
+    // Only allocate cluster if file has content
+    if (dataSize > 0)
     {
-        disk->Read28(fatStart + fatSector, fatBuffer, 512);
-        for (uint32_t j = 0; j < 128 && freeCluster == 0; j++) // 128 entries per sector (4 bytes each)
+        // Find a free cluster in FAT
+        uint8_t fatBuffer[512];
+        
+        for (uint32_t fatSector = 0; fatSector < fatSize && freeCluster == 0; fatSector++)
         {
-            uint32_t cluster = fatSector * 128 + j;
-            if (cluster < 2) continue; // Clusters 0 and 1 are reserved
-            
-            uint32_t fatEntry = *((uint32_t*)&fatBuffer[j * 4]) & 0x0FFFFFFF;
-            if (fatEntry == 0)
+            disk->Read28(fatStart + fatSector, fatBuffer, 512);
+            for (uint32_t j = 0; j < 128 && freeCluster == 0; j++) // 128 entries per sector (4 bytes each)
             {
-                freeCluster = cluster;
-                // Mark cluster as end-of-chain
-                *((uint32_t*)&fatBuffer[j * 4]) = 0x0FFFFFFF;
-                disk->Write28(fatStart + fatSector, fatBuffer, 512);
-                // Update second FAT copy
-                disk->Write28(fatStart + fatSize + fatSector, fatBuffer, 512);
+                uint32_t cluster = fatSector * 128 + j;
+                if (cluster < 2) continue; // Clusters 0 and 1 are reserved
+                
+                uint32_t fatEntry = *((uint32_t*)&fatBuffer[j * 4]) & 0x0FFFFFFF;
+                if (fatEntry == 0)
+                {
+                    freeCluster = cluster;
+                    // Mark cluster as end-of-chain
+                    *((uint32_t*)&fatBuffer[j * 4]) = 0x0FFFFFFF;
+                    disk->Write28(fatStart + fatSector, fatBuffer, 512);
+                    // Update second FAT copy
+                    disk->Write28(fatStart + fatSize + fatSector, fatBuffer, 512);
+                }
             }
         }
+        
+        if (freeCluster == 0)
+            return false; // No free cluster
     }
-    
-    if (freeCluster == 0)
-        return false; // No free cluster
     
     // Parse filename into 8.3 format
     auto entry = &directoryEntries[freeEntry];
@@ -510,30 +516,33 @@ bool FATReader::WriteFileContents(
     entry->firstClusterLow = freeCluster & 0xFFFF;
     entry->size = dataSize;
     
-    // Write file data to cluster
-    uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (freeCluster - 2);
-    uint32_t bytesWritten = 0;
-    uint32_t sectorOffset = 0;
-    
-    while (bytesWritten < dataSize && sectorOffset < bpb.sectorsPerCluster)
+    // Write file data to cluster (only if there's content)
+    if (dataSize > 0 && freeCluster > 0)
     {
-        uint32_t bytesToWrite = dataSize - bytesWritten;
-        if (bytesToWrite > 512)
-            bytesToWrite = 512;
+        uint32_t fileSector = dataStart + bpb.sectorsPerCluster * (freeCluster - 2);
+        uint32_t bytesWritten = 0;
+        uint32_t sectorOffset = 0;
         
-        uint8_t sectorBuffer[512];
-        for (uint32_t b = 0; b < 512; b++)
+        while (bytesWritten < dataSize && sectorOffset < bpb.sectorsPerCluster)
         {
-            if (b < bytesToWrite)
-                sectorBuffer[b] = data[bytesWritten + b];
-            else
-                sectorBuffer[b] = 0;
+            uint32_t bytesToWrite = dataSize - bytesWritten;
+            if (bytesToWrite > 512)
+                bytesToWrite = 512;
+            
+            uint8_t sectorBuffer[512];
+            for (uint32_t b = 0; b < 512; b++)
+            {
+                if (b < bytesToWrite)
+                    sectorBuffer[b] = data[bytesWritten + b];
+                else
+                    sectorBuffer[b] = 0;
+            }
+            
+            disk->Write28(fileSector + sectorOffset, sectorBuffer, 512);
+            
+            bytesWritten += bytesToWrite;
+            sectorOffset++;
         }
-        
-        disk->Write28(fileSector + sectorOffset, sectorBuffer, 512);
-        
-        bytesWritten += bytesToWrite;
-        sectorOffset++;
     }
     
     // Write updated directory

@@ -122,6 +122,9 @@ bool PartitionTable::WriteFileContents(
     const int8_t *data,
     uint32_t dataSize)
 {
+    if (disk == 0)
+        return false;
+        
     MasterBootRecord mbr;
     disk->Read28(0, (uint8_t *)&mbr, sizeof(MasterBootRecord));
 

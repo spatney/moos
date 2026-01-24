@@ -163,12 +163,16 @@ void AdvancedTechnologyAttachment::Write28(
 
     commandPort.Write(0x30);
 
+    // Wait for BSY to clear and DRQ to set
     auto status = commandPort.Read();
-    while (((status & 0x80) == 0x80) && ((status & 0x01) != 0x01))
+    while ((status & 0x80) == 0x80)  // Wait for BSY to clear
         status = commandPort.Read();
-
-    if (status & 0x01)
+    
+    if (status & 0x01)  // Check for error
         return;
+    
+    while ((status & 0x08) == 0)  // Wait for DRQ
+        status = commandPort.Read();
 
     for (int32_t i = 0; i < bytesPerSector; i += 2)
     {
@@ -179,6 +183,9 @@ void AdvancedTechnologyAttachment::Write28(
             wdata |= ((uint16_t)data[i + 1]) << 8;
         dataPort.Write(wdata);
     }
+    
+    // Flush to ensure write completes
+    Flush();
 }
 
 void AdvancedTechnologyAttachment::Flush()
